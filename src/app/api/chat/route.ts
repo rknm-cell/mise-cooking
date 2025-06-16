@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
 // Create an OpenAI API client (that's edge friendly!)
 const openai = new OpenAI({
@@ -8,8 +9,12 @@ const openai = new OpenAI({
 // IMPORTANT! Set the runtime to edge
 export const runtime = 'edge';
 
+interface ChatRequest {
+  messages: ChatCompletionMessageParam[];
+}
+
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages } = (await req.json()) as ChatRequest;
 
   // Create a streaming response
   const response = await openai.chat.completions.create({
@@ -18,7 +23,7 @@ export async function POST(req: Request) {
       {
         role: 'system',
         content: 'You are a helpful recipe assistant. You help users find recipes, suggest ingredients, and provide cooking tips. Keep your responses concise and focused on cooking and recipes.',
-      },
+      } as ChatCompletionMessageParam,
       ...messages,
     ],
     stream: true,
