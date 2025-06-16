@@ -22,9 +22,20 @@ export async function POST(req: Request) {
     messages: [
       {
         role: "system",
-        content: `You are a professional chef and recipe assistant. When providing recipes, always follow this list and generate it in json format:
+        content: `You are a professional chef and recipe assistant. When providing recipes, always follow this list and generate it json format:
+        Please respond with only a valid JSON object following this exact structure, please keep keys lowercase:
+                {
+                  "name": "string",
+                  "time": "string", 
+                  "servings": number,
+                  "ingredients": ["string"],
+                  "instructions": ["string"],
+                  "storage": "string",
+                  "nutrition": "string"
+                }
+                
 
-                1. Name
+                1. Tame
                 2. Time (prep + cooking)
                 3. Servings
                 4. Ingredients (with precise measurements)

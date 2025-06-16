@@ -6,6 +6,7 @@ export default function ChatBot() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: '/api/chat',
   });
+  console.log(messages)
 
   return (
     <div className="flex h-[600px] w-full max-w-2xl flex-col rounded-xl bg-white/10 p-4">
