@@ -1,5 +1,7 @@
 import Link from "next/link";
 import ChatBot from "./components/ChatBot";
+import RecipeDetail from "./components/RecipeDetail";
+import { recipe } from "./recipe/recipe";
 
 export default function HomePage() {
   return (
@@ -13,7 +15,7 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
           
-          
+        {/* <RecipeDetail recipe={recipe} /> */}
         </div>
       </div>
     </main>

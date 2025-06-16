@@ -1,8 +1,9 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
-import { index, mysqlTableCreator } from "drizzle-orm/mysql-core";
+import {  mysqlTableCreator } from "drizzle-orm/mysql-core";
+import type { InferSelectModel } from "drizzle-orm";
+import { jsonb, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -12,16 +13,16 @@ import { index, mysqlTableCreator } from "drizzle-orm/mysql-core";
  */
 export const createTable = mysqlTableCreator((name) => `RecipeApp_${name}`);
 
-export const posts = createTable(
-  "post",
-  (d) => ({
-    id: d.bigint({ mode: "number" }).primaryKey().autoincrement(),
-    name: d.varchar({ length: 256 }),
-    createdAt: d
-      .timestamp()
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: d.timestamp().onUpdateNow(),
-  }),
-  (t) => [index("name_idx").on(t.name)],
-);
+export const recipe = pgTable("Recipe", {
+  id: varchar("id").primaryKey().notNull(),
+  name: varchar("name").notNull(),
+  totalTime: varchar("total_time").notNull(),
+  servings: varchar("servings").notNull(),
+  instructions: jsonb("instructions").notNull(),
+  ingredients: jsonb("ingredients").notNull(),
+  storage: varchar("storage").notNull(),
+  nutrition: varchar("nutrition").notNull(),
+  createdAt: timestamp("createdAt").notNull(),
+});
+
+export type Recipe = InferSelectModel<typeof recipe>;
