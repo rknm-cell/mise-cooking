@@ -1,0 +1,232 @@
+I'll help you create a structured project_todos.md file that can be used to track progress. Here's how we can format it:
+
+```markdown
+# Project Todos
+
+## Status Legend
+- [ ] Not Started
+- [~] In Progress
+- [x] Completed
+- [!] Blocked
+
+## 1. Project Setup & Infrastructure
+- [x] Initialize Next.js project with TypeScript
+  - [x] Configure tsconfig
+  - [x] Set up ESLint and Prettier
+  - [x] Add necessary dependencies
+- [x] Set up PostgreSQL database
+  - [ ] Create database
+  - [ ] Configure connection
+  - [ ] Set up backup strategy
+- [x] Configure Drizzle ORM
+  - [x] Install dependencies
+  - [ ] Set up schema
+  - [ ] Configure migrations
+- [ ] Set up tRPC
+  - [ ] Install dependencies
+  - [ ] Configure router
+  - [ ] Set up client
+- [ ] Configure Vercel AI SDK
+  - [ ] Install SDK
+  - [ ] Set up OpenAI integration
+  - [ ] Configure API routes
+- [x] Set up environment variables
+  - [x] Create .env.example
+  - [x] Document all variables
+  - [x] Set up production variables
+- [x] Initialize Git repository
+  - [x] Set up .gitignore
+  - [x] Create initial commit
+  - [x] Set up remote
+
+## 2. Authentication & Authorization
+- [ ] Implement BetterAuth.js setup
+  - [ ] Install dependencies
+  - [ ] Configure providers
+  - [ ] Set up session handling
+- [ ] Create user model in database
+  - [ ] Define schema
+  - [ ] Set up migrations
+  - [ ] Add indexes
+- [ ] Set up authentication providers
+  - [ ] Email/Password
+  - [ ] Google OAuth
+  - [ ] GitHub OAuth
+- [ ] Implement protected routes
+  - [ ] Create middleware
+  - [ ] Add route protection
+  - [ ] Handle redirects
+- [ ] Create user session management
+  - [ ] Implement session storage
+  - [ ] Add session validation
+  - [ ] Handle session expiry
+- [ ] Add role-based access control
+  - [ ] Define roles
+  - [ ] Implement permissions
+  - [ ] Add role checks
+- [ ] Implement password reset flow
+  - [ ] Create reset token system
+  - [ ] Add email templates
+  - [ ] Implement reset logic
+- [ ] Add email verification
+  - [ ] Create verification tokens
+  - [ ] Add email templates
+  - [ ] Implement verification logic
+
+## 3. AI Integration
+- [ ] Set up OpenAI API integration
+  - [ ] Configure API keys
+  - [ ] Set up rate limiting
+  - [ ] Implement error handling
+- [ ] Implement recipe generation using AI
+  - [ ] Create prompt templates
+  - [ ] Implement generation logic
+  - [ ] Add response parsing
+- [ ] Create prompt engineering system
+  - [ ] Design prompt structure
+  - [ ] Implement prompt validation
+  - [ ] Add prompt versioning
+- [ ] Add nutritional analysis AI features
+  - [ ] Create analysis prompts
+  - [ ] Implement parsing logic
+  - [ ] Add validation
+- [ ] Implement ingredient substitution AI
+  - [ ] Create substitution logic
+  - [ ] Add validation
+  - [ ] Implement fallbacks
+- [ ] Add meal planning AI capabilities
+  - [ ] Create planning prompts
+  - [ ] Implement planning logic
+  - [ ] Add constraints handling
+
+
+## 4. Database & API
+- [ ] Design database schema
+  - [x] User table
+  - [x] Recipes table
+  - [x] Ingredients table
+  - [x] Nutritional info table
+  - [x] Meal plans table
+- [ ] Create tRPC routers
+  - [ ] User router
+  - [ ] Recipe router
+  - [ ] Meal plan router
+  - [ ] Nutrition router
+- [ ] Implement database migrations
+  - [ ] Create migration system
+  - [ ] Add rollback capability
+  - [ ] Document migrations
+- [ ] Set up database indexing
+  - [ ] Add performance indexes
+  - [ ] Optimize queries
+  - [ ] Monitor performance
+- [ ] Create API endpoints
+  - [ ] Recipe generation
+  - [ ] User preferences
+  - [ ] Meal planning
+  - [ ] Shopping lists
+
+## 5. Frontend Development
+- [ ] Set up UI component library
+  - [ ] Install dependencies
+  - [ ] Configure theme
+  - [ ] Create base components
+- [ ] Create responsive layout
+  - [ ] Design system
+  - [ ] Implement breakpoints
+  - [ ] Add responsive components
+- [ ] Implement key pages
+  - [ ] Home/Dashboard
+  - [ ] Recipe generation
+  - [ ] Recipe details
+  - [ ] Meal planning
+  - [ ] User profile
+  - [ ] Settings
+- [ ] Add form validation
+  - [ ] Implement validation logic
+  - [ ] Add error messages
+  - [ ] Create custom validators
+- [ ] Implement error boundaries
+  - [ ] Create error components
+  - [ ] Add fallback UI
+  - [ ] Implement logging
+- [ ] Create loading states
+  - [ ] Add loading components
+  - [ ] Implement skeletons
+  - [ ] Add transitions
+- [ ] Add toast notifications
+  - [ ] Set up notification system
+  - [ ] Create notification components
+  - [ ] Add animations
+
+## 6. Testing
+- [ ] Set up testing framework
+  - [ ] Install Jest
+  - [ ] Configure testing environment
+  - [ ] Set up test utilities
+- [ ] Write unit tests
+  - [ ] API routes
+  - [ ] Database operations
+  - [ ] AI integration
+  - [ ] Utility functions
+- [ ] Create integration tests
+  - [ ] API integration
+  - [ ] Database integration
+  - [ ] AI integration
+- [ ] Implement E2E tests
+  - [ ] Set up Cypress
+  - [ ] Create test scenarios
+  - [ ] Add CI integration
+- [ ] Set up test coverage reporting
+  - [ ] Configure coverage
+  - [ ] Set up reporting
+  - [ ] Add CI integration
+- [ ] Add performance testing
+  - [ ] Set up benchmarks
+  - [ ] Create performance tests
+  - [ ] Add monitoring
+
+## 7. Error Handling & Monitoring
+- [ ] Implement global error handling
+  - [ ] Create error middleware
+  - [ ] Add error logging
+  - [ ] Implement recovery
+- [ ] Set up error logging
+  - [ ] Configure logging system
+  - [ ] Add log levels
+  - [ ] Set up log rotation
+- [ ] Create error tracking
+  - [ ] Set up Sentry
+  - [ ] Configure alerts
+  - [ ] Add context
+- [ ] Add performance monitoring
+  - [ ] Set up metrics
+  - [ ] Add dashboards
+  - [ ] Configure alerts
+- [ ] Implement rate limiting
+  - [ ] Add rate limiters
+  - [ ] Configure limits
+  - [ ] Add monitoring
+- [ ] Set up alerting system
+  - [ ] Configure alerts
+  - [ ] Add notification channels
+  - [ ] Set up escalation
+- [ ] Create error recovery mechanisms
+  - [ ] Implement retry logic
+  - [ ] Add fallbacks
+  - [ ] Create recovery procedures
+
+## 8. Documentation
+- [ ] Create technical documentation
+  - [ ] Architecture decisions
+  - [ ] API documentation
+  - [ ] Database schema
+  - [ ] AI integration details
+- [ ] Write user documentation
+  - [ ] Installation guide
+  - [ ] User manual
+  - [ ] API usage guide
+- [ ] Add code documentation
+  - [ ] JSDoc comments
+  - [ ] README updates
+  - [ ] Component documentation
