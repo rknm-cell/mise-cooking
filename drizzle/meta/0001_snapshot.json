@@ -1,6 +1,6 @@
 {
-  "id": "943b2dcf-590a-41cc-95c5-e641f2df919b",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "4d21f995-d493-4ae0-8006-5b3a0f91f08d",
+  "prevId": "943b2dcf-590a-41cc-95c5-e641f2df919b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -34,7 +34,7 @@
         },
         "nutrition": {
           "name": "nutrition",
-          "type": "varchar[]",
+          "type": "jsonb[]",
           "primaryKey": false,
           "notNull": true
         },
