@@ -18,14 +18,8 @@ interface RecipeDetails {
 }
 
 const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
-  const {
-    name,
-    servings,
-    ingredients,
-    instructions,
-    storage,
-    nutrition,
-  } = recipe
+  const { name, servings, ingredients, instructions, storage, nutrition } =
+    recipe;
   console.log(nutrition);
   function handleInstructions(instructions: string[]) {
     return instructions.map((instruction, index) => {
@@ -42,7 +36,6 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     });
   }
   return (
-
     <Card>
       <CardHeader>
         <CardTitle>{name}</CardTitle>

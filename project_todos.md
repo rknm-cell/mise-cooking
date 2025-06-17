@@ -15,21 +15,21 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [x] Set up ESLint and Prettier
   - [x] Add necessary dependencies
 - [x] Set up PostgreSQL database
-  - [ ] Create database
-  - [ ] Configure connection
+  - [x] Create database
+  - [x] Configure connection
   - [ ] Set up backup strategy
 - [x] Configure Drizzle ORM
   - [x] Install dependencies
   - [x] Set up schema
-  - [ ] Configure migrations
+  - [x] Configure migrations
 - [ ] Set up tRPC
   - [ ] Install dependencies
   - [ ] Configure router
   - [ ] Set up client
-- [ ] Configure Vercel AI SDK
-  - [ ] Install SDK
-  - [ ] Set up OpenAI integration
-  - [ ] Configure API routes
+- [x] Configure Vercel AI SDK
+  - [x] Install SDK
+  - [x] Set up OpenAI integration
+  - [x] Configure API routes
 - [x] Set up environment variables
   - [x] Create .env.example
   - [x] Document all variables
@@ -40,9 +40,9 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [x] Set up remote
 
 ## 2. Authentication & Authorization
-- [ ] Implement BetterAuth.js setup
-  - [ ] Install dependencies
-  - [ ] Configure providers
+- [x] Implement BetterAuth.js setup
+  - [x] Install dependencies
+  - [x] Configure providers
   - [ ] Set up session handling
 - [ ] Create user model in database
   - [ ] Define schema
@@ -76,7 +76,7 @@ I'll help you create a structured project_todos.md file that can be used to trac
 ## 3. AI Integration
 - [x] Set up OpenAI API integration
   - [x] Configure API keys
-  - [ ] Set up rate limiting
+  - [] Set up rate limiting
   - [ ] Implement error handling
 - [x] Implement recipe generation using AI
   - [ ] Create prompt templates
@@ -86,8 +86,8 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [ ] Design prompt structure
   - [ ] Implement prompt validation
   - [ ] Add prompt versioning
-- [ ] Add nutritional analysis AI features
-  - [ ] Create analysis prompts
+- [x] Add nutritional analysis AI features
+  - [x] Create analysis prompts
   - [ ] Implement parsing logic
   - [ ] Add validation
 - [ ] Implement ingredient substitution AI
@@ -101,7 +101,7 @@ I'll help you create a structured project_todos.md file that can be used to trac
 
 
 ## 4. Database & API
-- [ ] Design database schema
+- [x] Design database schema
   - [x] User table
   - [x] Recipes table
   - [x] Ingredients table
@@ -112,7 +112,7 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [ ] Recipe router
   - [ ] Meal plan router
   - [ ] Nutrition router
-- [ ] Implement database migrations
+- [x] Implement database migrations
   - [ ] Create migration system
   - [ ] Add rollback capability
   - [ ] Document migrations
@@ -127,8 +127,8 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [ ] Shopping lists
 
 ## 5. Frontend Development
-- [ ] Set up UI component library
-  - [ ] Install dependencies
+- [x] Set up UI component library
+  - [x] Install dependencies
   - [ ] Configure theme
   - [ ] Create base components
 - [ ] Create responsive layout
@@ -161,7 +161,7 @@ I'll help you create a structured project_todos.md file that can be used to trac
 
 ## 6. Testing
 - [ ] Set up testing framework
-  - [ ] Install Jest
+  - [ ] Install Vitest
   - [ ] Configure testing environment
   - [ ] Set up test utilities
 - [ ] Write unit tests
@@ -230,3 +230,31 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [ ] JSDoc comments
   - [ ] README updates
   - [ ] Component documentation
+
+
+## Recipe types:
+Pasta Dishes: Spaghetti Bolognese, Mac and Cheese, Lasagna, Carbonara.
+Stir-fries: Chicken and Broccoli Stir-fry, Vegetable Stir-fry.
+Soups: Chicken Noodle Soup, Tomato Soup, Lentil Soup, Minestrone.
+Salads: Caesar Salad, Garden Salad, Cobb Salad, Caprese Salad.
+Curries: Chicken Curry, Vegetable Curry, Lentil Dahl.
+Roasts: Roast Chicken, Roast Beef, Roast Potatoes.
+Casseroles/Bakes: Tuna Casserole, Chicken and Rice Bake, Shepherd's Pie.
+Pizzas: Pepperoni Pizza, Margherita Pizza, Veggie Pizza.
+Burgers/Sandwiches: Classic Beef Burger, Grilled Cheese, BLT.
+Tacos/Burritos: Beef Tacos, Chicken Burritos, Fish Tacos.
+Stews: Beef Stew, Irish Stew, Goulash.
+Grill/BBQ: Grilled Chicken, Grilled Steaks, BBQ Ribs.
+Seafood Dishes: Baked Salmon, Shrimp Scampi, Fish and Chips.
+Rice Dishes: Fried Rice, Risotto, Pilaf.
+Egg Dishes: Scrambled Eggs, Omelette, Frittata, Quiche.
+Breakfast Foods: Pancakes, Waffles, French Toast, Oatmeal.
+Side Dishes: Mashed Potatoes, Roasted Vegetables, Coleslaw.
+Dips/Spreads: Hummus, Guacamole, Salsa, Tzatziki.
+Desserts (Cakes/Pies): Chocolate Cake, Apple Pie, Cheesecake.
+Desserts (Cookies/Brownies): Chocolate Chip Cookies, Fudgy Brownies.
+Breads/Pastries: Homemade Bread, Muffins, Croissants.
+Smoothies/Drinks: Fruit Smoothie, Green Smoothie.
+Dressings/Sauces: Vinaigrette, Marinara Sauce, Pesto.
+Slow Cooker Meals: Pulled Pork, Pot Roast.
+Sheet Pan Meals: Sheet Pan Chicken and Veggies, Sheet Pan Sausage and Peppers.
