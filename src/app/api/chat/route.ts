@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   console.log("prompt: ", prompt)
    const result  = await generateObject({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    model: openai("gpt-4-turbo"),
+    model: openai("gpt-4o-mini"),
     system: `You are a professional chef and recipe assistant. When providing recipes, always follow this list: 
                1. Name
                2. Time (prep + cooking)
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     storage: storage,
     nutrition: nutrition,
   });
-  console.log(recipe)
+  console.log("recipe: ",recipe.name)
 
   return result.toJsonResponse();
 }
