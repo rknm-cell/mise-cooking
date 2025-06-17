@@ -20,7 +20,7 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [ ] Set up backup strategy
 - [x] Configure Drizzle ORM
   - [x] Install dependencies
-  - [ ] Set up schema
+  - [x] Set up schema
   - [ ] Configure migrations
 - [ ] Set up tRPC
   - [ ] Install dependencies
@@ -74,11 +74,11 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [ ] Implement verification logic
 
 ## 3. AI Integration
-- [ ] Set up OpenAI API integration
-  - [ ] Configure API keys
+- [x] Set up OpenAI API integration
+  - [x] Configure API keys
   - [ ] Set up rate limiting
   - [ ] Implement error handling
-- [ ] Implement recipe generation using AI
+- [x] Implement recipe generation using AI
   - [ ] Create prompt templates
   - [ ] Implement generation logic
   - [ ] Add response parsing
