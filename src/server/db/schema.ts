@@ -4,6 +4,7 @@
 import {  mysqlTableCreator } from "drizzle-orm/mysql-core";
 import type { InferSelectModel } from "drizzle-orm";
 import { integer, jsonb, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import {z} from "zod/v4"
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -14,15 +15,29 @@ import { integer, jsonb, pgTable, timestamp, uuid, varchar } from "drizzle-orm/p
 export const createTable = mysqlTableCreator((name) => `RecipeApp_${name}`);
 
 export const recipe = pgTable("Recipe", {
-  id: varchar("id").primaryKey().notNull(),
+  id: uuid("id").primaryKey().notNull(),
   name: varchar("name").notNull(),
   totalTime: varchar("total_time").notNull(),
   servings: integer("servings").notNull(),
-  ingredients: jsonb("ingredients").notNull(),
-  instructions: jsonb("instructions").notNull(),
+  ingredients: varchar("nutrition").array().notNull(),
+  instructions: varchar("nutrition").array().notNull(),
   storage: varchar("storage").notNull(),
-  nutrition: varchar("nutrition").notNull(),
+  nutrition: varchar("nutrition").array().notNull(),
   createdAt: timestamp("createdAt").notNull(),
 });
 
 export type Recipe = InferSelectModel<typeof recipe>;
+
+
+export const recipeObject = z.object({
+  id: z.string(),
+  name: z.string(),
+  totalTime: z.string(),
+  servings: z.number(),
+  ingredients: z.array(z.string()),
+  instructions: z.array(z.string()),
+  storage: z.string(),
+  nutrition: z.array(z.string())
+})
+
+export type RecipeObject = z.infer<typeof recipeObject>
