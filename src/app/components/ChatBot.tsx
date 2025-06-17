@@ -1,28 +1,27 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { useEffect } from "react";
+import RecipeDetail from "./RecipeDetail";
+import { useEffect, useState } from "react";
 
 export default function ChatBot() {
   const { messages, input, handleInputChange, handleSubmit, status } = useChat({
     api: "/api/chat",
-    onResponse: (response) => console.log('API Response:', response.status),
-    onError: (err) => console.error('API Error:', err),
+    onResponse: (response) => console.log("API Response:", response.status),
+    onError: (err) => console.error("API Error:", err),
   });
+  // const [recipes, setRecipes] = useState({})
   const isLoading = status;
+  // const handleFilteredMessages = () => {
+  //   const recipe = messages.filter((message) => message.role === "assistant")
+  //   setRecipes(recipe)
+  // }
+  // useEffect(() => {
+  //   handleFilteredMessages()
+  // }, [messages])
+  // console.log("filtered:", recipes)
 
-  useEffect(() => {
-    if (messages.length > 0) {
-      const lastMessage = messages[messages.length - 1];
-      if (lastMessage?.role === 'assistant') {
-        console.log('Message:', lastMessage.content);
-      }
-    }
-  }, [messages]);
-
-  
-  
-
+  // console.log("messages:", messages)
   return (
     <div className="flex h-[600px] w-full max-w-2xl flex-col rounded-xl bg-white/10 p-4">
       <div className="mb-4 flex-1 overflow-y-auto">
@@ -79,6 +78,7 @@ export default function ChatBot() {
           Send
         </button>
       </form>
+      {/* <RecipeDetail recipe={}/> */}
     </div>
   );
 }

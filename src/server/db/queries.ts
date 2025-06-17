@@ -2,8 +2,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { recipe, type Recipe } from "./schema";
-import type { PgUUID } from "drizzle-orm/pg-core";
-import type { UUID } from "crypto";
+import { uuid } from "drizzle-orm/pg-core";
 
 const client = postgres(process.env.POSTGRES_URL!);
 const db = drizzle(client);
@@ -22,10 +21,10 @@ export async function saveRecipe({
   name: string;
   totalTime: string;
   servings: number;
-  ingredients: string;
-  instructions: string;
+  ingredients: string[];
+  instructions: string[];
   storage: string;
-  nutrition: string;
+  nutrition: string[];
 }) {
   try {
     return await db.insert(recipe).values({
