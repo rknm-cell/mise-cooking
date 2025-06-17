@@ -16,7 +16,7 @@ export const maxDuration = 30;
 //Unleash later
 export async function POST(req: Request) {
   const {prompt}: {prompt: string} = await req.json();
-  console.log("Request: ", await req.json())
+  console.log("prompt: ", prompt)
    const result  = await generateObject({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     model: openai("gpt-4-turbo"),
@@ -51,87 +51,20 @@ export async function POST(req: Request) {
   });
   
   const recipe = result.object
+  recipe.id = nanoid();
+  const {id, name, totalTime, servings, ingredients, instructions, storage, nutrition } = recipe
+  
+  await saveRecipe({
+    id: id,
+    name: name,
+    totalTime: totalTime,
+    servings: servings,
+    ingredients: ingredients,
+    instructions: instructions,
+    storage: storage,
+    nutrition: nutrition,
+  });
   console.log(recipe)
-    recipe.id = nanoid();
-    const {id, name, totalTime, servings, ingredients, instructions, storage, nutrition } = recipe
-
-    await saveRecipe({
-      id: id,
-      name: name,
-      totalTime: totalTime,
-      servings: servings,
-      ingredients: ingredients,
-      instructions: instructions,
-      storage: storage,
-      nutrition: nutrition,
-    });
 
   return result.toJsonResponse();
 }
-
-// export async function POST(req: Request) {
-//   const { messages } = await req.json();
-
-//   console.log("messages", messages);
-
-//   const result = streamText({
-//     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-//     model: openai("gpt-4-turbo"),
-//     system: "You are a helpful assistant.",
-//     messages: [
-//       {
-//         role: "system",
-//         content: `You are a professional chef and recipe assistant. When providing recipes, always follow this list and generate it json format:
-//         Please respond with only a valid JSON object following this exact structure, please keep keys lowercase:
-//                 {
-//                   "name": "string",
-//                   "time": "string", 
-//                   "servings": number,
-//                   "ingredients": ["string"],
-//                   "instructions": ["string"],
-//                   "storage": "string",
-//                   "nutrition": ["string"]
-//                 }
-                
-
-//                 1. Name
-//                 2. Time (prep + cooking)
-//                 3. Servings
-//                 4. Ingredients (with precise measurements)
-//                   - List all ingredients with their quantities
-//                   - Include any optional ingredients or substitutions
-//                 5. Instructions
-//                   - Separate each step
-//                   - Include specific temperatures, times, and techniques
-//                   - Add helpful tips or notes where relevant
-//                 6. Storage (if applicable) as storage
-//                 7. Nutrition
-//                 Keep your responses clear, precise, and easy to follow. Include helpful cooking tips and explain any technical terms. If asked about a specific cuisine or dietary requirement, adapt the recipe accordingly.
-                
-//                 `,
-//       } as ChatCompletionMessageParam,
-//       ...messages,
-//     ],
-//     async onFinish({ text }) {
-//       const recipe = JSON.parse(text);
-//       const recipeJSON: RecipeObject = recipe;
-
-//       recipeJSON.id = nanoid();
-//       console.log(recipeJSON);
-//       const {id, name, totalTime, servings, ingredients, instructions, storage, nutrition } = recipeJSON
-
-//       const saveResult = saveRecipe({
-//         id: id,
-//         name: name,
-//         totalTime: totalTime,
-//         servings: servings,
-//         ingredients: ingredients,
-//         instructions: instructions,
-//         storage: storage,
-//         nutrition: nutrition,
-//       });
-//     },
-//   });
-
-//   return result.toDataStreamResponse();
-// }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import { useActions } from "ai/rsc";
 import RecipeDetail from "./RecipeDetail";
 import { useEffect, useState } from "react";
 
@@ -12,16 +13,7 @@ export default function ChatBot() {
   });
   // const [recipes, setRecipes] = useState({})
   const isLoading = status;
-  // const handleFilteredMessages = () => {
-  //   const recipe = messages.filter((message) => message.role === "assistant")
-  //   setRecipes(recipe)
-  // }
-  // useEffect(() => {
-  //   handleFilteredMessages()
-  // }, [messages])
-  // console.log("filtered:", recipes)
-
-  // console.log("messages:", messages)
+  
   return (
     <div className="flex h-[600px] w-full max-w-2xl flex-col rounded-xl bg-white/10 p-4">
       <div className="mb-4 flex-1 overflow-y-auto">
