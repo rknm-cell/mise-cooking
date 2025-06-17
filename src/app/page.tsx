@@ -1,7 +1,6 @@
 import Link from "next/link";
 import ChatBot from "./components/ChatBot";
 import RecipeDetail from "./components/RecipeDetail";
-import { recipe } from "./recipe/recipe";
 
 export default function HomePage() {
   return (
