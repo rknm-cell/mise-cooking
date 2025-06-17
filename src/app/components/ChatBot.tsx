@@ -70,7 +70,6 @@ export default function ChatBot() {
           Send
         </button>
       </form>
-      {/* <RecipeDetail recipe={}/> */}
     </div>
   );
 }
