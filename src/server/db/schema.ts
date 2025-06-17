@@ -40,4 +40,4 @@ export const recipeObject = z.object({
   nutrition: z.array(z.string())
 })
 
-export type RecipeObject = z.infer<typeof recipeObject>
+export type RecipeSchema = z.infer<typeof recipeObject>

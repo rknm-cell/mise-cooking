@@ -2,11 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { openai } from "@ai-sdk/openai";
-import { generateObject, generateText, streamText } from "ai";
-import type { ChatCompletionMessageParam } from "openai/resources.js";
+import { generateObject} from "ai";
 import { nanoid } from "nanoid";
 import { saveRecipe } from "~/server/db/queries";
-import { recipeObject, type RecipeObject } from "~/server/db/schema";
 import { z } from "zod";
 
 // Allow streaming responses up to 30 seconds
