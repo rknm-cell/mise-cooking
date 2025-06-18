@@ -44,14 +44,14 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [x] Install dependencies
   - [x] Configure providers
   - [ ] Set up session handling
-- [ ] Create user model in database
-  - [ ] Define schema
+- [x] Create user model in database
+  - [x] Define schema
   - [ ] Set up migrations
   - [ ] Add indexes
-- [ ] Set up authentication providers
-  - [ ] Email/Password
-  - [ ] Google OAuth
-  - [ ] GitHub OAuth
+- [x] Set up authentication providers
+  - [~] Email/Password
+  - [~] Google OAuth
+  - [~] GitHub OAuth
 - [ ] Implement protected routes
   - [ ] Create middleware
   - [ ] Add route protection
@@ -76,7 +76,7 @@ I'll help you create a structured project_todos.md file that can be used to trac
 ## 3. AI Integration
 - [x] Set up OpenAI API integration
   - [x] Configure API keys
-  - [] Set up rate limiting
+  - [ ] Set up rate limiting
   - [ ] Implement error handling
 - [x] Implement recipe generation using AI
   - [ ] Create prompt templates
@@ -106,7 +106,7 @@ I'll help you create a structured project_todos.md file that can be used to trac
   - [x] Recipes table
   - [x] Ingredients table
   - [x] Nutritional info table
-  - [x] Meal plans table
+  - [ ] Meal plans table
 - [ ] Create tRPC routers
   - [ ] User router
   - [ ] Recipe router
