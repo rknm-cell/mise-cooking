@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
+
 import {
   Form,
   FormControl,
@@ -60,6 +61,7 @@ export function LoginForm({
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("button pressed")
     setIsLoading(true);
 
     const { success, message } = await signIn(values.email, values.password);
@@ -115,7 +117,7 @@ export function LoginForm({
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input placeholder="m@example.com" {...field} />
+                            <Input placeholder="name@email.com" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

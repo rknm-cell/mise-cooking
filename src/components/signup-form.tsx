@@ -14,13 +14,13 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { signUp } from "~/server/users";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { authClient } from "~/lib/auth-client";
 import Link from "next/link";
+import { signUp } from "~/server/users";
 
 const formSchema = z.object({
   username: z.string().min(3),
@@ -72,7 +72,7 @@ export function SignupForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-xl">Create an account</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -84,6 +84,7 @@ export function SignupForm({
                     variant="outline"
                     className="w-full"
                     onClick={signInWithGoogle}
+                    disabled={isLoading}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                       <path
@@ -107,52 +108,46 @@ export function SignupForm({
                       <FormItem>
                         <FormLabel>Username</FormLabel>
                         <FormControl>
-                          <Input placeholder="Name" {...field} />
+                          <Input placeholder="Enter your username" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <div className="grid gap-2">
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="email@email.com"
-                              {...field}
-                              type="email"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <div className="flex flex-col"></div>
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Password</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="*******"
-                              {...field}
-                              type="password"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="email@example.com"
+                            {...field}
+                            type="email"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your password"
+                            {...field}
+                            type="password"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? (
                       <Loader2 className="size-4 animate-spin" />

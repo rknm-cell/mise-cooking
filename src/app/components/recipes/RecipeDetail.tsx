@@ -30,17 +30,22 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
       );
     });
   }
+  function handleNutrition(nutrients: string[]) {
+    return nutrients.map((nutrient, index) => {
+      return <p key={index}> {nutrient} </p>;
+    });
+  }
   function handleIngredients(ingredients: string[]) {
     return ingredients.map((ingredient, index) => {
       return <p key={index}> {ingredient} </p>;
     });
   }
   return (
-    <Card>
+    <Card className="w-175 bg-[#2aa68b]">
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>{nutrition}</CardDescription>
-        <CardDescription>Servings: {servings}</CardDescription>
+        <CardDescription className="text-zinc-700">{handleNutrition(nutrition)}</CardDescription>
+        <CardDescription className="text-zinc-700">Servings: {servings}</CardDescription>
       </CardHeader>
       <CardContent>{handleIngredients(ingredients)}</CardContent>
       <CardContent>{handleInstructions(instructions)}</CardContent>

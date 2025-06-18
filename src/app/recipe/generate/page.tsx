@@ -1,24 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import RecipeDetail from "../components/recipes/RecipeDetail";
-import { type RecipeSchema } from "~/server/db/schema";
+import RecipeDetail from "~/app/components/recipes/RecipeDetail";
+import { recipeObject, type RecipeSchema } from "~/server/db/schema";
+import { z } from "zod";
 
 export default function Page() {
   const [generation, setGeneration] = useState<RecipeSchema | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
+  const [recipeRequest, setRecipeRequest] = useState("");
   const [input, setInput] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
 
-  
+  const handleGenerateRecipe = (generation: RecipeSchema) => {
+    return <RecipeDetail recipe={generation} />;
+  };
   
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); 
     try {
       setIsLoading(true);
-      const response = await fetch("/api/chat", {
+      const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
