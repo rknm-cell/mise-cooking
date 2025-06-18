@@ -1,9 +1,6 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import { useActions } from "ai/rsc";
-import RecipeDetail from "./RecipeDetail";
-import { useEffect, useState } from "react";
 
 export default function ChatBot() {
   const { messages, input, handleInputChange, handleSubmit, status } = useChat({

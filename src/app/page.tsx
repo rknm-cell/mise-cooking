@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
+// import Link from "next/link";
 import ChatBot from "./components/ChatBot";
-import { useEffect, useState } from "react";
-import { useChat } from "@ai-sdk/react";
+// import { useEffect, useState } from "react";
+// import { useChat } from "@ai-sdk/react";
 
 export default function HomePage() {
   
