@@ -6,7 +6,7 @@ import { recipeObject, type RecipeSchema } from "~/server/db/schema";
 import { z } from "zod";
 
 export default function Page() {
-  const [generation, setGeneration] = useState();
+  const [generation, setGeneration] = useState<RecipeSchema | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [recipeRequest, setRecipeRequest] = useState("");
   const [input, setInput] = useState("");
@@ -17,19 +17,23 @@ export default function Page() {
   const handleGenerateRecipe = (generation: RecipeSchema) => {
     return <RecipeDetail recipe={generation} />;
   };
-  async function handleSubmit() {
+  
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); 
     try {
       setIsLoading(true);
       const response = await fetch("/api/chat", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           prompt: input,
         }),
       })
-      const recipeData: RecipeSchema = (await response.json()) as RecipeSchema;
-
-      setGeneration(recipeData)
-      console.log("recipedata: ",recipeData)
+      const recipeData: RecipeSchema = await response.json();
+      setGeneration(recipeData);
+      console.log("recipedata: ", recipeData);
       
     } catch (error) {
         const e = error as Error;

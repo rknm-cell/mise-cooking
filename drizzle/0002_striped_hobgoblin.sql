@@ -1,0 +1,1 @@
+ALTER TABLE "Recipe" ALTER COLUMN "nutrition" SET DATA TYPE varchar[];
