@@ -1,5 +1,5 @@
 import React from "react";
-import RecipeDetail from "~/app/components/RecipeDetail";
+import RecipeDetail from "~/app/components/recipes/RecipeDetail";
 import { getRecipeById } from "~/server/db/queries";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
