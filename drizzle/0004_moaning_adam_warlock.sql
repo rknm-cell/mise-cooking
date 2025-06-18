@@ -1,0 +1,1 @@
+ALTER TABLE "Recipe" ALTER COLUMN "id" SET DATA TYPE varchar;

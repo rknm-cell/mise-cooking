@@ -15,12 +15,12 @@ import {z} from "zod/v4"
 export const createTable = mysqlTableCreator((name) => `RecipeApp_${name}`);
 
 export const recipe = pgTable("Recipe", {
-  id: uuid("id").primaryKey().notNull(),
+  id: varchar("id").primaryKey().notNull(),
   name: varchar("name").notNull(),
   totalTime: varchar("total_time").notNull(),
   servings: integer("servings").notNull(),
-  ingredients: varchar("nutrition").array().notNull(),
-  instructions: varchar("nutrition").array().notNull(),
+  ingredients: varchar("ingredients").array().notNull(),
+  instructions: varchar("instructions").array().notNull(),
   storage: varchar("storage").notNull(),
   nutrition: varchar("nutrition").array().notNull(),
   createdAt: timestamp("createdAt").notNull(),
