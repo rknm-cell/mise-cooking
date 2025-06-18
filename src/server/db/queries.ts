@@ -2,7 +2,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
-import { uuid } from "drizzle-orm/pg-core";
 import { eq } from "drizzle-orm";
 
 const client = postgres(process.env.POSTGRES_URL!);
