@@ -54,17 +54,25 @@ export function LoginForm({
   });
 
   const signInWithGoogle = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/dashboard",
-    });
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+    } catch (error) {
+      console.error("Google signin error:", error);
+      toast.error("Failed to sign in with Google");
+    }
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("button pressed")
     setIsLoading(true);
 
-    const { success, message } = await signIn(values.email, values.password);
+    const result = await authClient.signIn.email({
+      email: values.email,
+      password: values.password,
+    });
 
     if (success) {
       toast.success(message as string);
@@ -93,6 +101,7 @@ export function LoginForm({
                     className="w-full"
                     type="button"
                     onClick={signInWithGoogle}
+                    disabled={isLoading}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                       <path
