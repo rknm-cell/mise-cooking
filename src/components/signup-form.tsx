@@ -14,13 +14,13 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { signUp } from "~/server/users";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { authClient } from "~/lib/auth-client";
 import Link from "next/link";
-import { signUp } from "~/server/users";
 
 const formSchema = z.object({
   username: z.string().min(3),
@@ -63,10 +63,15 @@ export function SignupForm({
   }
 
   const signInWithGoogle = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/dashboard",
-    });
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+      });
+    } catch (error) {
+      console.error("Google signin error:", error);
+      toast.error("Failed to sign in with Google");
+    }
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
