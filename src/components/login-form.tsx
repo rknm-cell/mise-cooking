@@ -74,12 +74,7 @@ export function LoginForm({
       password: values.password,
     });
 
-    if (success) {
-      toast.success(message as string);
-      router.push("/dashboard");
-    } else {
-      toast.error(message as string);
-    }
+    
 
     setIsLoading(false);
   }

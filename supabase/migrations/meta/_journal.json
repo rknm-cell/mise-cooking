@@ -8,6 +8,13 @@
       "when": 1750336578689,
       "tag": "0000_black_wonder_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750364214364,
+      "tag": "0001_happy_reavers",
+      "breakpoints": true
     }
   ]
 }
