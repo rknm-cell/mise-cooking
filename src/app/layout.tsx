@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { GoogleTagManager } from "@next/third-parties/google";
-import { TRPCProvider } from "~/trpc/client";
+import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
   title: "Mise",
@@ -23,7 +23,9 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <GoogleTagManager gtmId="GTM-XYZ" />
       
-        <body>{children}</body>
+        <body>
+        <TRPCReactProvider>{children}</TRPCReactProvider>
+      </body>
       
     </html>
   );
