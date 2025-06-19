@@ -7,7 +7,7 @@ import {
 import type { Recipe } from "~/server/db/schema";
 
 export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
-  const { name, nutrition } = recipe;
+  const { name, nutrition, description } = recipe;
 
   //add a router for id of recipe to redirect to recipedetails page
 
@@ -15,6 +15,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
     <Card className="w-1/2 m-4">
       <CardHeader>
         <CardTitle>{name}</CardTitle>
+        <CardDescription>{description}</CardDescription>
         <CardDescription>{nutrition.join(", ")}</CardDescription>
       </CardHeader>
     </Card>
