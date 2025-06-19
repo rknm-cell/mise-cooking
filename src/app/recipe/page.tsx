@@ -6,7 +6,7 @@ export default function Page() {
   const { data: recipes } = api.recipe.getAllRecipes.useQuery();
   
   
-  const recipeList = recipes || [];
+  const recipeList = recipes ?? [];
   
   return (
     <div className="flex flex-grid justify-center ">
