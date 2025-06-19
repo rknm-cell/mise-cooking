@@ -1,21 +1,22 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import type { Recipe } from "~/server/db/schema";
 
+export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
+  const { name, nutrition } = recipe;
 
-interface RecipeCard {
-  name: string;
-  nutrition: string[];
-}
+  //add a router for id of recipe to redirect to recipedetails page
 
-export const RecipeCard = ({ recipe }: { recipe: RecipeCard }) => {
-    const {name, nutrition } = recipe
-    return (
-
-        
-        <Card>
+  return (
+    <Card>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>{nutrition}</CardDescription>
+        <CardDescription>{nutrition.join(", ")}</CardDescription>
       </CardHeader>
     </Card>
-)
-}
+  );
+};
