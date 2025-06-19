@@ -12,7 +12,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
   //add a router for id of recipe to redirect to recipedetails page
 
   return (
-    <Card>
+    <Card className="w-1/2 m-4">
       <CardHeader>
         <CardTitle>{name}</CardTitle>
         <CardDescription>{nutrition.join(", ")}</CardDescription>
