@@ -9,7 +9,7 @@ export default function Page() {
   const recipeList = recipes || [];
   
   return (
-    <div>
+    <div className="flex flex-grid justify-center ">
       <h1>Recipes ({recipeList.length})</h1>
       {recipeList.length > 0 ? (
         recipeList.map((recipe, index) => (
