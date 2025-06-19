@@ -6,9 +6,13 @@ import { api } from "~/trpc/server";
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
   console.log(id)
-  const {data: recipe} = api.recipe.getRecipe.useQuery(id);
+  const recipe = await api.recipe.getRecipe(id);
+
+  console.log("recipe",recipe)
+  
   if (!recipe) {
     return <div>Recipe not found</div>;
   }
+  
   return <RecipeDetail recipe={recipe} />;
 }
