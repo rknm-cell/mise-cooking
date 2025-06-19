@@ -5,7 +5,7 @@ import * as schema from "./schema";
 import { eq } from "drizzle-orm";
 
 const client = postgres(process.env.POSTGRES_URL!);
-const db = drizzle(client, {schema});
+const db = drizzle(client, { schema });
 
 export async function saveRecipe({
   id,
@@ -17,7 +17,7 @@ export async function saveRecipe({
   storage,
   nutrition,
 }: {
-  id: string,
+  id: string;
   name: string;
   totalTime: string;
   servings: number;
@@ -48,13 +48,28 @@ export async function saveRecipe({
   }
 }
 
-export async function getRecipeById(id: string): Promise<schema.Recipe | undefined>{
+export async function getRecipeById(
+  id: string,
+): Promise<schema.Recipe | undefined> {
   try {
     const recipeDetail = await db.query.recipe.findFirst({
       where: eq(schema.recipe.id, id),
-    })
-    return recipeDetail
+    });
+    return recipeDetail;
   } catch (error) {
-    console.error(`Error fetching recipe ${id}`, error)
+    console.error(`Error fetching recipe ${id}`, error);
+  }
+}
+
+export async function getAllRecipes(): Promise<schema.Recipe[] | undefined> {
+  try {
+    const recipes = await db.query.recipe.findMany({
+      with: {
+        with: { recipe: true },
+      },
+    });
+    return recipes;
+  } catch (error) {
+    console.error(`Error fetching recipes: `, error);
   }
 }
