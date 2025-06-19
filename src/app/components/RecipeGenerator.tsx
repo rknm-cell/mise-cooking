@@ -30,6 +30,7 @@ export default function RecipeGenerator() {
           prompt: input,
         }),
       });
+      
       const recipeData: RecipeSchema = await response.json();
       setGeneration(recipeData);
       console.log("recipedata: ", recipeData);
