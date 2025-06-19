@@ -10,6 +10,7 @@ const db = drizzle(client, { schema });
 export async function saveRecipe({
   id,
   name,
+  description,
   totalTime,
   servings,
   ingredients,
@@ -19,6 +20,7 @@ export async function saveRecipe({
 }: {
   id: string;
   name: string;
+  description: string;
   totalTime: string;
   servings: number;
   ingredients: string[];
@@ -30,6 +32,7 @@ export async function saveRecipe({
     return await db.insert(schema.recipe).values({
       id,
       name,
+      description,
       totalTime,
       servings,
       ingredients,
