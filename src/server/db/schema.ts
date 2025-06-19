@@ -24,6 +24,7 @@ export const createTable = mysqlTableCreator((name) => `RecipeApp_${name}`);
 export const recipe = pgTable("Recipe", {
   id: varchar("id").primaryKey().notNull(),
   name: varchar("name").notNull(),
+  description: varchar("description").notNull(),
   totalTime: varchar("total_time").notNull(),
   servings: integer("servings").notNull(),
   ingredients: varchar("ingredients").array().notNull(),
@@ -38,6 +39,7 @@ export type Recipe = InferSelectModel<typeof recipe>;
 export const recipeObject = z.object({
   id: z.string(),
   name: z.string(),
+  description: z.string(),
   totalTime: z.string(),
   servings: z.number(),
   ingredients: z.array(z.string()),
