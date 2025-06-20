@@ -11,62 +11,47 @@ vi.mock("~/server/db", async (importActual) => {
           findFirst: vi.fn(),
         },
       },
-      insert: vi.fn(),
+      insert: vi.fn(() => ({
+        values: vi.fn(),
+      })),
     },
   };
 });
 
-import { getAllRecipes, getRecipeById } from "~/server/db/queries";
+import { getAllRecipes, getRecipeById, saveRecipe } from "~/server/db/queries";
 import { db } from "~/server/db";
-import type { Recipe, RecipeSchema } from "~/server/db/schema";
+import {type Recipe, type RecipeSchema } from "~/server/db/schema";
+import * as schema from "~/server/db/schema"
 
 describe("getAllRecipes", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
+  const mockRecipes: Recipe[] = [
+    {
+      id: "lo6QNhzdJ-5olh0oqIl7L",
+      name: "Southwestern Corn Salad",
+      description:
+        "A vibrant and flavorful corn salad with a southwestern twist, featuring black beans, bell peppers, and a zesty lime dressing. Perfect for potlucks!",
+      totalTime: "20 minutes",
+      servings: 8,
+      ingredients: ["4 cups fresh corn kernels (or 2 cans of corn, drained)"],
+      instructions: [
+        "In a large bowl, combine the corn, black beans, red bell pepper, green bell pepper, red onion, and cilantro.",
+      ],
+      storage:
+        "Store leftovers in an airtight container in the refrigerator for up to 3 days.",
+      nutrition: [
+        "Calories: 150 per serving",
+        "Protein: 6g",
+        "Carbohydrates: 25g",
+        "Fat: 5g",
+        "Fiber: 6g",
+      ],
+      createdAt: new Date(),
+    },
+  ];
   it("should return recipes when database has items", async () => {
-    const mockRecipes: Recipe[] = [
-      {
-        id: "lo6QNhzdJ-5olh0oqIl7L",
-        name: "Southwestern Corn Salad",
-        description:
-          "A vibrant and flavorful corn salad with a southwestern twist, featuring black beans, bell peppers, and a zesty lime dressing. Perfect for potlucks!",
-        totalTime: "20 minutes",
-        servings: 8,
-        ingredients: [
-          "4 cups fresh corn kernels (or 2 cans of corn, drained)",
-          "1 can (15 oz) black beans, rinsed and drained",
-          "1 red bell pepper, diced",
-          "1 green bell pepper, diced",
-          "1/2 red onion, finely chopped",
-          "1/4 cup fresh cilantro, chopped",
-          "1/4 cup lime juice",
-          "2 tablespoons olive oil",
-          "1 teaspoon cumin",
-          "1 teaspoon chili powder",
-          "Salt and pepper to taste",
-          "Optional: 1 avocado, diced (for serving)",
-        ],
-        instructions: [
-          "In a large bowl, combine the corn, black beans, red bell pepper, green bell pepper, red onion, and cilantro.",
-          "In a separate small bowl, whisk together the lime juice, olive oil, cumin, chili powder, salt, and pepper.",
-          "Pour the dressing over the corn mixture and toss gently to combine.",
-          "Taste and adjust seasoning if necessary.",
-          "If using, gently fold in the diced avocado just before serving to prevent browning.",
-          "Serve chilled or at room temperature.",
-        ],
-        storage:
-          "Store leftovers in an airtight container in the refrigerator for up to 3 days.",
-        nutrition: [
-          "Calories: 150 per serving",
-          "Protein: 6g",
-          "Carbohydrates: 25g",
-          "Fat: 5g",
-          "Fiber: 6g",
-        ],
-        createdAt: new Date(),
-      },
-    ];
     vi.mocked(db.query.recipe.findMany).mockResolvedValue(mockRecipes);
 
     const recipes = await getAllRecipes();
@@ -74,9 +59,6 @@ describe("getAllRecipes", () => {
     expect(recipes).toEqual(mockRecipes);
     expect(recipes).toHaveLength(1);
     expect(db.query.recipe.findMany).toHaveBeenCalled();
-
-    
-
   });
 });
 
@@ -87,45 +69,27 @@ describe("getRecipeById", () => {
 
   it("should return a recipe when found by id", async () => {
     const mockRecipe: Recipe = {
-        id: "lo6QNhzdJ-5olh0oqIl7L",
-        name: "Southwestern Corn Salad",
-        description:
-          "A vibrant and flavorful corn salad with a southwestern twist, featuring black beans, bell peppers, and a zesty lime dressing. Perfect for potlucks!",
-        totalTime: "20 minutes",
-        servings: 8,
-        ingredients: [
-          "4 cups fresh corn kernels (or 2 cans of corn, drained)",
-          "1 can (15 oz) black beans, rinsed and drained",
-          "1 red bell pepper, diced",
-          "1 green bell pepper, diced",
-          "1/2 red onion, finely chopped",
-          "1/4 cup fresh cilantro, chopped",
-          "1/4 cup lime juice",
-          "2 tablespoons olive oil",
-          "1 teaspoon cumin",
-          "1 teaspoon chili powder",
-          "Salt and pepper to taste",
-          "Optional: 1 avocado, diced (for serving)",
-        ],
-        instructions: [
-          "In a large bowl, combine the corn, black beans, red bell pepper, green bell pepper, red onion, and cilantro.",
-          "In a separate small bowl, whisk together the lime juice, olive oil, cumin, chili powder, salt, and pepper.",
-          "Pour the dressing over the corn mixture and toss gently to combine.",
-          "Taste and adjust seasoning if necessary.",
-          "If using, gently fold in the diced avocado just before serving to prevent browning.",
-          "Serve chilled or at room temperature.",
-        ],
-        storage:
-          "Store leftovers in an airtight container in the refrigerator for up to 3 days.",
-        nutrition: [
-          "Calories: 150 per serving",
-          "Protein: 6g",
-          "Carbohydrates: 25g",
-          "Fat: 5g",
-          "Fiber: 6g",
-        ],
-        createdAt: new Date(),
-      }
+      id: "lo6QNhzdJ-5olh0oqIl7L",
+      name: "Southwestern Corn Salad",
+      description:
+        "A vibrant and flavorful corn salad with a southwestern twist, featuring black beans, bell peppers, and a zesty lime dressing. Perfect for potlucks!",
+      totalTime: "20 minutes",
+      servings: 8,
+      ingredients: ["4 cups fresh corn kernels (or 2 cans of corn, drained)"],
+      instructions: [
+        "In a large bowl, combine the corn, black beans, red bell pepper, green bell pepper, red onion, and cilantro.",
+      ],
+      storage:
+        "Store leftovers in an airtight container in the refrigerator for up to 3 days.",
+      nutrition: [
+        "Calories: 150 per serving",
+        "Protein: 6g",
+        "Carbohydrates: 25g",
+        "Fat: 5g",
+        "Fiber: 6g",
+      ],
+      createdAt: new Date(),
+    };
 
     vi.mocked(db.query.recipe.findFirst).mockResolvedValue(mockRecipe);
 
@@ -144,5 +108,82 @@ describe("getRecipeById", () => {
 
     expect(db.query.recipe.findFirst).toHaveBeenCalledTimes(1);
     expect(result).toBeNull();
+  });
+});
+
+describe("saveRecipe", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should insert a recipe object", async () => {
+
+ const mockRecipe = {
+      id: "lo6QNhzdJ-5olh0oqIl7L",
+      name: "Southwestern Corn Salad",
+      description:
+        "A vibrant and flavorful corn salad with a southwestern twist, featuring black beans, bell peppers, and a zesty lime dressing. Perfect for potlucks!",
+      totalTime: "20 minutes",
+      servings: 8,
+      ingredients: ["4 cups fresh corn kernels (or 2 cans of corn, drained)"],
+      instructions: [
+        "In a large bowl, combine the corn, black beans, red bell pepper, green bell pepper, red onion, and cilantro.",
+      ],
+      storage:
+        "Store leftovers in an airtight container in the refrigerator for up to 3 days.",
+      nutrition: [
+        "Calories: 150 per serving",
+        "Protein: 6g",
+        "Carbohydrates: 25g",
+        "Fat: 5g",
+        "Fiber: 6g",
+      ],
+    };
+
+    const mockInsertResult = { success: true };
+    vi.mocked(db.insert).mockReturnValue({
+      values: vi.fn().mockResolvedValue(mockInsertResult),
+    } as any);
+
+    const result = await saveRecipe(mockRecipe);
+
+    expect(db.insert).toHaveBeenCalledWith(schema.recipe);
+    expect(result).toEqual(mockInsertResult);
+  });
+
+  it("should handle errors when saving recipe fails", async () => {
+    const mockRecipeData = {
+      id: "lo6QNhzdJ-5olh0oqIl7L",
+      name: "Southwestern Corn Salad",
+      description:
+        "A vibrant and flavorful corn salad with a southwestern twist, featuring black beans, bell peppers, and a zesty lime dressing. Perfect for potlucks!",
+      totalTime: "20 minutes",
+      servings: 8,
+      ingredients: ["4 cups fresh corn kernels (or 2 cans of corn, drained)"],
+      instructions: [
+        "In a large bowl, combine the corn, black beans, red bell pepper, green bell pepper, red onion, and cilantro.",
+      ],
+      storage:
+        "Store leftovers in an airtight container in the refrigerator for up to 3 days.",
+      nutrition: [
+        "Calories: 150 per serving",
+        "Protein: 6g",
+        "Carbohydrates: 25g",
+        "Fat: 5g",
+        "Fiber: 6g",
+      ],
+    };
+
+    const mockError = new Error("Database connection failed");
+    vi.mocked(db.insert).mockReturnValue({
+      values: vi.fn().mockRejectedValue(mockError),
+    } as any);
+
+    const result = await saveRecipe(mockRecipeData);
+
+    expect(result).toEqual({
+      success: false,
+      message: "Database connection failed",
+    });
   });
 });
