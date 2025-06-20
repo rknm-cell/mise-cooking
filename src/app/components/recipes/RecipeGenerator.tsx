@@ -51,7 +51,7 @@ export default function RecipeGenerator() {
               type="text"
               value={input}
               onChange={handleChange}
-              placeholder="What do you want?"
+              placeholder="What do you want to make?"
               className="flex-1 rounded-lg bg-zinc-500 px-4 py-2 text-white placeholder-white/50 focus:ring-2 focus:outline-none"
               disabled={isLoading}
             />
