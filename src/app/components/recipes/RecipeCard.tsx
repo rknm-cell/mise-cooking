@@ -13,7 +13,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
   //add a router for id of recipe to redirect to recipedetails page
 
   return (
-    <Link href={`/recipe/${id}`}>
+    <Link href={`/recipes/${id}`}>
       <Card className="h-full cursor-pointer transition-shadow hover:shadow-sm">
         <CardHeader>
           <CardTitle>{name}</CardTitle>
