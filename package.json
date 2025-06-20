@@ -36,6 +36,7 @@
     "@trpc/next": "^11.4.2",
     "@trpc/react-query": "^11.4.2",
     "@trpc/server": "^11.4.2",
+    "RecipeApp": ".",
     "ai": "^4.3.16",
     "better-auth": "^1.2.9",
     "class-variance-authority": "^0.7.1",
