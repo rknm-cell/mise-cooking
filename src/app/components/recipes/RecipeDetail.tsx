@@ -43,10 +43,11 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     });
   }
   return (
-    <Card className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 m-2 sm:m-4 hover:shadow-lg transition-shadow">
+    <Card className="w-full sm:w-1/2 lg:w-2/3 xl:w-1 m-2 sm:m-4 hover:shadow-lg transition-shadow">
       <CardHeader className="p-3 sm:p-4">
         <CardTitle className="text-lg sm:text-xl lg:text-2xl line-clamp-2">{name}</CardTitle>
         <CardDescription className="text-sm sm:text-base line-clamp-3">{description}</CardDescription>
+        <CardDescription className="text-sm sm:text-base line-clamp-3">{handleNutrition(nutrition)}</CardDescription>
       </CardHeader>
       <CardContent className="p-3 sm:p-4">
         <div className="space-y-2 text-sm sm:text-base">

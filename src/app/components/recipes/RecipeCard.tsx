@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Card,
   CardDescription,
@@ -7,17 +8,19 @@ import {
 import type { Recipe } from "~/server/db/schema";
 
 export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
-  const { name, nutrition, description } = recipe;
+  const { id, name, nutrition, description } = recipe;
 
   //add a router for id of recipe to redirect to recipedetails page
 
   return (
-    <Card className="w-1/2 m-4">
-      <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-        <CardDescription>{nutrition.join(", ")}</CardDescription>
-      </CardHeader>
-    </Card>
+    <Link href={`/recipe/${id}`}>
+      <Card className="h-full cursor-pointer transition-shadow hover:shadow-sm">
+        <CardHeader>
+          <CardTitle>{name}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+          <CardDescription>{nutrition.join(", ")}</CardDescription>
+        </CardHeader>
+      </Card>
+    </Link>
   );
 };

@@ -15,8 +15,6 @@ export default function RecipeGenerator() {
     setInput(event.target.value);
   };
 
-  
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
@@ -30,7 +28,7 @@ export default function RecipeGenerator() {
           prompt: input,
         }),
       });
-      
+
       const recipeData: RecipeSchema = await response.json();
       setGeneration(recipeData);
       console.log("recipedata: ", recipeData);
@@ -54,22 +52,21 @@ export default function RecipeGenerator() {
               value={input}
               onChange={handleChange}
               placeholder="What do you want?"
-              className="flex-1 rounded-lg bg-zinc-500 px-4 py-2 text-white placeholder-white/50 focus:ring-2 focus:ring-[hsl(280,100%,70%)] focus:outline-none"
+              className="flex-1 rounded-lg bg-zinc-500 px-4 py-2 text-white placeholder-white/50 focus:ring-2 focus:outline-none"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="rounded-lg bg-[hsl(136,11%,33%)] px-4 py-2 font-semibold text-white hover:bg-[hsl(280,100%,60%)] focus:ring-2 focus:ring-[hsl(280,100%,70%)] focus:outline-none disabled:opacity-50 disabled:hover:bg-[hsl(280,100%,70%)]"
+              className="rounded-lg bg-[hsl(136,11%,33%)] px-4 py-2 font-semibold text-white  focus:outline-none disabled:opacity-50 "
             >
               Send
             </button>
           </form>
           {isLoading ? "Loading..." : <> </>}
-
         </div>
       </div>
-          {generation && <RecipeDetail recipe={generation} />}
+      {generation && <RecipeDetail recipe={generation} />}
     </>
   );
 }
