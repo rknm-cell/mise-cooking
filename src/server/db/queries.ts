@@ -1,11 +1,7 @@
 "server-only";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { db } from "~/server/db";
 import * as schema from "./schema";
 import { eq } from "drizzle-orm";
-
-const client = postgres(process.env.DATABASE_URL!);
-const db = drizzle(client, { schema });
 
 export async function saveRecipe({
   id,
