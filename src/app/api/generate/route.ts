@@ -7,8 +7,7 @@ import { saveRecipe } from "~/server/db/queries";
 import { z } from "zod";
 
 
-//RECIPE GENERATOR
-//Unleash later
+
 export async function POST(req: Request) {
   try {
     const {prompt}: {prompt: string} = await req.json();
