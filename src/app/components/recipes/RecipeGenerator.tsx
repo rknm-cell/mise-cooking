@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import RecipeDetail from "~/app/components/recipes/RecipeDetail";
 import { Progress } from "~/components/ui/progress";
-import { type RecipeSchema } from "~/server/db/schema";
+import { recipe, type RecipeSchema } from "~/server/db/schema";
 
 export default function RecipeGenerator() {
   const [generation, setGeneration] = useState<RecipeSchema | undefined>(
@@ -13,21 +13,20 @@ export default function RecipeGenerator() {
   const [input, setInput] = useState("");
   const [progress, setProgress] = useState(0);
   const totalDuration = 10000;
-  const updateInterval = 100
+  const updateInterval = 100;
 
   useEffect(() => {
-    const increment =(100/ totalDuration) * updateInterval
+    const increment = (100 / totalDuration) * updateInterval;
     const timer = setInterval(() => {
       setProgress((prevProgress) => {
-        const newProgress = prevProgress + increment
+        const newProgress = prevProgress + increment;
         if (newProgress >= 100) {
-          clearInterval(timer)
-          return 100
+          clearInterval(timer);
+          return 100;
         }
-        return newProgress
-      })
-    }, updateInterval)
-  
+        return newProgress;
+      });
+    }, updateInterval);
   }, [isLoading]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +36,9 @@ export default function RecipeGenerator() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
+      setGeneration(undefined)
       setIsLoading(true);
+      setProgress(0);
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
@@ -51,6 +52,7 @@ export default function RecipeGenerator() {
       const recipeData: RecipeSchema = await response.json();
       setGeneration(recipeData);
       console.log("recipedata: ", recipeData);
+      setIsLoading(false);
     } catch (error) {
       const e = error as Error;
       return {
@@ -58,7 +60,6 @@ export default function RecipeGenerator() {
         message: e.message || "An unknown error occurred.",
       };
     }
-    setIsLoading(false);
   }
 
   return (
@@ -71,24 +72,24 @@ export default function RecipeGenerator() {
               value={input}
               onChange={handleChange}
               placeholder="What do you want to make?"
-              className="flex-1 rounded-lg bg-zinc-500 px-4 py-2 text-white placeholder-white/50 focus:ring-2 focus:outline-none"
+              className="flex-1 rounded-lg bg-zinc-500 px-4 py-2 text-white placeholder-white/50"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="rounded-lg bg-[hsl(136,11%,33%)] px-4 py-2 font-semibold text-white focus:outline-none disabled:opacity-50"
+              className="rounded-lg bg-[hsl(136,11%,33%)] px-4 py-2 font-semibold text-white disabled:opacity-50"
             >
               Send
             </button>
           </form>
         </div>
-          {isLoading ? (
-            <Progress value={progress} className="w-[100%]" />
-          ) : (
-            <> </>
-          )}
-      {/* <Progress value={progress} className="w-[100%]"/> */}
+        {isLoading && !generation ? (
+          <Progress value={progress} className="w-[100%]" />
+        ) : (
+          <> </>
+        )}
+        {/* <Progress value={progress} className="w-[100%]"/> */}
       </div>
       {generation && <RecipeDetail recipe={generation} />}
     </>

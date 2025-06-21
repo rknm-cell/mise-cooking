@@ -6,7 +6,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import NavBar from "./components/NavBar";
 
 export const metadata: Metadata = {
-  title: "Meez",
+  title: "Mise",
   description: "An AI powered recipe app",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
