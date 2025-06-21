@@ -47,9 +47,7 @@ export async function saveRecipe({
   }
 }
 
-export async function getRecipeById(
-  id: string,
-): Promise<schema.Recipe | null> {
+export async function getRecipeById(id: string): Promise<schema.Recipe | null> {
   try {
     const recipeDetail = await db.query.recipe.findFirst({
       where: eq(schema.recipe.id, id),
@@ -68,5 +66,24 @@ export async function getAllRecipes(): Promise<schema.Recipe[]> {
   } catch (error) {
     console.error(`Error fetching recipes: `, error);
     return [];
+  }
+}
+
+export async function getBookmarks(userId: string): Promise<schema.Bookmark[] | null> {
+  try {
+    const bookmarks = await db.select().from(schema.bookmark).where(eq(schema.bookmark.userId, userId));
+    return bookmarks || [];
+  } catch (error) {
+    console.error(`Error fetching bookmarks: `, error);
+    return [];
+  }
+}
+
+export async function saveBookmark(userId: string, recipeId: string): Promise<schema.Bookmark>{
+  try{
+    return await db.insert(schema.bookmark).values({userId, recipeId});
+  } catch (error) {
+    console.error(`Error saving bookmark: `, error)
+    return null;
   }
 }
