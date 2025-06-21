@@ -20,8 +20,16 @@ interface RecipeDetails {
 }
 
 const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
-  const { name, description, servings, ingredients, instructions, storage, nutrition, totalTime } =
-    recipe;
+  const {
+    name,
+    description,
+    servings,
+    ingredients,
+    instructions,
+    storage,
+    nutrition,
+    totalTime,
+  } = recipe;
   console.log(nutrition);
   function handleInstructions(instructions: string[]) {
     return instructions.map((instruction, index) => {
@@ -43,24 +51,35 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     });
   }
   return (
-    <Card className="w-full  lg:w-3/4 xl:w-3 m:w-1/4 sm:m-4 hover:shadow-lg transition-shadow">
-      <CardHeader className="p-3 sm:p-4">
-        <CardTitle className="text-lg sm:text-xl lg:text-2xl line-clamp-2">{name}</CardTitle>
-        <CardDescription className="text-sm sm:text-base line-clamp-3">{description}</CardDescription>
-        <CardDescription className="text-sm sm:text-base line-clamp-3">{handleNutrition(nutrition)}</CardDescription>
-      </CardHeader>
-      <CardContent className="p-3 sm:p-4">
-        <div className="space-y-2 text-sm sm:text-base">
-          <p><strong>Time:</strong> {totalTime}</p>
-          <p><strong>Servings:</strong> {servings}</p>
-        </div>
-      </CardContent>
-      <CardContent>{handleIngredients(ingredients)}</CardContent>
-      <CardContent>{handleInstructions(instructions)}</CardContent>
-      <CardFooter>
-        <p>{storage}</p>
-      </CardFooter>
-    </Card>
+    
+      <Card className="w-full sm:m-4 lg:w-3/4 flex">
+        <CardHeader className="">
+          <CardTitle className="text-lg sm:text-xl lg:text-2xl">
+            {name}
+          </CardTitle>
+          <CardDescription className="text-sm sm:text-base">
+            {description}
+          </CardDescription>
+          <CardDescription className="h-30 text-sm sm:text-base">
+            {handleNutrition(nutrition)}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-3 sm:p-4">
+          <div className="space-y-2 text-sm sm:text-base">
+            <p>
+              <strong>Time:</strong> {totalTime}
+            </p>
+            <p>
+              <strong>Servings:</strong> {servings}
+            </p>
+          </div>
+        </CardContent>
+        <CardContent>{handleIngredients(ingredients)}</CardContent>
+        <CardContent>{handleInstructions(instructions)}</CardContent>
+        <CardFooter>
+          <p>{storage}</p>
+        </CardFooter>
+      </Card>
   );
 };
 export default RecipeDetail;
