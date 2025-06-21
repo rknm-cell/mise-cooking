@@ -19,9 +19,7 @@ export default function HomePage() {
 
         <RecipeGenerator />
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          {/* <RecipeDetail recipe={recipe} /> */}
-        </div>
+        
       </div>
     </main>
   );

@@ -8,7 +8,7 @@ export default function Page() {
   const recipeList = recipes ?? [];
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="mx-auto p-4 bg-gradient-to-b from-[#1d7b86] to-[#426b70]">
       <h1 className="text-3xl font-bold mb-6 text-center">Recipes {recipeList.length}</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {recipeList.length > 0 ? (
