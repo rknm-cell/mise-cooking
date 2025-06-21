@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RecipeDetail from "~/app/components/recipes/RecipeDetail";
-import { recipeObject, type RecipeSchema } from "~/server/db/schema";
-import { z } from "zod";
+import { Progress } from "~/components/ui/progress";
+import { type RecipeSchema } from "~/server/db/schema";
 
 export default function RecipeGenerator() {
   const [generation, setGeneration] = useState<RecipeSchema | undefined>(
@@ -11,6 +11,25 @@ export default function RecipeGenerator() {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState("");
+  const [progress, setProgress] = useState(0);
+  const totalDuration = 10000;
+  const updateInterval = 100
+
+  useEffect(() => {
+    const increment =(100/ totalDuration) * updateInterval
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => {
+        const newProgress = prevProgress + increment
+        if (newProgress >= 100) {
+          clearInterval(timer)
+          return 100
+        }
+        return newProgress
+      })
+    }, updateInterval)
+  
+  }, [isLoading]);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
@@ -44,7 +63,7 @@ export default function RecipeGenerator() {
 
   return (
     <>
-      <div className="flex h-[100px] w-full max-w-2xl flex-col rounded-xl bg-zinc-200 p-4">
+      <div className="flex h-[100px] w-full max-w-2xl flex-col rounded-xl bg-[#428a93] p-4">
         <div className="mb-4 flex-1 overflow-y-auto">
           <form onSubmit={handleSubmit} className="flex gap-2">
             <input
@@ -58,13 +77,18 @@ export default function RecipeGenerator() {
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="rounded-lg bg-[hsl(136,11%,33%)] px-4 py-2 font-semibold text-white  focus:outline-none disabled:opacity-50 "
+              className="rounded-lg bg-[hsl(136,11%,33%)] px-4 py-2 font-semibold text-white focus:outline-none disabled:opacity-50"
             >
               Send
             </button>
           </form>
-          {isLoading ? "Loading..." : <> </>}
         </div>
+          {isLoading ? (
+            <Progress value={progress} className="w-[100%]" />
+          ) : (
+            <> </>
+          )}
+      {/* <Progress value={progress} className="w-[100%]"/> */}
       </div>
       {generation && <RecipeDetail recipe={generation} />}
     </>

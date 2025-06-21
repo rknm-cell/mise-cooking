@@ -2,7 +2,7 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import { mysqlTableCreator } from "drizzle-orm/mysql-core";
-import type { InferSelectModel } from "drizzle-orm";
+import { relations, type InferSelectModel } from "drizzle-orm";
 import {
   integer,
   text,
@@ -10,6 +10,9 @@ import {
   timestamp,
   varchar,
   boolean,
+  foreignKey,
+  serial,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { z } from "zod/v4";
 
@@ -66,6 +69,41 @@ export const user = pgTable("user", {
     .notNull(),
 });
 
+export const userRecipes = relations(user, ({ many }) => ({
+  recipes: many(recipe),
+  bookmarks: many(bookmark),
+}));
+
+export const bookmark = pgTable(
+  "bookmarks",
+  {
+    userId: varchar("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    recipeId: varchar("recipe_id")
+      .notNull()
+      .references(() => recipe.id, { onDelete: "cascade" }),
+    bookmarkedAt: timestamp("bookmarked_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.recipeId] })],
+);
+
+export type Bookmark = z.infer<typeof bookmark>
+
+export const bookmarksRelations = relations(bookmark,({one}) => ({
+  user: one(user, {
+    fields: [bookmark.userId],
+    references: [user.id],
+  }),
+  recipe: one(recipe, {
+    fields: [bookmark.recipeId],
+    references: [recipe.id]
+  })
+}))
+
+
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -110,4 +148,4 @@ export const verification = pgTable("verification", {
   ),
 });
 
-export const schema = {user, session, account, verification}
+export const schema = { user, session, account, verification };
