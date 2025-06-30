@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import RecipeDetail from "~/app/components/recipes/RecipeDetail";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { Progress } from "~/components/ui/progress";
 import { recipe, type RecipeSchema } from "~/server/db/schema";
 
@@ -67,21 +69,21 @@ export default function RecipeGenerator() {
       <div className="flex h-[100px] w-full max-w-2xl flex-col rounded-xl bg-[#428a93] p-4">
         <div className="mb-4 flex-1 overflow-y-auto">
           <form onSubmit={handleSubmit} className="flex gap-2">
-            <input
+            <Input
               type="text"
               value={input}
               onChange={handleChange}
               placeholder="What do you want to make?"
-              className="flex-1 rounded-lg bg-zinc-500 px-4 py-2 text-white placeholder-white/50"
+              className="flex-1 rounded-lg bg-zinc-500 px-4 py-2 text-white focus:outline-none focus:ring-0"
               disabled={isLoading}
             />
-            <button
+            <Button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="rounded-lg bg-[hsl(136,11%,33%)] px-4 py-2 font-semibold text-white disabled:opacity-50"
+              className="rounded-lg bg-[#fcf45a]/70 px-4 py-2 font-semibold text-black hover:bg-[#fcf45a] disabled:opacity-50"
             >
               Send
-            </button>
+            </Button>
           </form>
         </div>
         {isLoading && !generation ? (

@@ -7,8 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { motion } from "motion/react";
 
 interface RecipeDetails {
+  id: string;
   name: string;
   description: string;
   servings: number;
@@ -21,6 +23,7 @@ interface RecipeDetails {
 
 const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
   const {
+    id,
     name,
     description,
     servings,
@@ -51,8 +54,8 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     });
   }
   return (
-    
-      <Card className="w-full sm:m-4 lg:w-3/4 flex">
+    <motion.div layoutId={`recipe-card-${id}`}>
+      <Card className="flex w-full sm:m-4 lg:w-3/4">
         <CardHeader className="">
           <CardTitle className="text-lg sm:text-xl lg:text-2xl">
             {name}
@@ -80,6 +83,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           <p>{storage}</p>
         </CardFooter>
       </Card>
+    </motion.div>
   );
 };
 export default RecipeDetail;
