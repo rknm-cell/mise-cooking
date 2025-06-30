@@ -1,22 +1,43 @@
+"use client"
 import React from "react";
 import RecipeDetail from "~/app/components/recipes/RecipeDetail";
-import { getRecipeById } from "~/server/db/queries";
-import { api } from "~/trpc/server";
+import { api } from "~/trpc/react";
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const { id } = await props.params;
-  console.log(id);
-  const recipe = await api.recipe.getRecipe(id);
+export default function Page({ params }: { params: { id: string } }) {
+  const { id } = params
+  
+  const { data: recipe, isLoading, error } = api.recipe.getRecipe.useQuery(id, {
+    // This will use prefetched data if available
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-  console.log("recipe", recipe);
+  if (isLoading) {
+    return (
+      <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col">
+        <div className="text-white">Loading recipe...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col">
+        <div className="text-white">Error loading recipe: {error.message}</div>
+      </div>
+    );
+  }
 
   if (!recipe) {
-    return <div>Recipe not found</div>;
+    return (
+      <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col">
+        <div className="text-white">Recipe not found</div>
+      </div>
+    );
   }
 
   return (
-    <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col ">
-      <RecipeDetail recipe={recipe} />;
+    <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col">
+      <RecipeDetail recipe={recipe} />
     </div>
   );
 }
