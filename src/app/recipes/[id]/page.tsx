@@ -1,10 +1,10 @@
-
+"use client"
 import React from "react";
 import RecipeDetail from "~/app/components/recipes/RecipeDetail";
 import { api } from "~/trpc/react";
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const { id } = await props.params
+export default function Page({ params }: { params: { id: string } }) {
+  const { id } = params
   
   const { data: recipe, isLoading, error } = api.recipe.getRecipe.useQuery(id, {
     // This will use prefetched data if available
