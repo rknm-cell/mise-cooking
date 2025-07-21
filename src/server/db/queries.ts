@@ -1,7 +1,9 @@
 "server-only";
+
 import { and, eq, inArray } from "drizzle-orm";
 import { db } from "~/server/db";
 import * as schema from "./schema";
+
 
 export async function saveRecipe({
   id,
@@ -62,7 +64,9 @@ export async function getRecipeById(id: string): Promise<schema.Recipe | null> {
 export async function getAllRecipes(): Promise<schema.Recipe[]> {
   try {
     const recipes = await db.query.recipe.findMany();
+
     return recipes as schema.Recipe[] || [];
+
   } catch (error) {
     console.error(`Error fetching recipes: `, error);
     return [];
@@ -78,6 +82,7 @@ export async function getBookmarks(userId: string): Promise<schema.Bookmark[] | 
     return [];
   }
 }
+
 
 export async function saveBookmark(userId: string, recipeId: string): Promise<{ success: boolean; message?: string }> {
   try {
@@ -306,5 +311,6 @@ export async function clearCompletedShoppingItems(userId: string): Promise<{ suc
   } catch (error) {
     console.error(`Error clearing completed shopping items: `, error);
     return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+
   }
 }

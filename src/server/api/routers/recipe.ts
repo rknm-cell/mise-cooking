@@ -12,11 +12,12 @@ import {
 
 export const recipeRouter = createTRPCRouter({
   // Recipe queries
+
   getAllRecipes: publicProcedure.query(async () => {
     const allRecipes = await getAllRecipes();
     return allRecipes;
   }),
-  
+
   getRecipe: publicProcedure.input(z.string()).query(async (opts) => {
     const { input } = opts;
     const recipe = await getRecipeById(input)
@@ -62,4 +63,5 @@ export const recipeRouter = createTRPCRouter({
       const result = await isBookmarked(userId, recipeId);
       return result;
     }),
+
 });
