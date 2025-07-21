@@ -1,0 +1,62 @@
+# Project Specification: AI-Powered Recipe and Meal Planning App
+
+## Overview
+A web application where users generate, share, and review AI-created recipes. Recipes are generated via gpt-4o-mini based on user prompts, include nutritional data, and are stored in a shared database. The app supports user reviews and rate limiting, with paid subscriptions unlocking higher usage.
+
+## Core Features
+
+1. **AI Recipe Generation**
+   - Users submit prompts; recipes are generated using gpt-4o-mini.
+   - Recipes include: name, description, prep/cook time, servings, ingredients (with measurements), instructions, storage info, and nutritional data.
+
+2. **Recipe Database**
+   - All recipes are saved and visible to all users.
+   - Users can browse, search, and filter recipes.
+
+3. **Review System**
+   - Users can leave a written review and indicate "liked" or "didn't like" for each recipe.
+   - Reviews are visible to all users.
+
+4. **Ingredient & Shopping List Management**
+   - Users can generate shopping lists from recipe ingredients (local only).
+
+5. **User Management & Access**
+   - Authentication via Better Auth (already configured).
+   - No special user roles; all users have the same experience.
+
+6. **Rate Limiting & Subscriptions**
+   - Free users have limited recipe generations per period.
+   - Paid users (managed via Stripe subscriptions) get higher limits.
+
+7. **Internationalization**
+   - English is primary; Spanish support is a stretch goal for the future.
+
+8. **No Notifications**
+   - No in-app or email notifications at this stage.
+
+## Technical Stack
+
+- **Frontend:** Next.js, TypeScript, Tailwind CSS
+- **Backend/API:** tRPC, Drizzle ORM or Prisma, Supabase
+- **Authentication:** Better Auth
+- **Payments:** Stripe integration for subscriptions
+- **AI Integration:** gpt-4o-mini (OpenAI SDK)
+- **Testing:** Cypress
+- **Error Tracking:** Sentry
+
+## Next Steps
+
+1. **Feature Planning:**  
+   Break down the above features into actionable tasks or tickets.
+
+2. **Database Schema:**  
+   Design tables for users, recipes, reviews, and subscription status.
+
+3. **Stripe Integration:**  
+   Implement subscription logic and UI for paid features.
+
+4. **Rate Limiting:**  
+   Add logic to enforce usage limits for free and paid users.
+
+5. **Internationalization:**  
+   Set up i18n infrastructure for future Spanish support.
