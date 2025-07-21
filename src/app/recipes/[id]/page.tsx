@@ -3,15 +3,21 @@ import React from "react";
 import RecipeDetail from "~/app/components/recipes/RecipeDetail";
 import { api } from "~/trpc/react";
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const [id, setId] = React.useState<string | null>(null);
   
-  const { data: recipe, isLoading, error } = api.recipe.getRecipe.useQuery(id, {
-    // This will use prefetched data if available
+  React.useEffect(() => {
+    params.then((resolvedParams) => {
+      setId(resolvedParams.id);
+    });
+  }, [params]);
+
+  const { data: recipe, isLoading, error } = api.recipe.getRecipe.useQuery(id!, {
+    enabled: !!id,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  if (isLoading) {
+  if (!id || isLoading) {
     return (
       <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col">
         <div className="text-white">Loading recipe...</div>
