@@ -15,6 +15,13 @@
       "when": 1750364214364,
       "tag": "0001_happy_reavers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1753127617450,
+      "tag": "0002_great_lady_vermin",
+      "breakpoints": true
     }
   ]
 }
