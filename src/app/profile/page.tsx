@@ -52,13 +52,15 @@ export default function ProfilePage() {
       setIsLoading(true);
       const session = await authClient.getSession();
       
-      if (session?.user) {
+      // Check if we have a valid session with user data
+      if ('user' in session) {
+        const user = session.user as any; // Type assertion for better-auth compatibility
         setUser({
-          id: session.user.id,
-          name: session.user.name || "User",
-          email: session.user.email || "",
-          image: session.user.image,
-          createdAt: session.user.createdAt || new Date().toISOString(),
+          id: user.id,
+          name: user.name || "User",
+          email: user.email || "",
+          image: user.image,
+          createdAt: user.createdAt || new Date().toISOString(),
         });
 
         // Load cooking history and viewed recipes

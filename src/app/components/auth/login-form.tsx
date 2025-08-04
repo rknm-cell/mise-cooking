@@ -74,11 +74,12 @@ export function LoginForm({
         password: values.password,
       });
 
-      if (result.success) {
+      // Check if we have user data (successful sign in)
+      if ('user' in result) {
         toast.success("Signed in successfully!");
         router.push("/dashboard");
       } else {
-        toast.error(result.error || "Invalid email or password");
+        toast.error("Invalid email or password");
       }
     } catch (error) {
       console.error("Signin error:", error);

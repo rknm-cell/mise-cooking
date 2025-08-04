@@ -7,7 +7,9 @@ const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
 const MAX_ATTEMPTS = 5; // 5 attempts per window
 
 export function authRateLimit(req: NextRequest) {
-  const ip = req.ip || req.headers.get("x-forwarded-for") || "unknown";
+  const ip = req.headers.get("x-forwarded-for") || 
+             req.headers.get("x-real-ip") || 
+             "unknown";
   const now = Date.now();
   
   const attempts = authAttempts.get(ip);

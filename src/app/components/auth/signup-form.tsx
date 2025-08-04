@@ -81,11 +81,12 @@ export function SignupForm({
         name: values.name,
       });
 
-      if (result.success) {
+      // Check if we have user data (successful sign up)
+      if ('user' in result) {
         toast.success("Account created successfully!");
         router.push("/dashboard");
       } else {
-        toast.error(result.error || "Failed to create account");
+        toast.error("Failed to create account");
       }
     } catch (error) {
       console.error("Signup error:", error);

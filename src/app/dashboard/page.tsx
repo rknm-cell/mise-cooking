@@ -28,9 +28,24 @@ export default function Dashboard() {
   const checkAuth = async () => {
     try {
       const currentSession = await authClient.getSession();
-      setSession(currentSession);
+      
+      // Check if we have a valid session with user data
+      if ('user' in currentSession) {
+        const user = currentSession.user as any; // Type assertion for better-auth compatibility
+        setSession({
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image || undefined,
+          }
+        });
+      } else {
+        setSession(null);
+      }
     } catch (error) {
       console.error("Auth check error:", error);
+      setSession(null);
     } finally {
       setIsLoading(false);
     }

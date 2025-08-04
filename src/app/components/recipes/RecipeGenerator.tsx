@@ -81,10 +81,8 @@ export default function RecipeGenerator() {
       const recipeData: RecipeSchema = await response.json();
       setGeneration(recipeData);
       
-      // Update conversation history with modification context
-      const assistantMessage = recipeData.isModification 
-        ? `Modified recipe: ${recipeData.name} - ${recipeData.description}`
-        : `Generated recipe: ${recipeData.name} - ${recipeData.description}`;
+      // Update conversation history
+      const assistantMessage = `Generated recipe: ${recipeData.name} - ${recipeData.description}`;
       setConversationHistory(prev => [
         ...prev,
         { role: 'user', content: userMessage },
