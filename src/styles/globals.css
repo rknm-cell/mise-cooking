@@ -62,6 +62,78 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Mise Custom Colors */
+  --color-mise-ocean-50: #f0f9fa;
+  --color-mise-ocean-100: #ccf0f3;
+  --color-mise-ocean-200: #99e1e7;
+  --color-mise-ocean-300: #66d2db;
+  --color-mise-ocean-400: #33c3cf;
+  --color-mise-ocean-500: #1d7b86;
+  --color-mise-ocean-600: #1a6f79;
+  --color-mise-ocean-700: #17636c;
+  --color-mise-ocean-800: #14575f;
+  --color-mise-ocean-900: #114b52;
+  --color-mise-ocean-950: #0e3f45;
+  
+  --color-mise-yellow-50: #fefef9;
+  --color-mise-yellow-100: #fefdf2;
+  --color-mise-yellow-200: #fefbe6;
+  --color-mise-yellow-300: #fdf9d9;
+  --color-mise-yellow-400: #fdf7cc;
+  --color-mise-yellow-500: #fcf45a;
+  --color-mise-yellow-600: #e3db51;
+  --color-mise-yellow-700: #cac248;
+  --color-mise-yellow-800: #b1a93f;
+  --color-mise-yellow-900: #989036;
+  --color-mise-yellow-950: #7f772d;
+  
+  --color-mise-oceanLight-50: #f8fbfc;
+  --color-mise-oceanLight-100: #eef5f6;
+  --color-mise-oceanLight-200: #ddebf0;
+  --color-mise-oceanLight-300: #cce1ea;
+  --color-mise-oceanLight-400: #bbd7e4;
+  --color-mise-oceanLight-500: #426b70;
+  --color-mise-oceanLight-600: #3b6065;
+  --color-mise-oceanLight-700: #34555a;
+  --color-mise-oceanLight-800: #2d4a4f;
+  --color-mise-oceanLight-900: #263f44;
+  --color-mise-oceanLight-950: #1f3439;
+  
+  --color-mise-oceanMedium-50: #f0f8f9;
+  --color-mise-oceanMedium-100: #d9edf0;
+  --color-mise-oceanMedium-200: #b3dbe1;
+  --color-mise-oceanMedium-300: #8dc9d2;
+  --color-mise-oceanMedium-400: #67b7c3;
+  --color-mise-oceanMedium-500: #428a93;
+  --color-mise-oceanMedium-600: #3b7c84;
+  --color-mise-oceanMedium-700: #346e75;
+  --color-mise-oceanMedium-800: #2d6066;
+  --color-mise-oceanMedium-900: #265257;
+  --color-mise-oceanMedium-950: #1f4448;
+  
+  /* Semantic Colors */
+  --color-brand-primary: #1d7b86;
+  --color-brand-secondary: #426b70;
+  --color-brand-accent: #fcf45a;
+  --color-brand-surface: #428a93;
+  
+  /* Status Colors */
+  --color-status-success-light: #dcfce7;
+  --color-status-success-main: #22c55e;
+  --color-status-success-dark: #166534;
+  
+  --color-status-error-light: #fef2f2;
+  --color-status-error-main: #ef4444;
+  --color-status-error-dark: #dc2626;
+  
+  --color-status-warning-light: #fef3c7;
+  --color-status-warning-main: #f59e0b;
+  --color-status-warning-dark: #d97706;
+  
+  --color-status-info-light: #dbeafe;
+  --color-status-info-main: #3b82f6;
+  --color-status-info-dark: #1d4ed8;
 }
 
 :root {
