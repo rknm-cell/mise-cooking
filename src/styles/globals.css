@@ -65,38 +65,53 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.823);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.705 0.015 286.067);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-primary: oklch(0.21 0.006 285.885);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.705 0.015 286.067);
+  /* Mise Brand Colors */
+  --mise-ocean-50: #f0f9fa;
+  --mise-ocean-100: #ccf0f3;
+  --mise-ocean-200: #99e1e7;
+  --mise-ocean-300: #66d2db;
+  --mise-ocean-400: #33c3cf;
+  --mise-ocean-500: #1d7b86;
+  --mise-ocean-600: #1a6f79;
+  --mise-ocean-700: #17636c;
+  --mise-ocean-800: #14575f;
+  --mise-ocean-900: #114b52;
+  --mise-ocean-950: #0e3f45;
+
+  --mise-yellow-50: #fefef9;
+  --mise-yellow-100: #fefdf2;
+  --mise-yellow-200: #fefbe6;
+  --mise-yellow-300: #fdf9d9;
+  --mise-yellow-400: #fdf7cc;
+  --mise-yellow-500: #fcf45a;
+  --mise-yellow-600: #e3db51;
+  --mise-yellow-700: #cac248;
+  --mise-yellow-800: #b1a93f;
+  --mise-yellow-900: #989036;
+  --mise-yellow-950: #7f772d;
+
+  /* Semantic Colors */
+  --brand-primary: #1d7b86;
+  --brand-secondary: #426b70;
+  --brand-accent: #fcf45a;
+  --brand-surface: #428a93;
+
+  /* Status Colors */
+  --status-success-light: #dcfce7;
+  --status-success-main: #22c55e;
+  --status-success-dark: #166534;
+  
+  --status-error-light: #fef2f2;
+  --status-error-main: #ef4444;
+  --status-error-dark: #dc2626;
+  
+  --status-warning-light: #fef3c7;
+  --status-warning-main: #f59e0b;
+  --status-warning-dark: #d97706;
+  
+  --status-info-light: #dbeafe;
+  --status-info-main: #3b82f6;
+  --status-info-dark: #1d4ed8;
 }
 
 .dark {
