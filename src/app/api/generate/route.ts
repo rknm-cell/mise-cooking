@@ -6,32 +6,61 @@ import { nanoid } from "nanoid";
 import { saveRecipe } from "~/server/db/queries";
 import { z } from "zod";
 
-
+interface ConversationMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 export async function POST(req: Request) {
   try {
-    const {prompt}: {prompt: string} = await req.json();
-    console.log("prompt: ", prompt)
+    const {prompt, conversationHistory = []}: {prompt: string, conversationHistory?: ConversationMessage[]} = await req.json();
+    console.log("prompt: ", prompt);
+    console.log("conversationHistory: ", conversationHistory);
+    
+    // Build context-aware prompt
+    let contextPrompt = prompt;
+    if (conversationHistory && conversationHistory.length > 0) {
+      // Create a summary of the conversation for context
+      const conversationSummary = conversationHistory
+        .map(msg => `${msg.role}: ${msg.content}`)
+        .slice(-4) // Keep last 4 messages to avoid token limits
+        .join('\n');
+      
+      contextPrompt = `Previous conversation context:\n${conversationSummary}\n\nCurrent request: ${prompt}`;
+    }
+    
+    // Determine if this is a modification request
+    const isModification = conversationHistory.length > 0;
+    
+    const systemPrompt = `You are a Michelin-starred professional chef and recipe assistant specializing in complex, restaurant-quality recipes. When providing recipes, follow this structured format and consider the conversation context.
+
+If the user is asking for modifications to a previous recipe, adapt the recipe accordingly while maintaining the structured format.
+
+Recipe structure requirements:
+1. Name - Clear, descriptive recipe name with cuisine type
+2. Description - Detailed overview including dish origin, flavor profile, and texture notes
+3. Time - Breakdown of prep time, cooking time, and resting/marinating time if needed
+4. Servings - Number of restaurant-style portions
+5. Ingredients - List with precise measurements, including:
+   - High-quality, restaurant-grade ingredients
+   - Specialty ingredients with suggested substitutes
+   - Mise en place grouping for complex preparations
+6. Instructions - Professional step-by-step cooking instructions including:
+   - Advanced cooking techniques with detailed explanations
+   - Temperature control specifics
+   - Visual/tactile cues for doneness
+   - Plating guidelines
+7. Storage - Professional storage methods with temperature guidelines
+8. Nutrition - Detailed nutritional information
+
+Keep responses clear, precise, and easy to follow. Include helpful cooking tips and explain any technical terms. If asked about a specific cuisine or dietary requirement, adapt the recipe accordingly.
+
+If the user is modifying a previous recipe, note what changes were made in the description.`;
     
     const result = await generateObject({
       model: openai("gpt-4o-mini"),
-      system: `You are a professional chef and recipe assistant. When providing recipes, always follow this list: 
-                 1. Name
-                 2. Description
-                 3. Time (prep + cooking)
-                 4. Servings
-                 5. Ingredients (with precise measurements)
-                   - List all ingredients with their quantities
-                   - Include any optional ingredients or substitutions
-                 6. Instructions
-                   - Separate each step
-                   - Include specific temperatures, times, and techniques
-                   - Add helpful tips or notes where relevant
-                 7. Storage (if applicable) as storage
-                 8. Nutrition
-                 Keep your responses clear, precise, and easy to follow. Include helpful cooking tips and explain any technical terms. If asked about a specific cuisine or dietary requirement, adapt the recipe accordingly.
-                 `,
-      prompt,
+      system: systemPrompt,
+      prompt: contextPrompt,
       schema: z.object({
         id: z.string(),
         name: z.string(),
@@ -41,12 +70,25 @@ export async function POST(req: Request) {
         ingredients: z.array(z.string()),
         instructions: z.array(z.string()),
         storage: z.string(),
-        nutrition: z.array(z.string())
+        nutrition: z.array(z.string()),
+        conversationContext: z.string().optional(), // Track why changes were made
+        isModification: z.boolean().optional() // Flag if this is a modification
       }),
     });
     
     const recipe = result.object;
     recipe.id = nanoid();
+    
+    // Add conversation context if this is a modification
+    if (conversationHistory && conversationHistory.length > 0) {
+      recipe.isModification = true;
+      recipe.conversationContext = `Based on conversation: ${conversationHistory
+        .filter(msg => msg.role === 'user')
+        .slice(-2)
+        .map(msg => msg.content)
+        .join('; ')}`;
+    }
+    
     const {id, name, description, totalTime, servings, ingredients, instructions, storage, nutrition } = recipe;
     
     // Save to database and handle the response
@@ -64,10 +106,16 @@ export async function POST(req: Request) {
     
     console.log("saveResult: ", saveResult);
     console.log("recipe: ", recipe.name);
+    if (recipe.isModification) {
+      console.log("Modification context: ", recipe.conversationContext);
+    }
 
-    return result.toJsonResponse();
+    return new Response(JSON.stringify(recipe), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
-    console.error("Error in POST /api/chat:", error);
+    console.error("Error in POST /api/generate:", error);
     return new Response(JSON.stringify({ error: "Failed to generate recipe" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
