@@ -66,17 +66,27 @@ export function LoginForm({
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("button pressed")
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
+      
+      const result = await authClient.signIn.email({
+        email: values.email,
+        password: values.password,
+      });
 
-    const result = await authClient.signIn.email({
-      email: values.email,
-      password: values.password,
-    });
-
-    
-
-    setIsLoading(false);
+      // Check if we have user data (successful sign in)
+      if ('user' in result) {
+        toast.success("Signed in successfully!");
+        router.push("/dashboard");
+      } else {
+        toast.error("Invalid email or password");
+      }
+    } catch (error) {
+      console.error("Signin error:", error);
+      toast.error("Failed to sign in");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (

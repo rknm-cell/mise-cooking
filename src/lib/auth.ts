@@ -11,8 +11,32 @@ export const auth = betterAuth({
   basePath: "/auth",
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: false, // No email verification for now
+    passwordMinLength: 8,
+    passwordMaxLength: 128,
+  },
+  socialProviders: {
+    google: {
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    },
+  },
+  session: {
+    expiresIn: 60 * 60 * 24 * 30, // 30 days
+    updateAge: 60 * 60 * 24, // Update session every 24 hours
+    rememberMe: true, // Enable remember me functionality
   },
   plugins: [nextCookies()],
-  // Temporarily remove database adapter to test basic functionality
-  // adapter: postgresAdapter(env.DATABASE_URL),
+  callbacks: {
+    onSignIn: async ({ user, account }) => {
+      // Track sign-in for analytics
+      console.log(`User ${user.email} signed in via ${account?.providerId || 'email'}`);
+      return true;
+    },
+    onSignUp: async ({ user }) => {
+      // Initialize user preferences and history
+      console.log(`New user registered: ${user.email}`);
+      return true;
+    },
+  },
 });

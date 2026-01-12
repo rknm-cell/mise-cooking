@@ -1,10 +1,24 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
 import {
   Form,
   FormControl,
@@ -13,19 +27,16 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import { signUp } from "~/server/users";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import { authClient } from "~/lib/auth-client";
-import Link from "next/link";
 
 const formSchema = z.object({
-  username: z.string().min(3),
-  email: z.string().min(2).max(50),
-  password: z.string().min(8),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 export function SignupForm({
@@ -34,61 +45,74 @@ export function SignupForm({
 }: React.ComponentProps<"div">) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
-  console.log("Form errors:", form.formState.errors);
-  console.log("Form is valid:", form.formState.isValid);
 
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    const { success, message } = await signUp(
-      values.username,
-      values.email,
-      values.password,
-    );
-    if (success) {
-      toast.success(message);
-      router.push("/dashboard");
-    } else {
-      toast.error(message);
-    }
-    setIsLoading(false);
-  }
-
-  const signInWithGoogle = async () => {
+  const signUpWithGoogle = async () => {
     try {
+      setIsLoading(true);
       await authClient.signIn.social({
         provider: "google",
         callbackURL: "/dashboard",
       });
     } catch (error) {
-      console.error("Google signin error:", error);
-      toast.error("Failed to sign in with Google");
+      console.error("Google signup error:", error);
+      toast.error("Failed to sign up with Google");
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      
+      const result = await authClient.signUp.email({
+        email: values.email,
+        password: values.password,
+        name: values.name,
+      });
+
+      // Check if we have user data (successful sign up)
+      if ('user' in result) {
+        toast.success("Account created successfully!");
+        router.push("/dashboard");
+      } else {
+        toast.error("Failed to create account");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      toast.error("Failed to create account");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Create an account</CardTitle>
+          <CardTitle className="text-xl">Create your account</CardTitle>
+          <CardDescription>Join Mise to start cooking amazing recipes</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid gap-6">
                 <div className="flex flex-col gap-4">
                   <Button
-                    type="button"
                     variant="outline"
                     className="w-full"
-                    onClick={signInWithGoogle}
+                    type="button"
+                    onClick={signUpWithGoogle}
                     disabled={isLoading}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -97,23 +121,23 @@ export function SignupForm({
                         fill="currentColor"
                       />
                     </svg>
-                    Signup with Google
+                    Sign up with Google
                   </Button>
                 </div>
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                  <span className="bg-background text-muted-foreground relative z-10 px-2">
-                    Or continue with
+                  <span className="bg-card text-muted-foreground relative z-10 px-2">
+                    Or continue with email
                   </span>
                 </div>
-                <div className="grid gap-6">
+                <div className="grid gap-4">
                   <FormField
                     control={form.control}
-                    name="username"
+                    name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username</FormLabel>
+                        <FormLabel>Full Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your username" {...field} />
+                          <Input placeholder="John Doe" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -126,11 +150,7 @@ export function SignupForm({
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="email@example.com"
-                            {...field}
-                            type="email"
-                          />
+                          <Input placeholder="name@email.com" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -144,7 +164,24 @@ export function SignupForm({
                         <FormLabel>Password</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter your password"
+                            placeholder="********"
+                            {...field}
+                            type="password"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="********"
                             {...field}
                             type="password"
                           />
@@ -157,14 +194,14 @@ export function SignupForm({
                     {isLoading ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
-                      "Sign Up"
+                      "Create Account"
                     )}
                   </Button>
                 </div>
                 <div className="text-center text-sm">
                   Already have an account?{" "}
                   <Link href="/login" className="underline underline-offset-4">
-                    Login
+                    Sign in
                   </Link>
                 </div>
               </div>
@@ -172,9 +209,10 @@ export function SignupForm({
           </Form>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground [&_a]:hover:text-primary text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+        By creating an account, you agree to our{" "}
+        <Link href="#">Terms of Service</Link> and{" "}
+        <Link href="#">Privacy Policy</Link>.
       </div>
     </div>
   );

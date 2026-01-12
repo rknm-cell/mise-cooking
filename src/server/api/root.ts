@@ -2,6 +2,9 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { recipeRouter } from "./routers/recipe";
 
+import { shoppingRouter } from "./routers/shopping";
+
+
 /**
  * This is the primary router for your server.
  *
@@ -9,7 +12,9 @@ import { recipeRouter } from "./routers/recipe";
  */
 export const appRouter = createTRPCRouter({
   // post: postRouter,
-  recipe: recipeRouter
+
+  recipe: recipeRouter,
+  shopping: shoppingRouter
 
 });
 
