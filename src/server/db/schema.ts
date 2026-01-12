@@ -178,9 +178,22 @@ export type ShoppingListItem = InferSelectModel<typeof shoppingListItem>;
 export const userRecipes = relations(user, ({ many }) => ({
   recipes: many(recipe),
   bookmarks: many(bookmark),
+  shoppingLists: many(shoppingList),
 }));
 
-export const bookmarksRelations = relations(bookmark, ({ one }) => ({
+export const userShoppingLists = relations(user, ({ many }) => ({
+  shoppingLists: many(shoppingList),
+}));
+
+export const userShoppingListItems = relations(user, ({ many }) => ({
+  shoppingListItems: many(shoppingListItem),
+}));
+
+export const userBookmarks = relations(user, ({ many }) => ({
+  bookmarks: many(bookmark),
+}));
+
+export const bookmarkRelations = relations(bookmark, ({ one }) => ({
   user: one(user, {
     fields: [bookmark.userId],
     references: [user.id],
