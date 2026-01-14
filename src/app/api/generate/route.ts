@@ -5,6 +5,11 @@ import { generateObject} from "ai";
 import { nanoid } from "nanoid";
 import { saveRecipe } from "~/server/db/queries";
 import { z } from "zod";
+import { NextResponse } from "next/server";
+
+// Route segment config to prevent redirects
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 interface ConversationMessage {
   role: 'user' | 'assistant';
@@ -12,6 +17,7 @@ interface ConversationMessage {
 }
 
 export async function POST(req: Request) {
+  console.log("POST /api/generate called");
   try {
     const {prompt, conversationHistory = []}: {prompt: string, conversationHistory?: ConversationMessage[]} = await req.json();
     console.log("prompt: ", prompt);
@@ -110,15 +116,12 @@ If the user is modifying a previous recipe, note what changes were made in the d
       console.log("Modification context: ", recipe.conversationContext);
     }
 
-    return new Response(JSON.stringify(recipe), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(recipe, { status: 200 });
   } catch (error) {
     console.error("Error in POST /api/generate:", error);
-    return new Response(JSON.stringify({ error: "Failed to generate recipe" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(
+      { error: "Failed to generate recipe", details: error instanceof Error ? error.message : String(error) },
+      { status: 500 }
+    );
   }
 }
