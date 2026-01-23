@@ -159,13 +159,13 @@ export default function RecipeGenerator() {
           </form>
         </div>
         {isLoading && !generation ? (
-          <Progress value={progress} className="w-[100%]" />
+          <Progress value={progress} className="w-full" />
         ) : (
           <> </>
         )}
       </div>
 
-      {/* Conversation History Indicator */}
+      {/* Conversation History Indicator
       {conversationHistory.length > 0 && (
         <Card className="w-full max-w-2xl mx-auto mt-4 bg-[#428a93] border-[#fcf45a]">
           <CardHeader className="pb-2">
@@ -193,7 +193,7 @@ export default function RecipeGenerator() {
             </div>
           </CardContent>
         </Card>
-      )}
+      )} */}
 
       {generation && (
         <div className="w-full max-w-2xl mx-auto mt-4">
