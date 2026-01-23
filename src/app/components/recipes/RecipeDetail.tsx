@@ -7,6 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { motion } from "motion/react";
 import { Clock, Users, Utensils, ListChecks, Info } from "lucide-react";
 
@@ -125,27 +131,44 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
             </div>
           )}
 
-          {/* Ingredients */}
-          <div>
-            <h3 className="text-[#fcf45a] font-semibold text-lg mb-4 flex items-center gap-2">
-              <Utensils className="h-5 w-5" />
-              Ingredients
-            </h3>
-            <div className="space-y-1 bg-[#1d7b86]/30 rounded-lg p-4">
-              {handleIngredients(ingredients)}
-            </div>
-          </div>
+          {/* Ingredients & Instructions Accordion */}
+          <Accordion type="single" collapsible className="w-full">
+            {/* Ingredients Accordion */}
+            <AccordionItem
+              value="ingredients"
+              className="border-[#fcf45a]/20 px-0"
+            >
+              <AccordionTrigger className="text-[#fcf45a] font-semibold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a]">
+                <div className="flex items-center gap-2">
+                  <Utensils className="h-5 w-5" />
+                  Ingredients
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-0">
+                <div className="space-y-1 bg-[#1d7b86]/30 rounded-lg p-4">
+                  {handleIngredients(ingredients)}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
-          {/* Instructions */}
-          <div>
-            <h3 className="text-[#fcf45a] font-semibold text-lg mb-4 flex items-center gap-2">
-              <ListChecks className="h-5 w-5" />
-              Instructions
-            </h3>
-            <div className="space-y-4 bg-[#1d7b86]/30 rounded-lg p-4">
-              {handleInstructions(instructions)}
-            </div>
-          </div>
+            {/* Instructions Accordion */}
+            <AccordionItem
+              value="instructions"
+              className="border-[#fcf45a]/20 px-0"
+            >
+              <AccordionTrigger className="text-[#fcf45a] font-semibold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a]">
+                <div className="flex items-center gap-2">
+                  <ListChecks className="h-5 w-5" />
+                  Instructions
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-0">
+                <div className="space-y-4 bg-[#1d7b86]/30 rounded-lg p-4">
+                  {handleInstructions(instructions)}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </CardContent>
 
         {/* Storage Info */}
