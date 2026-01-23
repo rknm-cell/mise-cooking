@@ -8,9 +8,10 @@ import {
 import type { Recipe } from "~/server/db/schema";
 import { motion } from "motion/react";
 import { api } from "~/trpc/react";
+import { Clock } from "lucide-react";
 
 export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
-  const { id, name, nutrition, description } = recipe;
+  const { id, name, totalTime, description } = recipe;
   const utils = api.useUtils();
 
   const handleMouseEnter = () => {
@@ -38,21 +39,12 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
                 </CardDescription>
               </div>
             </div>
-            {nutrition && nutrition.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-2 border-t border-[#fcf45a]/20">
-                {nutrition.slice(0, 3).map((nutrient, index) => (
-                  <span
-                    key={index}
-                    className="px-2 py-1 rounded-full bg-[#fcf45a]/20 text-[#fcf45a] text-xs font-medium"
-                  >
-                    {nutrient}
-                  </span>
-                ))}
-                {nutrition.length > 3 && (
-                  <span className="px-2 py-1 rounded-full bg-[#fcf45a]/20 text-[#fcf45a] text-xs font-medium">
-                    +{nutrition.length - 3} more
-                  </span>
-                )}
+            {totalTime && (
+              <div className="flex items-center gap-2 pt-2 border-t border-[#fcf45a]/20">
+                <Clock className="h-4 w-4 text-[#fcf45a] shrink-0" />
+                <span className="text-[#fcf45a] text-xs font-medium">
+                  {totalTime}
+                </span>
               </div>
             )}
           </CardHeader>
