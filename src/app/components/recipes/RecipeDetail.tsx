@@ -7,6 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { motion } from "motion/react";
 import { Clock, Users, Utensils, ListChecks, Info } from "lucide-react";
 
@@ -38,12 +44,18 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
   function handleInstructions(instructions: string[]) {
     return instructions.map((instruction, index) => {
       return (
-        <div key={index} className="flex gap-3 text-white">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1, duration: 0.3 }}
+          className="flex gap-3 text-white"
+        >
           <span className="shrink-0 w-6 h-6 rounded-full bg-[#fcf45a] text-[#1d7b86] font-semibold text-sm flex items-center justify-center">
             {index + 1}
           </span>
           <span className="flex-1">{instruction}</span>
-        </div>
+        </motion.div>
       );
     });
   }
@@ -69,12 +81,15 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
   function handleIngredients(ingredients: string[]) {
     return ingredients.map((ingredient, index) => {
       return (
-        <div
+        <motion.div
           key={index}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.05, duration: 0.3 }}
           className="flex items-start gap-3 text-white py-2 border-b border-[#fcf45a]/20 last:border-0"
         >
           <span className="flex-1">{ingredient}</span>
-        </div>
+        </motion.div>
       );
     });
   }
@@ -125,27 +140,82 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
             </div>
           )}
 
-          {/* Ingredients */}
-          <div>
-            <h3 className="text-[#fcf45a] font-semibold text-lg mb-4 flex items-center gap-2">
-              <Utensils className="h-5 w-5" />
-              Ingredients
-            </h3>
-            <div className="space-y-1 bg-[#1d7b86]/30 rounded-lg p-4">
-              {handleIngredients(ingredients)}
-            </div>
-          </div>
+          {/* Ingredients & Instructions Accordion */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Accordion type="single" collapsible className="w-full">
+              {/* Ingredients Accordion */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.3 }}
+              >
+                <AccordionItem
+                  value="ingredients"
+                  className="border-[#fcf45a]/20 px-0"
+                >
+                  <AccordionTrigger className="text-[#fcf45a] font-semibold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
+                    <motion.div
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Utensils className="h-5 w-5" />
+                      Ingredients
+                    </motion.div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-0">
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                      className="space-y-1 bg-[#1d7b86]/30 rounded-lg p-4"
+                    >
+                      {handleIngredients(ingredients)}
+                    </motion.div>
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
 
-          {/* Instructions */}
-          <div>
-            <h3 className="text-[#fcf45a] font-semibold text-lg mb-4 flex items-center gap-2">
-              <ListChecks className="h-5 w-5" />
-              Instructions
-            </h3>
-            <div className="space-y-4 bg-[#1d7b86]/30 rounded-lg p-4">
-              {handleInstructions(instructions)}
-            </div>
-          </div>
+              {/* Instructions Accordion */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
+              >
+                <AccordionItem
+                  value="instructions"
+                  className="border-[#fcf45a]/20 px-0"
+                >
+                  <AccordionTrigger className="text-[#fcf45a] font-semibold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
+                    <motion.div
+                      className="flex items-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ListChecks className="h-5 w-5" />
+                      Instructions
+                    </motion.div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-0">
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                      className="space-y-4 bg-[#1d7b86]/30 rounded-lg p-4"
+                    >
+                      {handleInstructions(instructions)}
+                    </motion.div>
+                  </AccordionContent>
+                </AccordionItem>
+              </motion.div>
+            </Accordion>
+          </motion.div>
         </CardContent>
 
         {/* Storage Info */}
