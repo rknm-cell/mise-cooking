@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import type { Recipe } from "~/server/db/schema";
-import {motion} from "motion/react"
+import { motion } from "motion/react";
 import { api } from "~/trpc/react";
 
 export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
@@ -20,12 +20,41 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
 
   return (
     <Link href={`/recipes/${id}`} prefetch={true}>
-      <motion.div layoutId={`recipe-card-${id}`} onMouseEnter={handleMouseEnter}>
-        <Card className="h-full cursor-pointer transition-shadow hover:shadow-sm">
-          <CardHeader>
-            <CardTitle>{name}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-            <CardDescription>{nutrition.join(", ")}</CardDescription>
+      <motion.div
+        layoutId={`recipe-card-${id}`}
+        onMouseEnter={handleMouseEnter}
+        className="h-full"
+      >
+        <Card className="h-full cursor-pointer bg-[#428a93] border-[#fcf45a] transition-all duration-300 hover:shadow-lg hover:shadow-[#fcf45a]/20 hover:border-[#fcf45a] hover:scale-[1.02]">
+          <CardHeader className="space-y-3">
+            <div className="flex items-start gap-3">
+              
+              <div className="flex-1 min-w-0">
+                <CardTitle className="text-[#fcf45a] text-lg sm:text-xl font-bold line-clamp-2 mb-2">
+                  {name}
+                </CardTitle>
+                <CardDescription className="text-white/90 text-sm sm:text-base line-clamp-3">
+                  {description}
+                </CardDescription>
+              </div>
+            </div>
+            {nutrition && nutrition.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-[#fcf45a]/20">
+                {nutrition.slice(0, 3).map((nutrient, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 rounded-full bg-[#fcf45a]/20 text-[#fcf45a] text-xs font-medium"
+                  >
+                    {nutrient}
+                  </span>
+                ))}
+                {nutrition.length > 3 && (
+                  <span className="px-2 py-1 rounded-full bg-[#fcf45a]/20 text-[#fcf45a] text-xs font-medium">
+                    +{nutrition.length - 3} more
+                  </span>
+                )}
+              </div>
+            )}
           </CardHeader>
         </Card>
       </motion.div>
