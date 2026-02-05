@@ -35,6 +35,7 @@ interface RecipeDetails {
   difficulty?: string;
   cuisine?: string;
   dietaryTags?: string[];
+  tip?: string;
 }
 
 const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
@@ -52,7 +53,10 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     difficulty,
     cuisine,
     dietaryTags,
+    tip,
   } = recipe;
+
+  const chefTip = tip ?? "Let ingredients come to room temperature when the recipe allows—it improves texture and flavor.";
 
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const [copied, setCopied] = useState(false);
@@ -191,6 +195,12 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#428a93] via-[#428a93]/50 to-transparent" />
+            {/* Steam effect - wispy rising steam */}
+            <span className="steam-effect" aria-hidden />
+            <span className="steam-effect" aria-hidden />
+            <span className="steam-effect" aria-hidden />
+            <span className="steam-effect" aria-hidden />
+            <span className="steam-effect" aria-hidden />
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
               <CardTitle className="text-[#fcf45a] text-3xl sm:text-4xl font-body-bold mb-2">
                 {name}
@@ -370,6 +380,18 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
                 </AccordionItem>
               </motion.div>
             </Accordion>
+          </motion.div>
+
+          {/* Chef's Tip post-it style */}
+          <motion.div
+            initial={{ opacity: 0, rotate: -3 }}
+            animate={{ opacity: 1, rotate: 1 }}
+            transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 20 }}
+            className="relative mt-6 p-4 bg-[#fcf45a] text-[#1d7b86] rounded-lg shadow-lg transform rotate-1 font-body"
+          >
+            <div className="absolute -top-2 left-4 w-12 h-5 bg-mise-yellow-600 opacity-50 blur-sm rounded" aria-hidden />
+            <p className="font-display text-lg text-[#1d7b86] mb-1">Chef&apos;s Tip</p>
+            <p className="text-sm font-body-medium">{chefTip}</p>
           </motion.div>
         </CardContent>
 

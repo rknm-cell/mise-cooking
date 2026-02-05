@@ -8,8 +8,29 @@ import {
 import type { Recipe } from "~/server/db/schema";
 import { motion } from "motion/react";
 import { api } from "~/trpc/react";
-import { Clock } from "lucide-react";
+import { Clock, Leaf, CircleDot, Flame } from "lucide-react";
 import { cn } from "~/lib/utils";
+
+/* Floating ingredient doodles for decorative atmosphere */
+const FLOATING_DOODLES = [
+  (props: React.ComponentProps<typeof Leaf>) => <Leaf {...props} />,
+  (props: React.ComponentProps<typeof CircleDot>) => <CircleDot {...props} />,
+  (props: React.ComponentProps<typeof Flame>) => <Flame {...props} />,
+] as const;
+
+function getDoodleIndex(id: string): number {
+  let n = 0;
+  for (let i = 0; i < Math.min(id.length, 6); i++) n += id.charCodeAt(i);
+  return n % FLOATING_DOODLES.length;
+}
+
+function getDoodlePosition(id: string): { top?: string; right?: string; bottom?: string; left?: string; rotate: string } {
+  const v = id.charCodeAt(0) % 4;
+  if (v === 0) return { top: "-0.5rem", right: "-0.5rem", rotate: "12deg" };
+  if (v === 1) return { top: "-0.5rem", left: "-0.5rem", rotate: "-8deg" };
+  if (v === 2) return { bottom: "-0.5rem", right: "-0.25rem", rotate: "6deg" };
+  return { bottom: "-0.25rem", left: "-0.5rem", rotate: "-10deg" };
+}
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -19,9 +40,10 @@ interface RecipeCardProps {
 export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
   const { id, name, totalTime, description, imageUrl } = recipe;
   const utils = api.useUtils();
+  const DoodleIcon = FLOATING_DOODLES[getDoodleIndex(id)] ?? FLOATING_DOODLES[0];
+  const doodlePos = getDoodlePosition(id);
 
   const handleMouseEnter = () => {
-    // Prefetch the recipe data when hovering over the card
     utils.recipe.getRecipe.prefetch(id);
   };
 
@@ -30,7 +52,7 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
       <motion.div
         layoutId={`recipe-card-${id}`}
         onMouseEnter={handleMouseEnter}
-        className="h-full"
+        className="relative h-full"
         whileHover={{
           rotate: featured ? 0 : 2,
           scale: 1.03,
@@ -38,8 +60,9 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
           transition: { type: "spring", stiffness: 300, damping: 20 }
         }}
       >
+      
         <Card className={cn(
-          "h-full cursor-pointer bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean transition-all duration-300 hover:shadow-yellow-lg hover:glow-yellow hover:border-[#fcf45a] overflow-hidden",
+          "recipe-card-handdrawn h-full cursor-pointer bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean transition-all duration-300 hover:shadow-yellow-lg hover:glow-yellow hover:border-[#fcf45a] overflow-hidden",
           imageUrl && "pt-0",
           featured && "border-2 border-[#fcf45a] shadow-yellow-lg"
         )}>
@@ -91,6 +114,11 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
               </div>
             )}
           </CardHeader>
+          {/* Dotted border on top of image/content - same dot length on all sides */}
+          <span className="recipe-card-dot-border-top" aria-hidden />
+          <span className="recipe-card-dot-border-right" aria-hidden />
+          <span className="recipe-card-dot-border-bottom" aria-hidden />
+          <span className="recipe-card-dot-border-left" aria-hidden />
         </Card>
       </motion.div>
     </Link>

@@ -80,7 +80,7 @@ export default function Page() {
               return (
                 <motion.div
                   key={recipe.id || index}
-                  className={featured ? "sm:col-span-2 sm:row-span-2" : ""}
+                  className={featured ? "sm:col-span-2" : ""}
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
