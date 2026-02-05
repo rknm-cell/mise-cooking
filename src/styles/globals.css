@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Nanum+Pen+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Nanum+Pen+Script&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -13,18 +13,42 @@
   -moz-osx-font-smoothing: grayscale;
   font-display: swap;
 }
-/* .nanum-pen-script-bold {
+
+.font-display {
   font-family: "Nanum Pen Script", cursive;
+}
+
+.font-body {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-body-light {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 300;
+}
+
+.font-body-medium {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+}
+
+.font-body-semibold {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+}
+
+.font-body-bold {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
-  font-style: normal;
-} */
+}
 
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  --font-sans: "DM Sans", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display: "Nanum Pen Script", cursive;
 }
 
 @theme inline {

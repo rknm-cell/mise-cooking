@@ -31,10 +31,10 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
             <div className="flex items-start gap-3">
               
               <div className="flex-1 min-w-0">
-                <CardTitle className="text-[#fcf45a] text-lg sm:text-xl font-bold line-clamp-2 mb-2">
+                <CardTitle className="text-[#fcf45a] text-xl sm:text-2xl font-body line-clamp-2 mb-2">
                   {name}
                 </CardTitle>
-                <CardDescription className="text-white/90 text-sm sm:text-base line-clamp-3">
+                <CardDescription className="text-white/90 text-sm sm:text-base font-body line-clamp-3">
                   {description}
                 </CardDescription>
               </div>
@@ -42,7 +42,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
             {totalTime && (
               <div className="flex items-center gap-2 pt-2 border-t border-[#fcf45a]/20">
                 <Clock className="h-4 w-4 text-[#fcf45a] shrink-0" />
-                <span className="text-[#fcf45a] text-xs font-medium">
+                <span className="text-[#fcf45a] text-xs font-body-semibold">
                   {totalTime}
                 </span>
               </div>

@@ -200,13 +200,13 @@ export default function RecipeGenerator() {
           {/* Recipe Actions */}
           <Card className="mb-4 bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[#fcf45a] text-lg">Recipe Actions</CardTitle>
+              <CardTitle className="text-[#fcf45a] text-lg font-body-bold">Recipe Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {/* Start Session Button */}
               <Button
                 onClick={startCookingSession}
-                className="w-full bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 font-semibold"
+                className="w-full bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 font-body-semibold"
               >
                 🍳 Start Recipe Session
               </Button>
@@ -218,7 +218,7 @@ export default function RecipeGenerator() {
                     <Button
                       onClick={() => saveRecipe(generation)}
                       disabled={isSaving}
-                      className="flex-1 bg-white text-[#1d7b86] hover:bg-gray-100 font-semibold"
+                      className="flex-1 bg-white text-[#1d7b86] hover:bg-gray-100 font-body-semibold"
                     >
                       {isSaving ? (
                         <span className="flex items-center gap-2">
@@ -244,14 +244,14 @@ export default function RecipeGenerator() {
                 {saveStatus === 'saved' && (
                   <div className="flex-1 flex items-center justify-center gap-2 p-3 bg-green-100 border border-green-300 rounded-lg">
                     <span className="text-green-600">✓</span>
-                    <span className="text-green-600 font-semibold">Recipe Saved!</span>
+                    <span className="text-green-600 font-body-semibold">Recipe Saved!</span>
                   </div>
                 )}
                 
                 {saveStatus === 'error' && (
                   <Button
                     onClick={() => saveRecipe(generation)}
-                    className="flex-1 bg-red-500 text-white hover:bg-red-600 font-semibold"
+                    className="flex-1 bg-red-500 text-white hover:bg-red-600 font-body-semibold"
                   >
                     🔄 Retry Save
                   </Button>

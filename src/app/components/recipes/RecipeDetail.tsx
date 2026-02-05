@@ -49,7 +49,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1, duration: 0.3 }}
-          className="flex gap-3 text-white"
+          className="flex gap-3 text-white font-body"
         >
           <span className="shrink-0 w-6 h-6 rounded-full bg-[#fcf45a] text-[#1d7b86] font-semibold text-sm flex items-center justify-center">
             {index + 1}
@@ -68,7 +68,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           return (
             <span
               key={index}
-              className="px-3 py-1 rounded-full bg-[#fcf45a]/20 text-[#fcf45a] text-xs font-medium"
+              className="px-3 py-1 rounded-full bg-[#fcf45a]/20 text-[#fcf45a] text-xs font-body-medium"
             >
               {nutrient}
             </span>
@@ -86,7 +86,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.05, duration: 0.3 }}
-          className="flex items-start gap-3 text-white py-2 border-b border-[#fcf45a]/20 last:border-0"
+          className="flex items-start gap-3 text-white font-body py-2 border-b border-[#fcf45a]/20 last:border-0"
         >
           <span className="flex-1">{ingredient}</span>
         </motion.div>
@@ -98,10 +98,10 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     <motion.div layoutId={`recipe-card-${id}`} className="w-full">
       <Card className="w-full bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean-lg glow-ocean">
         <CardHeader className="pb-4">
-          <CardTitle className="text-[#fcf45a] text-2xl sm:text-3xl font-bold mb-2">
+          <CardTitle className="text-[#fcf45a] text-3xl sm:text-4xl font-body-bold mb-2">
             {name}
           </CardTitle>
-          <CardDescription className="text-white/90 text-base sm:text-lg">
+          <CardDescription className="text-white/90 text-base sm:text-lg font-body">
             {description}
           </CardDescription>
         </CardHeader>
@@ -112,19 +112,19 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
             <div className="flex items-center gap-3">
               <Clock className="h-5 w-5 text-[#fcf45a]" />
               <div>
-                <p className="text-xs text-white/70 uppercase tracking-wide">
+                <p className="text-xs text-white/70 uppercase tracking-wide font-body-medium">
                   Total Time
                 </p>
-                <p className="text-white font-semibold">{totalTime}</p>
+                <p className="text-white font-body-semibold">{totalTime}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Users className="h-5 w-5 text-[#fcf45a]" />
               <div>
-                <p className="text-xs text-white/70 uppercase tracking-wide">
+                <p className="text-xs text-white/70 uppercase tracking-wide font-body-medium">
                   Servings
                 </p>
-                <p className="text-white font-semibold">{servings}</p>
+                <p className="text-white font-body-semibold">{servings}</p>
               </div>
             </div>
           </div>
@@ -132,7 +132,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           {/* Nutrition Info */}
           {nutrition && nutrition.length > 0 && (
             <div className="pb-4 border-b border-[#fcf45a]/20">
-              <h3 className="text-[#fcf45a] font-semibold text-lg mb-3 flex items-center gap-2">
+              <h3 className="text-[#fcf45a] font-body-bold text-lg mb-3 flex items-center gap-2">
                 <Info className="h-5 w-5" />
                 Nutrition
               </h3>
@@ -157,7 +157,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
                   value="ingredients"
                   className="border-[#fcf45a]/20 px-0"
                 >
-                  <AccordionTrigger className="text-[#fcf45a] font-semibold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
+                  <AccordionTrigger className="text-[#fcf45a] font-body-bold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
                     <motion.div
                       className="flex items-center gap-2"
                       whileHover={{ scale: 1.02 }}
@@ -191,7 +191,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
                   value="instructions"
                   className="border-[#fcf45a]/20 px-0"
                 >
-                  <AccordionTrigger className="text-[#fcf45a] font-semibold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
+                  <AccordionTrigger className="text-[#fcf45a] font-body-bold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
                     <motion.div
                       className="flex items-center gap-2"
                       whileHover={{ scale: 1.02 }}
@@ -224,10 +224,10 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
             <div className="flex items-start gap-3 w-full">
               <Info className="h-5 w-5 text-[#fcf45a] mt-0.5 shrink-0" />
               <div>
-                <p className="text-[#fcf45a] font-semibold text-sm mb-1">
+                <p className="text-[#fcf45a] font-body-semibold text-sm mb-1">
                   Storage
                 </p>
-                <p className="text-white/90 text-sm">{storage}</p>
+                <p className="text-white/90 text-sm font-body">{storage}</p>
               </div>
             </div>
           </CardFooter>

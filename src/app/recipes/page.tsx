@@ -24,8 +24,8 @@ export default function Page() {
 
   return (
     <div className="mx-auto h-screen bg-gradient-to-b from-[#1d7b86] to-[#426b70] p-4 texture-grain pattern-organic">
-      <h1 className="mb-6 text-center text-3xl font-bold text-[#fcf45a] font-nanum-pen-script-regular">
-        Recipes 
+      <h1 className="mb-6 text-center text-4xl font-display text-[#fcf45a]">
+        Recipes
       </h1>
       <SearchBar search={search} setSearch={setSearch} />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -34,7 +34,7 @@ export default function Page() {
             <RecipeCard key={recipe.id || index} recipe={recipe} />
           ))
         ) : (
-          <p className="col-span-full text-center text-gray-700">
+          <p className="col-span-full text-center text-white font-body-medium">
             No recipes found
           </p>
         )}
