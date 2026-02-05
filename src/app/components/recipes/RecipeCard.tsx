@@ -32,13 +32,15 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
         onMouseEnter={handleMouseEnter}
         className="h-full"
         whileHover={{
-          rotate: featured ? 0 : 1,
-          scale: 1.02,
-          transition: { type: "spring", stiffness: 300 }
+          rotate: featured ? 0 : 2,
+          scale: 1.03,
+          skewX: featured ? 0 : 0.5,
+          transition: { type: "spring", stiffness: 300, damping: 20 }
         }}
       >
         <Card className={cn(
           "h-full cursor-pointer bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean transition-all duration-300 hover:shadow-yellow-lg hover:glow-yellow hover:border-[#fcf45a] overflow-hidden",
+          imageUrl && "pt-0",
           featured && "border-2 border-[#fcf45a] shadow-yellow-lg"
         )}>
           {imageUrl && (

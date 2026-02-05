@@ -3,9 +3,11 @@ import { api } from "~/trpc/react";
 import { RecipeCard } from "../components/recipes/RecipeCard";
 import SearchBar from "../components/SearchBar";
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import Masonry from "react-masonry-css";
 import { Grid, LayoutGrid } from "lucide-react";
+
+const springBouncy = { type: "spring" as const, stiffness: 280, damping: 40 };
 
 export default function Page() {
   const { data: recipes } = api.recipe.getAllRecipes.useQuery();
@@ -16,6 +18,11 @@ export default function Page() {
   const recipeList = (recipes ?? []).filter((recipe) =>
     recipe.name.toLowerCase().includes(search.toLowerCase()),
   );
+
+  // Parallax scroll for header
+  const { scrollY } = useScroll();
+  const headerY = useTransform(scrollY, [0, 400], [0, -100]);
+  const headerOpacity = useTransform(scrollY, [0, 250], [1, 0.7]);
 
   // Prefetch all recipe data when the page loads
   useEffect(() => {
@@ -30,10 +37,11 @@ export default function Page() {
   const isFeatured = (index: number) => index === 0 || (index > 0 && (index + 1) % 6 === 0);
 
   return (
-    <div className="relative mx-auto min-h-screen bg-gradient-to-b from-[#1d7b86] to-[#426b70] p-4 texture-grain pattern-organic overflow-hidden">
-      
-
-      <div className="flex items-center justify-between mb-6 relative z-10">
+    <div className="relative mx-auto min-h-screen bg-gradient-to-b from-[#1d7b86] to-[#426b70] p-4 texture-grain pattern-organic">
+      <motion.div
+        style={{ y: headerY, opacity: headerOpacity }}
+        className="flex items-center justify-between mb-6 relative z-10"
+      >
         <h1 className="text-center text-4xl font-display text-[#fcf45a] flex-1">
           Recipes
         </h1>
@@ -61,7 +69,7 @@ export default function Page() {
             <Grid className="h-5 w-5" />
           </button>
         </div>
-      </div>
+      </motion.div>
       <SearchBar search={search} setSearch={setSearch} />
 
       {layoutMode === "hero" ? (
@@ -73,13 +81,11 @@ export default function Page() {
                 <motion.div
                   key={recipe.id || index}
                   className={featured ? "sm:col-span-2 sm:row-span-2" : ""}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    delay: index * 0.05,
-                    duration: 0.4,
-                    type: "spring",
-                    stiffness: 100
+                    ...springBouncy,
+                    delay: index * 0.06
                   }}
                 >
                   <RecipeCard recipe={recipe} featured={featured} />
@@ -107,20 +113,18 @@ export default function Page() {
         >
           {recipeList.length > 0 ? (
             recipeList.map((recipe, index) => (
-              <motion.div
-                key={recipe.id || index}
-                className="mb-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: index * 0.05,
-                  duration: 0.4,
-                  type: "spring",
-                  stiffness: 100
-                }}
-              >
-                <RecipeCard recipe={recipe} />
-              </motion.div>
+              <div key={recipe.id || index} className="mb-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    ...springBouncy,
+                    delay: index * 0.06
+                  }}
+                >
+                  <RecipeCard recipe={recipe} />
+                </motion.div>
+              </div>
             ))
           ) : (
             <p className="text-center text-white font-body-medium w-full">

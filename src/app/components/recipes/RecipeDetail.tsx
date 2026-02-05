@@ -77,6 +77,8 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const springBouncy = { type: "spring" as const, stiffness: 280, damping: 40 };
+
   function handleInstructions(instructions: string[]) {
     return instructions.map((instruction, index) => {
       return (
@@ -84,7 +86,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           key={index}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1, duration: 0.3 }}
+          transition={{ delay: index * 0.08, ...springBouncy }}
           className="flex gap-3 text-white font-body"
         >
           <span className="shrink-0 w-6 h-6 rounded-full bg-[#fcf45a] text-[#1d7b86] font-semibold text-sm flex items-center justify-center">
@@ -122,7 +124,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           key={index}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.05, duration: 0.3 }}
+          transition={{ delay: index * 0.05, ...springBouncy }}
           className={cn(
             "flex items-start gap-3 text-white font-body py-2 border-b border-[#fcf45a]/20 last:border-0 transition-opacity duration-200",
             isChecked && "opacity-50"
@@ -141,7 +143,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
               <motion.svg
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 className="w-3 h-3 text-[#fcf45a]"
                 viewBox="0 0 12 12"
                 fill="none"
@@ -177,7 +179,10 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
         )}
       </AnimatePresence>
       <motion.div layoutId={`recipe-card-${id}`} className="w-full">
-      <Card className="w-full bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean-lg glow-ocean overflow-hidden">
+      <Card className={cn(
+        "w-full bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean-lg glow-ocean overflow-hidden",
+        imageUrl && "pt-0"
+      )}>
         {imageUrl && (
           <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden">
             <img
@@ -294,7 +299,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ type: "spring", stiffness: 280, damping: 40 }}
           >
             <Accordion type="single" collapsible className="w-full">
               {/* Ingredients Accordion */}
