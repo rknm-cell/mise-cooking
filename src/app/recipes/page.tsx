@@ -73,7 +73,7 @@ export default function Page() {
       <SearchBar search={search} setSearch={setSearch} />
 
       {layoutMode === "hero" ? (
-        <div className="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-fr">
+        <div className="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-start">
           {recipeList.length > 0 ? (
             recipeList.map((recipe, index) => {
               const featured = isFeatured(index);

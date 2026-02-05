@@ -52,7 +52,7 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
       <motion.div
         layoutId={`recipe-card-${id}`}
         onMouseEnter={handleMouseEnter}
-        className="relative h-full"
+        className="relative"
         whileHover={{
           rotate: featured ? 0 : 2,
           scale: 1.03,
@@ -62,7 +62,7 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
       >
       
         <Card className={cn(
-          "recipe-card-handdrawn h-full cursor-pointer bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean transition-all duration-300 hover:shadow-yellow-lg hover:glow-yellow hover:border-[#fcf45a] overflow-hidden",
+          "recipe-card-handdrawn cursor-pointer bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean transition-all duration-300 hover:shadow-yellow-lg hover:glow-yellow hover:border-[#fcf45a] overflow-hidden",
           imageUrl && "pt-0",
           featured && "border-2 border-[#fcf45a] shadow-yellow-lg"
         )}>
