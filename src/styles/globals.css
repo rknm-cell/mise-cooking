@@ -440,4 +440,37 @@
   .masonry-grid-column > div {
     margin-bottom: 1rem;
   }
+
+  /* Recipe badge styles (interactive elements) */
+  .badge-difficulty-easy {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+  }
+
+  .badge-difficulty-medium {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  }
+
+  .badge-difficulty-hard {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  }
+
+  .badge-cuisine {
+    background: var(--mise-yellow-500);
+    color: var(--mise-ocean-700);
+    font-weight: 600;
+    transform: rotate(-2deg);
+    box-shadow: 0 2px 8px rgba(252, 244, 90, 0.4);
+  }
+
+  .badge-dietary {
+    border: 2px dashed var(--mise-yellow-500);
+    background: transparent;
+    color: var(--mise-yellow-500);
+  }
 }

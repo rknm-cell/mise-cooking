@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -13,8 +15,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import { motion } from "motion/react";
-import { Clock, Users, Utensils, ListChecks, Info } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import { motion, AnimatePresence } from "motion/react";
+import { Clock, Users, Utensils, ListChecks, Info, Printer, Share2 } from "lucide-react";
+import { cn } from "~/lib/utils";
 
 interface RecipeDetails {
   id: string;
@@ -27,6 +32,9 @@ interface RecipeDetails {
   nutrition: string[];
   totalTime: string;
   imageUrl?: string;
+  difficulty?: string;
+  cuisine?: string;
+  dietaryTags?: string[];
 }
 
 const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
@@ -41,7 +49,33 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     nutrition,
     totalTime,
     imageUrl,
+    difficulty,
+    cuisine,
+    dietaryTags,
   } = recipe;
+
+  const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
+  const [copied, setCopied] = useState(false);
+
+  const toggleIngredient = (index: number) => {
+    setCheckedIngredients((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleShare = async () => {
+    if (typeof window === "undefined") return;
+    await navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   function handleInstructions(instructions: string[]) {
     return instructions.map((instruction, index) => {
@@ -82,22 +116,67 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
 
   function handleIngredients(ingredients: string[]) {
     return ingredients.map((ingredient, index) => {
+      const isChecked = checkedIngredients.has(index);
       return (
         <motion.div
           key={index}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.05, duration: 0.3 }}
-          className="flex items-start gap-3 text-white font-body py-2 border-b border-[#fcf45a]/20 last:border-0"
+          className={cn(
+            "flex items-start gap-3 text-white font-body py-2 border-b border-[#fcf45a]/20 last:border-0 transition-opacity duration-200",
+            isChecked && "opacity-50"
+          )}
+          whileTap={{ scale: 0.98 }}
         >
-          <span className="flex-1">{ingredient}</span>
+          <motion.button
+            type="button"
+            onClick={() => toggleIngredient(index)}
+            className="shrink-0 w-5 h-5 rounded border-2 border-[#fcf45a] flex items-center justify-center bg-transparent focus:outline-none focus:ring-2 focus:ring-[#fcf45a] focus:ring-offset-2 focus:ring-offset-[#428a93]"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label={isChecked ? `Uncheck ${ingredient}` : `Check ${ingredient}`}
+          >
+            {isChecked && (
+              <motion.svg
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="w-3 h-3 text-[#fcf45a]"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="2,6 5,9 10,3" />
+              </motion.svg>
+            )}
+          </motion.button>
+          <span className={cn("flex-1", isChecked && "line-through")}>{ingredient}</span>
         </motion.div>
       );
     });
   }
 
   return (
-    <motion.div layoutId={`recipe-card-${id}`} className="w-full">
+    <>
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="fixed bottom-4 right-4 z-50 bg-[#fcf45a] text-[#1d7b86] px-4 py-2 rounded-lg shadow-lg font-body-semibold flex items-center gap-2"
+          >
+            <span className="text-lg">✓</span>
+            Link copied!
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <motion.div layoutId={`recipe-card-${id}`} className="w-full">
       <Card className="w-full bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean-lg glow-ocean overflow-hidden">
         {imageUrl && (
           <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden">
@@ -123,6 +202,58 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           <CardDescription className="text-white/90 text-base sm:text-lg font-body">
             {description}
           </CardDescription>
+
+          {/* Recipe badges (difficulty, cuisine, dietary) */}
+          {(difficulty || cuisine || (dietaryTags && dietaryTags.length > 0)) && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {difficulty && (
+                <Badge
+                  className={cn(
+                    "font-body-semibold border-0",
+                    difficulty.toLowerCase() === "easy" && "badge-difficulty-easy",
+                    difficulty.toLowerCase() === "medium" && "badge-difficulty-medium",
+                    difficulty.toLowerCase() === "hard" && "badge-difficulty-hard"
+                  )}
+                >
+                  {difficulty}
+                </Badge>
+              )}
+              {cuisine && (
+                <Badge className="badge-cuisine font-body-semibold border-0">
+                  {cuisine}
+                </Badge>
+              )}
+              {dietaryTags?.map((tag) => (
+                <Badge key={tag} className="badge-dietary font-body-semibold">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
+
+          {/* Print & Share actions */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            <Button
+              type="button"
+              onClick={handlePrint}
+              variant="outline"
+              size="sm"
+              className="group border-[#fcf45a]/50 text-[#fcf45a] hover:bg-[#fcf45a]/10 hover:border-[#fcf45a]"
+            >
+              <Printer className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+              Print Recipe
+            </Button>
+            <Button
+              type="button"
+              onClick={handleShare}
+              variant="outline"
+              size="sm"
+              className="group border-[#fcf45a]/50 text-[#fcf45a] hover:bg-[#fcf45a]/10 hover:border-[#fcf45a]"
+            >
+              <Share2 className="mr-2 h-4 w-4 transition-transform group-hover:rotate-12" />
+              Share
+            </Button>
+          </div>
         </CardHeader>
 
         <CardContent className="space-y-6">
@@ -253,6 +384,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
         )}
       </Card>
     </motion.div>
+    </>
   );
 };
 export default RecipeDetail;
