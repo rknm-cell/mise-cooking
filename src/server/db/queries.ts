@@ -15,6 +15,7 @@ export async function saveRecipe({
   instructions,
   storage,
   nutrition,
+  imageUrl,
 }: {
   id: string;
   name: string;
@@ -25,6 +26,7 @@ export async function saveRecipe({
   instructions: string[];
   storage: string;
   nutrition: string[];
+  imageUrl?: string;
 }) {
   try {
     return await db.insert(schema.recipe).values({
@@ -37,6 +39,7 @@ export async function saveRecipe({
       instructions,
       storage,
       nutrition,
+      imageUrl,
       createdAt: new Date(),
     });
   } catch (error) {

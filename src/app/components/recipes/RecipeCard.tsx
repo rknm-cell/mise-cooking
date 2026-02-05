@@ -17,7 +17,7 @@ interface RecipeCardProps {
 }
 
 export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
-  const { id, name, totalTime, description } = recipe;
+  const { id, name, totalTime, description, imageUrl } = recipe;
   const utils = api.useUtils();
 
   const handleMouseEnter = () => {
@@ -38,9 +38,19 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
         }}
       >
         <Card className={cn(
-          "h-full cursor-pointer bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean transition-all duration-300 hover:shadow-yellow-lg hover:glow-yellow hover:border-[#fcf45a]",
+          "h-full cursor-pointer bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean transition-all duration-300 hover:shadow-yellow-lg hover:glow-yellow hover:border-[#fcf45a] overflow-hidden",
           featured && "border-2 border-[#fcf45a] shadow-yellow-lg"
         )}>
+          {imageUrl && (
+            <div className="relative h-48 overflow-hidden">
+              <img
+                src={imageUrl}
+                alt={name}
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1d7b86]/80 to-transparent" />
+            </div>
+          )}
           <CardHeader className={cn("space-y-3", featured && "p-6 sm:p-8")}>
             <div className="flex items-start gap-3">
 

@@ -26,6 +26,7 @@ interface RecipeDetails {
   storage: string;
   nutrition: string[];
   totalTime: string;
+  imageUrl?: string;
 }
 
 const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
@@ -39,6 +40,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     storage,
     nutrition,
     totalTime,
+    imageUrl,
   } = recipe;
 
   function handleInstructions(instructions: string[]) {
@@ -96,11 +98,28 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
 
   return (
     <motion.div layoutId={`recipe-card-${id}`} className="w-full">
-      <Card className="w-full bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean-lg glow-ocean">
+      <Card className="w-full bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean-lg glow-ocean overflow-hidden">
+        {imageUrl && (
+          <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden">
+            <img
+              src={imageUrl}
+              alt={name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#428a93] via-[#428a93]/50 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+              <CardTitle className="text-[#fcf45a] text-3xl sm:text-4xl font-body-bold mb-2">
+                {name}
+              </CardTitle>
+            </div>
+          </div>
+        )}
         <CardHeader className="pb-4">
-          <CardTitle className="text-[#fcf45a] text-3xl sm:text-4xl font-body-bold mb-2">
-            {name}
-          </CardTitle>
+          {!imageUrl && (
+            <CardTitle className="text-[#fcf45a] text-3xl sm:text-4xl font-body-bold mb-2">
+              {name}
+            </CardTitle>
+          )}
           <CardDescription className="text-white/90 text-base sm:text-lg font-body">
             {description}
           </CardDescription>
