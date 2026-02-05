@@ -23,7 +23,7 @@ export default function Page() {
   }, [recipes, utils.recipe.getRecipe]);
 
   return (
-    <div className="mx-auto h-screen bg-linear-to-b from-[#1d7b86] to-[#426b70] p-4">
+    <div className="mx-auto h-screen bg-gradient-to-b from-[#1d7b86] to-[#426b70] p-4 texture-grain pattern-organic">
       <h1 className="mb-6 text-center text-3xl font-bold text-[#fcf45a] font-nanum-pen-script-regular">
         Recipes 
       </h1>

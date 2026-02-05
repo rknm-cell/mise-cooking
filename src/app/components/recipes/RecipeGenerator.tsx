@@ -135,7 +135,7 @@ export default function RecipeGenerator() {
 
   return (
     <>
-      <div className="flex h-[100px] w-full max-w-2xl flex-col rounded-xl bg-[#428a93] p-4">
+      <div className="flex h-[100px] w-full max-w-2xl flex-col rounded-xl bg-[#428a93] p-4 texture-paper shadow-ocean-lg">
         <div className="mb-4 flex-1 overflow-y-auto">
           <form onSubmit={handleSubmit} className="flex gap-2">
             <Input
@@ -198,7 +198,7 @@ export default function RecipeGenerator() {
       {generation && (
         <div className="w-full max-w-2xl mx-auto mt-4">
           {/* Recipe Actions */}
-          <Card className="mb-4 bg-[#428a93] border-[#fcf45a]">
+          <Card className="mb-4 bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean">
             <CardHeader className="pb-2">
               <CardTitle className="text-[#fcf45a] text-lg">Recipe Actions</CardTitle>
             </CardHeader>

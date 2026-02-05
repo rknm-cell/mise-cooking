@@ -3,7 +3,7 @@ import React from "react";
 
 export default function NavBar() {
   return (
-    <nav className="sticky top-0 z-50 bg-linear-to-b from-[#1d7b86] to-[#426b70] shadow-sm">
+    <nav className="sticky top-0 z-50 bg-gradient-to-b from-[#1d7b86]/95 to-[#426b70]/95 backdrop-blur-soft shadow-ocean-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="shrink-0">

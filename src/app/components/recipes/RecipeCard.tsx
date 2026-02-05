@@ -26,7 +26,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
         onMouseEnter={handleMouseEnter}
         className="h-full"
       >
-        <Card className="h-full cursor-pointer bg-[#428a93] border-[#fcf45a] transition-all duration-300 hover:shadow-lg hover:shadow-[#fcf45a]/20 hover:border-[#fcf45a] hover:scale-[1.02]">
+        <Card className="h-full cursor-pointer bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean transition-all duration-300 hover:shadow-yellow-lg hover:glow-yellow hover:border-[#fcf45a] hover:scale-[1.02]">
           <CardHeader className="space-y-3">
             <div className="flex items-start gap-3">
               

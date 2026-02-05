@@ -96,7 +96,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
 
   return (
     <motion.div layoutId={`recipe-card-${id}`} className="w-full">
-      <Card className="w-full bg-[#428a93] border-[#fcf45a]">
+      <Card className="w-full bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean-lg glow-ocean">
         <CardHeader className="pb-4">
           <CardTitle className="text-[#fcf45a] text-2xl sm:text-3xl font-bold mb-2">
             {name}
@@ -173,7 +173,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.3 }}
-                      className="space-y-1 bg-[#1d7b86]/30 rounded-lg p-4"
+                      className="space-y-1 bg-[#1d7b86]/30 rounded-lg p-4 texture-grain shadow-ocean"
                     >
                       {handleIngredients(ingredients)}
                     </motion.div>
@@ -207,7 +207,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.3 }}
-                      className="space-y-4 bg-[#1d7b86]/30 rounded-lg p-4"
+                      className="space-y-4 bg-[#1d7b86]/30 rounded-lg p-4 texture-grain shadow-ocean"
                     >
                       {handleInstructions(instructions)}
                     </motion.div>
