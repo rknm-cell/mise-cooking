@@ -1,6 +1,8 @@
 "use client";
 import { api } from "~/trpc/react";
 import { RecipeCard } from "../components/recipes/RecipeCard";
+import { RecipeCardSkeleton } from "../components/recipes/RecipeCardSkeleton";
+import { EmptyState } from "../components/recipes/EmptyState";
 import SearchBar from "../components/SearchBar";
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
@@ -10,7 +12,7 @@ import { Grid, LayoutGrid } from "lucide-react";
 const springBouncy = { type: "spring" as const, stiffness: 280, damping: 40 };
 
 export default function Page() {
-  const { data: recipes } = api.recipe.getAllRecipes.useQuery();
+  const { data: recipes, isLoading } = api.recipe.getAllRecipes.useQuery();
   const [search, setSearch] = useState("");
   const [layoutMode, setLayoutMode] = useState<"hero" | "masonry">("hero");
   const utils = api.useUtils();
@@ -74,7 +76,20 @@ export default function Page() {
 
       {layoutMode === "hero" ? (
         <div className="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-start">
-          {recipeList.length > 0 ? (
+          {isLoading ? (
+            // Show skeleton loaders while loading
+            Array(8).fill(0).map((_, index) => {
+              const featured = isFeatured(index);
+              return (
+                <div
+                  key={index}
+                  className={featured ? "sm:col-span-2" : ""}
+                >
+                  <RecipeCardSkeleton featured={featured} />
+                </div>
+              );
+            })
+          ) : recipeList.length > 0 ? (
             recipeList.map((recipe, index) => {
               const featured = isFeatured(index);
               return (
@@ -93,26 +108,48 @@ export default function Page() {
               );
             })
           ) : (
-            <p className="col-span-full text-center text-white font-body-medium">
-              No recipes found
-            </p>
+            <div className="col-span-full">
+              <EmptyState
+                message={search ? "No recipes match your search" : "No recipes found"}
+                description={search ? "Try adjusting your search terms or browse all recipes" : "Get started by creating your first recipe!"}
+              />
+            </div>
           )}
         </div>
       ) : (
-        <Masonry
-          breakpointCols={{
-            default: 4,
-            1536: 4,
-            1280: 3,
-            1024: 3,
-            768: 2,
-            640: 1
-          }}
-          className="masonry-grid relative z-10"
-          columnClassName="masonry-grid-column"
-        >
-          {recipeList.length > 0 ? (
-            recipeList.map((recipe, index) => (
+        isLoading ? (
+          <Masonry
+            breakpointCols={{
+              default: 4,
+              1536: 4,
+              1280: 3,
+              1024: 3,
+              768: 2,
+              640: 1
+            }}
+            className="masonry-grid relative z-10"
+            columnClassName="masonry-grid-column"
+          >
+            {Array(8).fill(0).map((_, index) => (
+              <div key={index} className="mb-4">
+                <RecipeCardSkeleton />
+              </div>
+            ))}
+          </Masonry>
+        ) : recipeList.length > 0 ? (
+          <Masonry
+            breakpointCols={{
+              default: 4,
+              1536: 4,
+              1280: 3,
+              1024: 3,
+              768: 2,
+              640: 1
+            }}
+            className="masonry-grid relative z-10"
+            columnClassName="masonry-grid-column"
+          >
+            {recipeList.map((recipe, index) => (
               <div key={recipe.id || index} className="mb-4">
                 <motion.div
                   initial={{ opacity: 0, y: 24 }}
@@ -125,13 +162,16 @@ export default function Page() {
                   <RecipeCard recipe={recipe} />
                 </motion.div>
               </div>
-            ))
-          ) : (
-            <p className="text-center text-white font-body-medium w-full">
-              No recipes found
-            </p>
-          )}
-        </Masonry>
+            ))}
+          </Masonry>
+        ) : (
+          <div className="w-full">
+            <EmptyState
+              message={search ? "No recipes match your search" : "No recipes found"}
+              description={search ? "Try adjusting your search terms or browse all recipes" : "Get started by creating your first recipe!"}
+            />
+          </div>
+        )
       )}
     </div>
   );
