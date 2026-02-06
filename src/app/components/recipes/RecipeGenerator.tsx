@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import RecipeDetail from "~/app/components/recipes/RecipeDetail";
+import { CookingProgressLoader } from "~/app/components/recipes/CookingLoader";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Progress } from "~/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { recipe, type RecipeSchema } from "~/server/db/schema";
 
@@ -158,10 +158,13 @@ export default function RecipeGenerator() {
             </Button>
           </form>
         </div>
-        {isLoading && !generation ? (
-          <Progress value={progress} className="w-full" />
-        ) : (
-          <> </>
+{isLoading && !generation && (
+          <div className="mt-2">
+            <CookingProgressLoader
+              progress={progress}
+              message="Cooking up your recipe..."
+            />
+          </div>
         )}
       </div>
 
