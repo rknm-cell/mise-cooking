@@ -7,6 +7,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { recipe, type RecipeSchema } from "~/server/db/schema";
+import { motion, AnimatePresence } from "motion/react";
 
 interface ConversationMessage {
   role: 'user' | 'assistant';
@@ -135,38 +136,126 @@ export default function RecipeGenerator() {
 
   return (
     <>
-      <div className="flex h-[100px] w-full max-w-2xl flex-col rounded-xl bg-[#428a93] p-4 texture-paper shadow-ocean-lg">
-        <div className="mb-4 flex-1 overflow-y-auto">
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <Input
-              type="text"
-              value={input}
-              onChange={handleChange}
-              placeholder={conversationHistory.length > 0 
-                ? "Ask a follow-up question or request modifications..." 
-                : "What do you want to make?"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative w-full max-w-2xl"
+      >
+        {/* Decorative floating elements */}
+        <motion.div
+          className="absolute -top-8 -left-8 text-[#fcf45a]/20 pointer-events-none hidden sm:block"
+          animate={{
+            rotate: [0, -10, 0],
+            y: [0, -5, 0]
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          
+        </motion.div>
+
+        <Card className="relative bg-[#428a93] border-[#fcf45a] border-2 texture-paper shadow-ocean-lg overflow-visible">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-2xl font-display text-[#fcf45a] text-center">
+              What's cooking?
+            </CardTitle>
+            <p className="text-white/70 text-center text-sm font-body mt-1">
+              {conversationHistory.length > 0
+                ? "Refine your recipe or ask follow-up questions"
+                : "Tell me what you'd like to cook, and I'll create a recipe for you"
               }
-              className="flex-1 rounded-lg bg-zinc-500 px-4 py-2 text-white focus:outline-none focus:ring-0"
-              disabled={isLoading}
-            />
-            <Button
-              type="submit"
-              disabled={isLoading || !input.trim()}
-              className="rounded-lg bg-[#fcf45a]/70 px-4 py-2 font-semibold text-black hover:bg-[#fcf45a] disabled:opacity-50"
-            >
-              Send
-            </Button>
-          </form>
-        </div>
-{isLoading && !generation && (
-          <div className="mt-2">
-            <CookingProgressLoader
-              progress={progress}
-              message="Cooking up your recipe..."
-            />
-          </div>
-        )}
-      </div>
+            </p>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3">
+              {/* Input field with custom styling */}
+              <div className="relative">
+                <Input
+                  type="text"
+                  value={input}
+                  onChange={handleChange}
+                  placeholder={conversationHistory.length > 0
+                    ? "Make it spicier, add more vegetables, change the protein..."
+                    : "A hearty pasta dish, light summer salad, comfort food..."
+                  }
+                  className="w-full rounded-lg bg-[#1d7b86] border-2 border-[#fcf45a]/30 px-4 py-3 text-white placeholder:text-white/40 font-body focus:border-[#fcf45a] focus:outline-none focus:ring-2 focus:ring-[#fcf45a]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  disabled={isLoading}
+                />
+                {/* Decorative accent */}
+                <div className="absolute -bottom-1 right-2 w-8 h-1 bg-[#fcf45a]/40 rounded-full blur-sm" />
+              </div>
+
+              {/* Submit button with playful styling */}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button
+                  type="submit"
+                  disabled={isLoading || !input.trim()}
+                  className="w-full rounded-lg bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 disabled:opacity-50 disabled:cursor-not-allowed font-body-bold text-lg py-6 shadow-yellow transition-all relative overflow-hidden group"
+                >
+                  {/* Button shine effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    animate={{
+                      x: ['-100%', '200%']
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatDelay: 1,
+                      ease: "easeInOut"
+                    }}
+                  />
+                  <span className="relative flex items-center justify-center gap-2">
+                    {isLoading ? (
+                      <>
+                        <motion.span
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        >
+                          🍳
+                        </motion.span>
+                        Cooking...
+                      </>
+                    ) : (
+                      <>
+                        <span>✨</span>
+                        {conversationHistory.length > 0 ? "Refine Recipe" : "Create Recipe"}
+                        <span>✨</span>
+                      </>
+                    )}
+                  </span>
+                </Button>
+              </motion.div>
+            </form>
+
+            {/* Loading indicator */}
+            <AnimatePresence>
+              {isLoading && !generation && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <CookingProgressLoader
+                    progress={progress}
+                    message="Cooking up your recipe..."
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </CardContent>
+
+        </Card>
+      </motion.div>
 
       {/* Conversation History Indicator
       {conversationHistory.length > 0 && (
@@ -198,75 +287,106 @@ export default function RecipeGenerator() {
         </Card>
       )} */}
 
-      {generation && (
-        <div className="w-full max-w-2xl mx-auto mt-4">
-          {/* Recipe Actions */}
-          <Card className="mb-4 bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-[#fcf45a] text-lg font-body-bold">Recipe Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {/* Start Session Button */}
-              <Button
-                onClick={startCookingSession}
-                className="w-full bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 font-body-semibold"
-              >
-                🍳 Start Recipe Session
-              </Button>
-
-              {/* Save/Keep Buttons */}
-              <div className="flex gap-2">
-                {saveStatus === 'none' && (
-                  <>
-                    <Button
-                      onClick={() => saveRecipe(generation)}
-                      disabled={isSaving}
-                      className="flex-1 bg-white text-[#1d7b86] hover:bg-gray-100 font-body-semibold"
-                    >
-                      {isSaving ? (
-                        <span className="flex items-center gap-2">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1d7b86]"></div>
-                          Saving...
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-2">
-                          📖 Save Recipe
-                        </span>
-                      )}
-                    </Button>
-                    <Button
-                      onClick={() => alert('This recipe will be kept in your current session but not saved to your collection. You can always save it later.')}
-                      variant="outline"
-                      className="flex-1 border-[#fcf45a] text-[#fcf45a] hover:bg-[#fcf45a]/20"
-                    >
-                      ✓ Keep for Now
-                    </Button>
-                  </>
-                )}
-                
-                {saveStatus === 'saved' && (
-                  <div className="flex-1 flex items-center justify-center gap-2 p-3 bg-green-100 border border-green-300 rounded-lg">
-                    <span className="text-green-600">✓</span>
-                    <span className="text-green-600 font-body-semibold">Recipe Saved!</span>
-                  </div>
-                )}
-                
-                {saveStatus === 'error' && (
+      <AnimatePresence mode="wait">
+        {generation && (
+          <motion.div
+            key={generation.name}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="w-full max-w-2xl mx-auto mt-4"
+          >
+            {/* Recipe Actions */}
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+                delay: 0.1
+              }}
+            >
+              <Card className="mb-4 bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-[#fcf45a] text-lg font-body-bold">Recipe Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {/* Start Session Button */}
                   <Button
-                    onClick={() => saveRecipe(generation)}
-                    className="flex-1 bg-red-500 text-white hover:bg-red-600 font-body-semibold"
+                    onClick={startCookingSession}
+                    className="w-full bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 font-body-semibold"
                   >
-                    🔄 Retry Save
+                    🍳 Start Recipe Session
                   </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Recipe Details */}
-          <RecipeDetail recipe={generation} />
-        </div>
-      )}
+                  {/* Save/Keep Buttons */}
+                  <div className="flex gap-2">
+                    {saveStatus === 'none' && (
+                      <>
+                        <Button
+                          onClick={() => saveRecipe(generation)}
+                          disabled={isSaving}
+                          className="flex-1 bg-white text-[#1d7b86] hover:bg-gray-100 font-body-semibold"
+                        >
+                          {isSaving ? (
+                            <span className="flex items-center gap-2">
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1d7b86]"></div>
+                              Saving...
+                            </span>
+                          ) : (
+                            <span className="flex items-center gap-2">
+                              📖 Save Recipe
+                            </span>
+                          )}
+                        </Button>
+                        <Button
+                          onClick={() => alert('This recipe will be kept in your current session but not saved to your collection. You can always save it later.')}
+                          variant="outline"
+                          className="flex-1 border-[#fcf45a] text-[#fcf45a] hover:bg-[#fcf45a]/20"
+                        >
+                          ✓ Keep for Now
+                        </Button>
+                      </>
+                    )}
+
+                    {saveStatus === 'saved' && (
+                      <div className="flex-1 flex items-center justify-center gap-2 p-3 bg-green-100 border border-green-300 rounded-lg">
+                        <span className="text-green-600">✓</span>
+                        <span className="text-green-600 font-body-semibold">Recipe Saved!</span>
+                      </div>
+                    )}
+
+                    {saveStatus === 'error' && (
+                      <Button
+                        onClick={() => saveRecipe(generation)}
+                        className="flex-1 bg-red-500 text-white hover:bg-red-600 font-body-semibold"
+                      >
+                        🔄 Retry Save
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Recipe Details */}
+            <motion.div
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 240,
+                damping: 20,
+                delay: 0.25
+              }}
+            >
+              <RecipeDetail recipe={generation} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
