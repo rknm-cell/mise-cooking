@@ -118,13 +118,83 @@ interface CookingProgressLoaderProps {
   message?: string;
 }
 
+// Cooking prep phrases that change based on progress
+const COOKING_PHRASES = [
+  { threshold: 0, message: "Gathering ingredients...", emoji: "🥕" },
+  { threshold: 15, message: "Prepping the mise en place...", emoji: "🔪" },
+  { threshold: 30, message: "Heating up the kitchen...", emoji: "🔥" },
+  { threshold: 45, message: "Measuring and mixing...", emoji: "🥄" },
+  { threshold: 60, message: "Adding the secret ingredients...", emoji: "✨" },
+  { threshold: 75, message: "Tasting and adjusting...", emoji: "👨‍🍳" },
+  { threshold: 85, message: "Plating the masterpiece...", emoji: "🍽️" },
+  { threshold: 95, message: "Final touches...", emoji: "🌿" }
+];
+
+function getCookingPhrase(progress: number): { message: string; emoji: string } {
+  // Find the highest threshold that progress has passed
+  for (let i = COOKING_PHRASES.length - 1; i >= 0; i--) {
+    if (progress >= COOKING_PHRASES[i]!.threshold) {
+      return COOKING_PHRASES[i]!;
+    }
+  }
+  return COOKING_PHRASES[0]!;
+}
+
 export const CookingProgressLoader = ({
   progress = 0,
-  message = "Cooking up your recipe..."
+  message
 }: CookingProgressLoaderProps) => {
+  const currentPhrase = getCookingPhrase(progress);
+  const displayMessage = message || currentPhrase.message;
+
   return (
     <div className="w-full space-y-3">
-      <CookingLoader message={message} variant="compact" />
+      {/* Dynamic cooking phrase with emoji */}
+      <div className="flex items-center justify-center gap-3 py-2">
+        <motion.div
+          key={currentPhrase.emoji}
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 20
+          }}
+          className="text-3xl"
+        >
+          {currentPhrase.emoji}
+        </motion.div>
+
+        <motion.span
+          key={displayMessage}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+          className="font-display text-[#fcf45a] text-lg"
+        >
+          {displayMessage}
+        </motion.span>
+
+        {/* Animated dots */}
+        <div className="flex gap-1">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className="w-1.5 h-1.5 bg-[#fcf45a] rounded-full"
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.5, 1, 0.5]
+              }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                delay: i * 0.2,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* Enhanced progress bar */}
       <div className="relative h-2 w-full bg-[#1d7b86]/30 rounded-full overflow-hidden">

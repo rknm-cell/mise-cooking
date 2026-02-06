@@ -51,7 +51,7 @@ export default function RecipeGenerator() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return; // Prevent submission if already loading
 
     const userMessage = input.trim();
     setInput(''); // Clear input immediately
@@ -191,49 +191,41 @@ export default function RecipeGenerator() {
               </div>
 
               {/* Submit button with playful styling */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Button
-                  type="submit"
-                  disabled={isLoading || !input.trim()}
-                  className="w-full rounded-lg bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 disabled:opacity-50 disabled:cursor-not-allowed font-body-bold text-lg py-6 shadow-yellow transition-all relative overflow-hidden group"
+              {!isLoading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  {/* Button shine effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                    animate={{
-                      x: ['-100%', '200%']
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      repeatDelay: 1,
-                      ease: "easeInOut"
-                    }}
-                  />
-                  <span className="relative flex items-center justify-center gap-2">
-                    {isLoading ? (
-                      <>
-                        <motion.span
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        >
-                          🍳
-                        </motion.span>
-                        Cooking...
-                      </>
-                    ) : (
-                      <>
-                        <span>✨</span>
-                        {conversationHistory.length > 0 ? "Refine Recipe" : "Create Recipe"}
-                        <span>✨</span>
-                      </>
-                    )}
-                  </span>
-                </Button>
-              </motion.div>
+                  <Button
+                    type="submit"
+                    disabled={!input.trim()}
+                    className="w-full rounded-lg bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 disabled:opacity-50 disabled:cursor-not-allowed font-body-bold text-lg py-6 shadow-yellow transition-all relative overflow-hidden group"
+                  >
+                    {/* Button shine effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      animate={{
+                        x: ['-100%', '200%']
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        repeatDelay: 1,
+                        ease: "easeInOut"
+                      }}
+                    />
+                    <span className="relative flex items-center justify-center gap-2">
+                      <span>✨</span>
+                      {conversationHistory.length > 0 ? "Refine Recipe" : "Create Recipe"}
+                      <span>✨</span>
+                    </span>
+                  </Button>
+                </motion.div>
+              )}
             </form>
 
             {/* Loading indicator */}
@@ -247,7 +239,6 @@ export default function RecipeGenerator() {
                 >
                   <CookingProgressLoader
                     progress={progress}
-                    message="Cooking up your recipe..."
                   />
                 </motion.div>
               )}
