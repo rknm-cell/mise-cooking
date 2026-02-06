@@ -19,7 +19,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   if (!id || isLoading) {
     return (
-      <div className="bg-linear-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col">
+      <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col p-4">
         <div className="text-white">Loading recipe...</div>
       </div>
     );
@@ -27,7 +27,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   if (error) {
     return (
-      <div className="bg-linear-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col">
+      <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col p-4">
         <div className="text-white">Error loading recipe: {error.message}</div>
       </div>
     );
@@ -35,14 +35,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   if (!recipe) {
     return (
-      <div className="bg-linear-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col">
+      <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col p-4">
         <div className="text-white">Recipe not found</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-linear-to-b from-[#1d7b86] to-[#426b70] items-center h-dvh flex flex-col">
+    <div className="bg-gradient-to-b from-[#1d7b86] to-[#426b70] items-center min-h-dvh flex flex-col p-4 sm:p-6 lg:p-8">
       <RecipeDetail recipe={recipe} />
     </div>
   );
