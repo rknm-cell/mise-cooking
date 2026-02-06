@@ -4,7 +4,7 @@ import RecipeGenerator from "./components/recipes/RecipeGenerator";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1d7b86] to-[#426b70] text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#1d7b86] to-[#426b70] text-white texture-grain pattern-organic">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
           <div className="flex flex-col justify-center items-center">

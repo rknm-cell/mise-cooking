@@ -22,6 +22,13 @@
       "when": 1753127617450,
       "tag": "0002_great_lady_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1770322206673,
+      "tag": "0003_square_epoch",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Nanum+Pen+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Nanum+Pen+Script&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -13,18 +13,42 @@
   -moz-osx-font-smoothing: grayscale;
   font-display: swap;
 }
-/* .nanum-pen-script-bold {
+
+.font-display {
   font-family: "Nanum Pen Script", cursive;
+}
+
+.font-body {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-body-light {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 300;
+}
+
+.font-body-medium {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+}
+
+.font-body-semibold {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+}
+
+.font-body-bold {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
-  font-style: normal;
-} */
+}
 
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  --font-sans: "DM Sans", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display: "Nanum Pen Script", cursive;
 }
 
 @theme inline {
@@ -271,5 +295,334 @@
   }
   p, span, div, a, button, input, textarea, select, label {
     line-height: inherit;
+  }
+}
+
+@layer utilities {
+  /* Noise/Grain Texture Overlay */
+  .texture-grain {
+    position: relative;
+  }
+
+  .texture-grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' fill='%23000000'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .texture-grain > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Paper/Linen Texture */
+  .texture-paper {
+    position: relative;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.03) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(255, 255, 255, 0.03) 3px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(255, 255, 255, 0.03) 3px
+      );
+  }
+
+  /* Organic watercolor-style blob pattern */
+  .pattern-organic {
+    position: relative;
+  }
+
+  .pattern-organic::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fcf45a' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v6h6V4z'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .pattern-organic > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Kitchen/cooking themed decorative pattern */
+  .pattern-kitchen {
+    position: relative;
+  }
+
+  .pattern-kitchen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fcf45a' fill-opacity='0.04'%3E%3Cpath d='M0 0h80v80H0V0zm20 20v40h40V20H20zm2 2h36v36H22V22z'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .pattern-kitchen > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Enhanced shadow with color tint */
+  .shadow-ocean {
+    box-shadow:
+      0 4px 6px -1px rgba(29, 123, 134, 0.15),
+      0 2px 4px -1px rgba(29, 123, 134, 0.1);
+  }
+
+  .shadow-ocean-lg {
+    box-shadow:
+      0 10px 15px -3px rgba(29, 123, 134, 0.2),
+      0 4px 6px -2px rgba(29, 123, 134, 0.15);
+  }
+
+  .shadow-yellow {
+    box-shadow:
+      0 4px 6px -1px rgba(252, 244, 90, 0.2),
+      0 2px 4px -1px rgba(252, 244, 90, 0.15);
+  }
+
+  .shadow-yellow-lg {
+    box-shadow:
+      0 10px 15px -3px rgba(252, 244, 90, 0.25),
+      0 4px 6px -2px rgba(252, 244, 90, 0.2);
+  }
+
+  /* Backdrop blur utility */
+  .backdrop-blur-soft {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Layered depth effect */
+  .depth-layer {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+
+  /* Subtle glow effect */
+  .glow-yellow {
+    box-shadow: 0 0 20px rgba(252, 244, 90, 0.15);
+  }
+
+  .glow-ocean {
+    box-shadow: 0 0 20px rgba(29, 123, 134, 0.2);
+  }
+
+  /* Masonry Grid Layout */
+  .masonry-grid {
+    display: flex;
+    margin-left: -1rem; /* gutter size offset */
+    width: auto;
+  }
+
+  .masonry-grid-column {
+    padding-left: 1rem; /* gutter size */
+    background-clip: padding-box;
+  }
+
+  .masonry-grid-column > div {
+    margin-bottom: 1rem;
+  }
+
+  /* Recipe badge styles (interactive elements) */
+  .badge-difficulty-easy {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+  }
+
+  .badge-difficulty-medium {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  }
+
+  .badge-difficulty-hard {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  }
+
+  .badge-cuisine {
+    background: var(--mise-yellow-500);
+    color: var(--mise-ocean-700);
+    font-weight: 600;
+    transform: rotate(-2deg);
+    box-shadow: 0 2px 8px rgba(252, 244, 90, 0.4);
+  }
+
+  .badge-dietary {
+    border: 2px dashed var(--mise-yellow-500);
+    background: transparent;
+    color: var(--mise-yellow-500);
+  }
+
+  /* ========== 5. Decorative Elements & Atmosphere ========== */
+
+  /* Hand-drawn border - dotted, 25% thin, same dot length on all sides (4 separate edges) */
+  .recipe-card-handdrawn {
+    position: relative;
+    border: none;
+  }
+
+  .recipe-card-dot-border-top,
+  .recipe-card-dot-border-right,
+  .recipe-card-dot-border-bottom,
+  .recipe-card-dot-border-left {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .recipe-card-dot-border-top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: repeating-linear-gradient(
+      90deg,
+      #fcf45a 0,
+      #fcf45a 8px,
+      transparent 8px,
+      transparent 24px
+    );
+  }
+
+  .recipe-card-dot-border-bottom {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: repeating-linear-gradient(
+      90deg,
+      #fcf45a 0,
+      #fcf45a 8px,
+      transparent 8px,
+      transparent 24px
+    );
+  }
+
+  .recipe-card-dot-border-left {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 8px;
+    background: repeating-linear-gradient(
+      180deg,
+      #fcf45a 0,
+      #fcf45a 8px,
+      transparent 8px,
+      transparent 24px
+    );
+  }
+
+  .recipe-card-dot-border-right {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 8px;
+    background: repeating-linear-gradient(
+      180deg,
+      #fcf45a 0,
+      #fcf45a 8px,
+      transparent 8px,
+      transparent 24px
+    );
+  }
+
+  /* Torn paper edge (subtle jagged top) */
+  .recipe-card-torn {
+    clip-path: polygon(
+      0 4%, 2% 0, 5% 3%, 8% 0, 12% 2%, 16% 0, 20% 3%, 24% 0, 28% 2%, 32% 0, 36% 3%, 40% 0, 44% 2%, 48% 0, 52% 3%, 56% 0, 60% 2%, 64% 0, 68% 3%, 72% 0, 76% 2%, 80% 0, 84% 3%, 88% 0, 92% 2%, 96% 0, 100% 3%, 100% 100%, 0 100%
+    );
+  }
+
+  /* Steam / smoke effect - wispy vertical streaks rising from food */
+  @keyframes steam-rise {
+    0% {
+      transform: translateY(0) scaleY(1) scaleX(0.6);
+      opacity: 0.5;
+    }
+    40% {
+      transform: translateY(-30px) scaleY(1.4) scaleX(0.9);
+      opacity: 0.35;
+    }
+    100% {
+      transform: translateY(-80px) scaleY(2) scaleX(1.2);
+      opacity: 0;
+    }
+  }
+
+  .steam-effect {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    width: 16px;
+    height: 50px;
+    margin-left: -8px;
+    background: linear-gradient(
+      to top,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 20%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.12) 80%,
+      transparent 100%
+    );
+    border-radius: 50%;
+    filter: blur(6px);
+    animation: steam-rise 4s ease-out infinite;
+    pointer-events: none;
+  }
+
+  .steam-effect:nth-child(2) {
+    left: 35%;
+    margin-left: -6px;
+    width: 12px;
+    height: 45px;
+    animation-delay: 1.2s;
+    animation-duration: 4.5s;
+  }
+
+  .steam-effect:nth-child(3) {
+    left: 65%;
+    margin-left: -6px;
+    width: 12px;
+    height: 40px;
+    animation-delay: 2.4s;
+    animation-duration: 3.8s;
+  }
+
+  .steam-effect:nth-child(4) {
+    left: 50%;
+    margin-left: -4px;
+    width: 8px;
+    height: 35px;
+    animation-delay: 0.6s;
+    animation-duration: 3.5s;
+  }
+
+  .steam-effect:nth-child(5) {
+    left: 45%;
+    margin-left: -5px;
+    width: 10px;
+    height: 42px;
+    animation-delay: 2s;
   }
 }

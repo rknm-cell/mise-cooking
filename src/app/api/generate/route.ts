@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 import { saveRecipe } from "~/server/db/queries";
 import { z } from "zod";
 import { NextResponse } from "next/server";
+import { getRecipeImage } from "~/lib/recipeImageMapper";
 
 // Route segment config to prevent redirects
 export const runtime = 'nodejs';
@@ -84,7 +85,7 @@ If the user is modifying a previous recipe, note what changes were made in the d
     
     const recipe = result.object;
     recipe.id = nanoid();
-    
+
     // Add conversation context if this is a modification
     if (conversationHistory && conversationHistory.length > 0) {
       recipe.isModification = true;
@@ -94,9 +95,12 @@ If the user is modifying a previous recipe, note what changes were made in the d
         .map(msg => msg.content)
         .join('; ')}`;
     }
-    
+
     const {id, name, description, totalTime, servings, ingredients, instructions, storage, nutrition } = recipe;
-    
+
+    // Automatically assign an appropriate image based on recipe name
+    const imageUrl = getRecipeImage(name);
+
     // Save to database and handle the response
     const saveResult = await saveRecipe({
       id: id,
@@ -108,6 +112,7 @@ If the user is modifying a previous recipe, note what changes were made in the d
       instructions: instructions,
       storage: storage,
       nutrition: nutrition,
+      imageUrl: imageUrl,
     });
     
     console.log("saveResult: ", saveResult);

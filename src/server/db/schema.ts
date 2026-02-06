@@ -26,6 +26,7 @@ export const recipe = pgTable("recipe", {
   instructions: varchar("instructions").array().notNull(),
   storage: varchar("storage").notNull(),
   nutrition: varchar("nutrition").array().notNull(),
+  imageUrl: varchar("image_url"),
   createdAt: timestamp("createdAt").notNull(),
 });
 
@@ -41,6 +42,7 @@ export const recipeObject = z.object({
   instructions: z.array(z.string()),
   storage: z.string(),
   nutrition: z.array(z.string()),
+  imageUrl: z.string().optional(),
 });
 
 export type RecipeSchema = z.infer<typeof recipeObject>;
