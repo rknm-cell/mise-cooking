@@ -31,7 +31,7 @@ interface RecipeDetails {
   storage: string;
   nutrition: string[];
   totalTime: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   difficulty?: string;
   cuisine?: string;
   dietaryTags?: string[];
