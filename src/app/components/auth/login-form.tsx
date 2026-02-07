@@ -55,6 +55,7 @@ export function LoginForm({
 
   const signInWithGoogle = async () => {
     try {
+      setIsLoading(true);
       await authClient.signIn.social({
         provider: "google",
         callbackURL: "/api/auth/callback",
@@ -62,6 +63,8 @@ export function LoginForm({
     } catch (error) {
       console.error("Google signin error:", error);
       toast.error("Failed to sign in with Google");
+    } finally {
+      setIsLoading(false);
     }
   };
 

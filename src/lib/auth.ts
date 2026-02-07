@@ -2,13 +2,27 @@ import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "~/server/db";
+import * as schema from "~/server/db/schema";
 import { env } from "~/env";
 
 export const auth = betterAuth({
-  database: drizzleAdapter(db, { provider: "pg" }),
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    schema: {
+      user: schema.user,
+      session: schema.session,
+      account: schema.account,
+      verification: schema.verification,
+    },
+  }),
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
   basePath: "/auth",
+  // Enable debug logging in development
+  logger: {
+    level: process.env.NODE_ENV === 'development' ? 'debug' : 'error',
+    disabled: false,
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false, // No email verification for now

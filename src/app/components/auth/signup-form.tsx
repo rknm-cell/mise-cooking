@@ -61,7 +61,7 @@ export function SignupForm({
       setIsLoading(true);
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: "/api/auth/callback",
       });
     } catch (error) {
       console.error("Google signup error:", error);
@@ -74,7 +74,7 @@ export function SignupForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      
+
       const result = await authClient.signUp.email({
         email: values.email,
         password: values.password,
@@ -83,8 +83,16 @@ export function SignupForm({
 
       // Check if we have user data (successful sign up)
       if ('user' in result) {
+        const user = result.user as { id: string };
         toast.success("Account created successfully!");
-        router.push("/dashboard");
+
+        // Check if user needs to complete onboarding
+        const onboardingCheck = await fetch(`/api/user/preferences?userId=${user.id}`);
+        if (onboardingCheck.status === 404) {
+          router.push("/onboarding");
+        } else {
+          router.push("/dashboard");
+        }
       } else {
         toast.error("Failed to create account");
       }
