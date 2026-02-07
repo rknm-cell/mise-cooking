@@ -76,10 +76,11 @@ export function LoginForm({
 
       // Check if we have user data (successful sign in)
       if ('user' in result) {
+        const user = result.user as { id: string };
         toast.success("Signed in successfully!");
 
         // Check if user needs to complete onboarding
-        const onboardingCheck = await fetch(`/api/user/preferences?userId=${result.user.id}`);
+        const onboardingCheck = await fetch(`/api/user/preferences?userId=${user.id}`);
         if (onboardingCheck.status === 404) {
           router.push("/onboarding");
         } else {
