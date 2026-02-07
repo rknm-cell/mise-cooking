@@ -36,6 +36,7 @@ export const auth = betterAuth({
     onSignUp: async ({ user }) => {
       // Initialize user preferences and history
       console.log(`New user registered: ${user.email}`);
+      // New users will be redirected to onboarding in the login flow
       return true;
     },
   },

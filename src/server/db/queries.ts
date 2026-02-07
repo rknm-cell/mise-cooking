@@ -296,11 +296,11 @@ export async function clearCompletedShoppingItems(userId: string): Promise<{ suc
     // First get all shopping lists for the user
     const lists = await getShoppingLists(userId);
     const listIds = lists.map(list => list.id);
-    
+
     if (listIds.length === 0) {
       return { success: true };
     }
-    
+
     // Delete all completed items from all user's lists
     await db.delete(schema.shoppingListItem)
       .where(
@@ -309,11 +309,108 @@ export async function clearCompletedShoppingItems(userId: string): Promise<{ suc
           eq(schema.shoppingListItem.isCompleted, true)
         )
       );
-    
+
     return { success: true };
   } catch (error) {
     console.error(`Error clearing completed shopping items: `, error);
     return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
 
+  }
+}
+
+// User Preferences Queries
+export async function getUserPreferences(userId: string): Promise<schema.UserPreferences | null> {
+  try {
+    const preferences = await db.query.userPreferences.findFirst({
+      where: eq(schema.userPreferences.userId, userId),
+    });
+    return preferences ?? null;
+  } catch (error) {
+    console.error(`Error fetching user preferences for ${userId}:`, error);
+    return null;
+  }
+}
+
+export async function createUserPreferences(
+  userId: string,
+  preferences: {
+    dietaryRestrictions?: string[];
+    allergies?: string[];
+    favoriteCuisines?: string[];
+    skillLevel?: string;
+    spiceTolerance?: string;
+    maxCookingTime?: number;
+    preferredServingSize?: number;
+    availableEquipment?: string[];
+    mealPrepFriendly?: boolean;
+    quickMealsOnly?: boolean;
+  }
+): Promise<{ success: boolean; preferences?: schema.UserPreferences; message?: string }> {
+  try {
+    const newPreferences = await db.insert(schema.userPreferences).values({
+      userId,
+      dietaryRestrictions: preferences.dietaryRestrictions,
+      allergies: preferences.allergies,
+      favoriteCuisines: preferences.favoriteCuisines,
+      skillLevel: preferences.skillLevel,
+      spiceTolerance: preferences.spiceTolerance,
+      maxCookingTime: preferences.maxCookingTime,
+      preferredServingSize: preferences.preferredServingSize,
+      availableEquipment: preferences.availableEquipment,
+      mealPrepFriendly: preferences.mealPrepFriendly,
+      quickMealsOnly: preferences.quickMealsOnly,
+      onboardingCompleted: false,
+    }).returning();
+    return { success: true, preferences: newPreferences[0] };
+  } catch (error) {
+    console.error(`Error creating user preferences:`, error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function updateUserPreferences(
+  userId: string,
+  updates: {
+    dietaryRestrictions?: string[];
+    allergies?: string[];
+    favoriteCuisines?: string[];
+    skillLevel?: string;
+    spiceTolerance?: string;
+    maxCookingTime?: number;
+    preferredServingSize?: number;
+    availableEquipment?: string[];
+    mealPrepFriendly?: boolean;
+    quickMealsOnly?: boolean;
+    onboardingCompleted?: boolean;
+  }
+): Promise<{ success: boolean; preferences?: schema.UserPreferences; message?: string }> {
+  try {
+    const updatedAt = new Date();
+    const onboardingCompletedAt = updates.onboardingCompleted ? new Date() : undefined;
+
+    const updatedPreferences = await db
+      .update(schema.userPreferences)
+      .set({
+        ...updates,
+        updatedAt,
+        ...(onboardingCompletedAt && { onboardingCompletedAt }),
+      })
+      .where(eq(schema.userPreferences.userId, userId))
+      .returning();
+
+    return { success: true, preferences: updatedPreferences[0] };
+  } catch (error) {
+    console.error(`Error updating user preferences:`, error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function checkOnboardingStatus(userId: string): Promise<boolean> {
+  try {
+    const preferences = await getUserPreferences(userId);
+    return preferences?.onboardingCompleted ?? false;
+  } catch (error) {
+    console.error(`Error checking onboarding status:`, error);
+    return false;
   }
 }

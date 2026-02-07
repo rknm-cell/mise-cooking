@@ -57,7 +57,7 @@ export function LoginForm({
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: "/api/auth/callback",
       });
     } catch (error) {
       console.error("Google signin error:", error);
@@ -68,7 +68,7 @@ export function LoginForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      
+
       const result = await authClient.signIn.email({
         email: values.email,
         password: values.password,
@@ -76,8 +76,16 @@ export function LoginForm({
 
       // Check if we have user data (successful sign in)
       if ('user' in result) {
+        const user = result.user as { id: string };
         toast.success("Signed in successfully!");
-        router.push("/dashboard");
+
+        // Check if user needs to complete onboarding
+        const onboardingCheck = await fetch(`/api/user/preferences?userId=${user.id}`);
+        if (onboardingCheck.status === 404) {
+          router.push("/onboarding");
+        } else {
+          router.push("/dashboard");
+        }
       } else {
         toast.error("Invalid email or password");
       }

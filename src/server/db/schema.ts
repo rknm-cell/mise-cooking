@@ -1,6 +1,6 @@
 // Drizzle ORM Schema for Mise Cooking App
 
-import { relations, type InferSelectModel } from "drizzle-orm";
+import { relations, sql, type InferSelectModel } from "drizzle-orm";
 import {
     boolean,
     integer,
@@ -174,14 +174,69 @@ export type ShoppingList = InferSelectModel<typeof shoppingList>;
 export type ShoppingListItem = InferSelectModel<typeof shoppingListItem>;
 
 // ============================================================================
+// USER PREFERENCES TABLES
+// ============================================================================
+
+export const userPreferences = pgTable("user_preferences", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => user.id, { onDelete: "cascade" }),
+
+  // Dietary Restrictions
+  dietaryRestrictions: text("dietary_restrictions").array().default(sql`ARRAY[]::text[]`),
+  // Options: "vegetarian", "vegan", "gluten-free", "dairy-free", "nut-free", "halal", "kosher"
+
+  // Allergies
+  allergies: text("allergies").array().default(sql`ARRAY[]::text[]`),
+
+  // Cuisine Preferences
+  favoriteCuisines: text("favorite_cuisines").array().default(sql`ARRAY[]::text[]`),
+  // Options: "italian", "mexican", "chinese", "japanese", "indian", "thai", "mediterranean", etc.
+
+  // Cooking Profile
+  skillLevel: text("skill_level").default("beginner"),
+  // Options: "beginner", "intermediate", "advanced"
+
+  spiceTolerance: text("spice_tolerance").default("medium"),
+  // Options: "none", "mild", "medium", "hot", "extra-hot"
+
+  // Constraints
+  maxCookingTime: integer("max_cooking_time"), // in minutes, nullable
+  preferredServingSize: integer("preferred_serving_size").default(2),
+
+  // Kitchen Equipment
+  availableEquipment: text("available_equipment").array().default(sql`ARRAY[]::text[]`),
+  // Options: "oven", "stovetop", "microwave", "slow-cooker", "air-fryer", "grill", "blender", "food-processor"
+
+  // Preferences
+  mealPrepFriendly: boolean("meal_prep_friendly").default(false),
+  quickMealsOnly: boolean("quick_meals_only").default(false),
+
+  // Onboarding
+  onboardingCompleted: boolean("onboarding_completed").default(false),
+  onboardingCompletedAt: timestamp("onboarding_completed_at"),
+
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export type UserPreferences = InferSelectModel<typeof userPreferences>;
+
+// ============================================================================
 // RELATIONS
 // ============================================================================
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ many, one }) => ({
   bookmarks: many(bookmark),
   shoppingLists: many(shoppingList),
   sessions: many(session),
   accounts: many(account),
+  preferences: one(userPreferences, {
+    fields: [user.id],
+    references: [userPreferences.userId],
+  }),
 }));
 
 export const recipeRelations = relations(recipe, ({ many }) => ({
@@ -214,4 +269,14 @@ export const shoppingListItemRelations = relations(shoppingListItem, ({ one }) =
 // EXPORTS
 // ============================================================================
 
-export const schema = { user, session, account, verification, recipe, bookmark, shoppingList, shoppingListItem };
+export const schema = {
+  user,
+  session,
+  account,
+  verification,
+  recipe,
+  bookmark,
+  shoppingList,
+  shoppingListItem,
+  userPreferences,
+};
