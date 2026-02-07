@@ -61,12 +61,11 @@ export function SignupForm({
       setIsLoading(true);
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/api/auth/callback",
+        callbackURL: "/onboarding",
       });
     } catch (error) {
       console.error("Google signup error:", error);
       toast.error("Failed to sign up with Google");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -81,18 +80,16 @@ export function SignupForm({
         name: values.name,
       });
 
-      // Check if we have user data (successful sign up)
-      if ('user' in result) {
-        const user = result.user as { id: string };
-        toast.success("Account created successfully!");
+      console.log("Sign up result:", result);
 
-        // Check if user needs to complete onboarding
-        const onboardingCheck = await fetch(`/api/user/preferences?userId=${user.id}`);
-        if (onboardingCheck.status === 404) {
-          router.push("/onboarding");
-        } else {
-          router.push("/dashboard");
-        }
+      // Check if sign up was successful
+      if (result.data) {
+        toast.success("Account created successfully!");
+        // New users should always go through onboarding
+        // Use window.location for a hard redirect to ensure proper session refresh
+        window.location.href = "/onboarding";
+      } else if (result.error) {
+        toast.error(result.error.message || "Failed to create account");
       } else {
         toast.error("Failed to create account");
       }

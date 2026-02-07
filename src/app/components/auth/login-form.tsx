@@ -58,12 +58,11 @@ export function LoginForm({
       setIsLoading(true);
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/api/auth/callback",
+        callbackURL: "/dashboard",
       });
     } catch (error) {
       console.error("Google signin error:", error);
       toast.error("Failed to sign in with Google");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -77,20 +76,17 @@ export function LoginForm({
         password: values.password,
       });
 
-      // Check if we have user data (successful sign in)
-      if ('user' in result) {
-        const user = result.user as { id: string };
-        toast.success("Signed in successfully!");
+      console.log("Sign in result:", result);
 
-        // Check if user needs to complete onboarding
-        const onboardingCheck = await fetch(`/api/user/preferences?userId=${user.id}`);
-        if (onboardingCheck.status === 404) {
-          router.push("/onboarding");
-        } else {
-          router.push("/dashboard");
-        }
+      // Check if sign in was successful
+      if (result.data) {
+        toast.success("Signed in successfully!");
+        // Use window.location for a hard redirect to ensure proper session refresh
+        window.location.href = "/dashboard";
+      } else if (result.error) {
+        toast.error(result.error.message || "Invalid email or password");
       } else {
-        toast.error("Invalid email or password");
+        toast.error("Failed to sign in");
       }
     } catch (error) {
       console.error("Signin error:", error);
