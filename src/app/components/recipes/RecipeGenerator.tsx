@@ -3,6 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import RecipeDetail from "~/app/components/recipes/RecipeDetail";
 import { CookingProgressLoader } from "~/app/components/recipes/CookingLoader";
+import { ChatFAB } from "~/app/components/recipes/ChatFAB";
+import { ChatPanel } from "~/app/components/recipes/ChatPanel";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -37,6 +39,7 @@ export default function RecipeGenerator() {
   const [saveStatus, setSaveStatus] = useState<'none' | 'saved' | 'error'>('none');
   const [error, setError] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const totalDuration = 10000;
   const updateInterval = 100;
@@ -409,98 +412,154 @@ export default function RecipeGenerator() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="w-full max-w-2xl mx-auto mt-4"
+            className="w-full max-w-2xl mx-auto mt-6"
           >
-            {/* Recipe Actions */}
+            {/* Conversational intro */}
             <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 20,
-                delay: 0.1
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="mb-4 px-4"
             >
-              <Card className="mb-4 bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-[#fcf45a] text-lg font-body-bold">Recipe Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {/* Start Session Button */}
-                  <Button
-                    onClick={startCookingSession}
-                    className="w-full bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 font-body-semibold"
-                  >
-                    🍳 Start Recipe Session
-                  </Button>
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 w-8 h-8 rounded-full bg-[#fcf45a] flex items-center justify-center shadow-yellow">
+                  <ChefHat className="h-4 w-4 text-[#1d7b86]" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/90 font-body text-sm leading-relaxed">
+                    Great! I've created <span className="text-[#fcf45a] font-body-semibold">{generation.name}</span> for you. What would you like to do?
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
-                  {/* Save/Keep Buttons */}
-                  <div className="flex gap-2">
-                    {saveStatus === 'none' && (
+            {/* Inline Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="mb-4 px-4"
+            >
+              <div className="flex flex-col sm:flex-row gap-2">
+                {/* Start Cooking - Primary Action */}
+                <motion.button
+                  onClick={startCookingSession}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 font-body-bold shadow-yellow transition-all"
+                >
+                  <ChefHat className="h-4 w-4" />
+                  Start Cooking
+                </motion.button>
+
+                {/* Save Recipe */}
+                {saveStatus === 'none' && (
+                  <motion.button
+                    onClick={() => saveRecipe(generation)}
+                    disabled={isSaving}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[#428a93] border-2 border-[#fcf45a]/30 text-white hover:border-[#fcf45a] hover:bg-[#428a93]/80 font-body-semibold transition-all disabled:opacity-50"
+                  >
+                    {isSaving ? (
                       <>
-                        <Button
-                          onClick={() => saveRecipe(generation)}
-                          disabled={isSaving}
-                          className="flex-1 bg-white text-[#1d7b86] hover:bg-gray-100 font-body-semibold"
-                        >
-                          {isSaving ? (
-                            <span className="flex items-center gap-2">
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1d7b86]"></div>
-                              Saving...
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-2">
-                              📖 Save Recipe
-                            </span>
-                          )}
-                        </Button>
-                        <Button
-                          onClick={() => alert('This recipe will be kept in your current session but not saved to your collection. You can always save it later.')}
-                          variant="outline"
-                          className="flex-1 border-[#fcf45a] text-[#fcf45a] hover:bg-[#fcf45a]/20"
-                        >
-                          ✓ Keep for Now
-                        </Button>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Save to Collection
                       </>
                     )}
+                  </motion.button>
+                )}
 
-                    {saveStatus === 'saved' && (
-                      <div className="flex-1 flex items-center justify-center gap-2 p-3 bg-green-100 border border-green-300 rounded-lg">
-                        <span className="text-green-600">✓</span>
-                        <span className="text-green-600 font-body-semibold">Recipe Saved!</span>
-                      </div>
-                    )}
+                {saveStatus === 'saved' && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-green-500/20 border-2 border-green-500/50 text-green-200 font-body-semibold"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Saved!
+                  </motion.div>
+                )}
 
-                    {saveStatus === 'error' && (
-                      <Button
-                        onClick={() => saveRecipe(generation)}
-                        className="flex-1 bg-red-500 text-white hover:bg-red-600 font-body-semibold"
-                      >
-                        🔄 Retry Save
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+                {saveStatus === 'error' && (
+                  <motion.button
+                    onClick={() => saveRecipe(generation)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-red-500/20 border-2 border-red-500/50 text-red-200 hover:bg-red-500/30 font-body-semibold transition-all"
+                  >
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Retry Save
+                  </motion.button>
+                )}
+              </div>
             </motion.div>
 
             {/* Recipe Details */}
             <motion.div
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{
                 type: "spring",
                 stiffness: 240,
                 damping: 20,
-                delay: 0.25
+                delay: 0.3
               }}
             >
               <RecipeDetail recipe={generation} />
             </motion.div>
+
+            {/* Optional: Refine suggestion */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="mt-4 px-4"
+            >
+              <div className="flex items-start gap-3">
+                <div className="shrink-0 w-8 h-8 rounded-full bg-[#428a93] border border-[#fcf45a]/30 flex items-center justify-center">
+                  <Sparkles className="h-4 w-4 text-[#fcf45a]" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/70 font-body text-sm leading-relaxed">
+                    Want to adjust the recipe? Use the form above to request changes like "make it spicier" or "add more vegetables".
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Cooking Assistant FAB and Chat Panel */}
+      {generation && (
+        <>
+          <ChatFAB
+            isOpen={isChatOpen}
+            onClick={() => {
+              console.log('FAB clicked, current state:', isChatOpen);
+              setIsChatOpen(!isChatOpen);
+              console.log('FAB clicked, new state:', !isChatOpen);
+            }}
+          />
+          <ChatPanel
+            isOpen={isChatOpen}
+            onClose={() => setIsChatOpen(false)}
+            recipe={generation}
+          />
+        </>
+      )}
     </>
   );
 }
