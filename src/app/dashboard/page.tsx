@@ -190,13 +190,8 @@ export default function Dashboard() {
               <div className="group relative bg-[#fcf45a]/90 rounded-2xl p-8 cursor-pointer overflow-hidden transition-all hover:shadow-yellow-lg hover:scale-[1.02] border-2 border-[#fcf45a]">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#fcf45a] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="h-14 w-14 rounded-xl bg-[#1d7b86] flex items-center justify-center shadow-ocean">
-                      <ChefHat className="h-7 w-7 text-white" />
-                    </div>
-                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#1d7b86] text-white shadow-lg">
-                      AI Powered
-                    </span>
+                  <div className="h-14 w-14 rounded-xl bg-[#1d7b86] flex items-center justify-center shadow-ocean mb-4">
+                    <ChefHat className="h-7 w-7 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-[#1d7b86] mb-2">
                     Generate New Recipe

@@ -14,11 +14,27 @@ const springBouncy = { type: "spring" as const, stiffness: 280, damping: 40 };
 export default function Page() {
   const { data: recipes, isLoading } = api.recipe.getAllRecipes.useQuery();
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const [layoutMode, setLayoutMode] = useState<"hero" | "masonry">("hero");
   const utils = api.useUtils();
 
+  // Debounce search input for better performance
+  useEffect(() => {
+    setIsSearching(true);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setIsSearching(false);
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+      setIsSearching(false);
+    };
+  }, [search]);
+
   const recipeList = (recipes ?? []).filter((recipe) =>
-    recipe.name.toLowerCase().includes(search.toLowerCase()),
+    recipe.name.toLowerCase().includes(debouncedSearch.toLowerCase()),
   );
 
   // Parallax scroll for header
@@ -72,7 +88,12 @@ export default function Page() {
           </button>
         </div>
       </motion.div>
-      <SearchBar search={search} setSearch={setSearch} />
+      <SearchBar
+        search={search}
+        setSearch={setSearch}
+        resultsCount={recipeList.length}
+        isLoading={isLoading || isSearching}
+      />
 
       {layoutMode === "hero" ? (
         <div className="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-start">

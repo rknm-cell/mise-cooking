@@ -68,7 +68,10 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
           featured && "border-2 border-[#fcf45a] shadow-yellow-lg"
         )}>
           {imageUrl && (
-            <div className="relative h-48 overflow-hidden">
+            <div className={cn(
+              "relative overflow-hidden",
+              featured ? "h-40" : "h-32"
+            )}>
               <img
                 src={imageUrl}
                 alt={name}
@@ -77,44 +80,41 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
               <div className="absolute inset-0 bg-linear-gradient(to top, #1d7b86/80, transparent)" />
             </div>
           )}
-          <CardHeader className={cn("space-y-3 relative", featured && "p-6 sm:p-8")}>
+          <CardHeader className={cn("space-y-2 relative", featured ? "p-4 sm:p-5" : "p-3 sm:p-4")}>
             {/* Bookmark Button */}
-            <div className="absolute top-3 right-3 z-10">
-              <BookmarkButton recipeId={id} size={featured ? 24 : 20} />
+            <div className="absolute top-2 right-2 z-10">
+              <BookmarkButton recipeId={id} size={featured ? 20 : 18} />
             </div>
 
-            <div className="flex items-start gap-3">
-              <div className="flex-1 min-w-0 pr-8">
+            <div className="flex items-start gap-2">
+              <div className="flex-1 min-w-0 pr-7">
                 <CardTitle className={cn(
-                  "text-[#fcf45a] font-body line-clamp-2 mb-2",
-                  featured ? "text-2xl sm:text-3xl lg:text-4xl" : "text-xl sm:text-2xl"
+                  "text-[#fcf45a] font-body line-clamp-2 mb-1.5",
+                  featured ? "text-lg sm:text-xl lg:text-2xl" : "text-base sm:text-lg"
                 )}>
                   {name}
                 </CardTitle>
                 <CardDescription className={cn(
-                  "text-white/90 font-body",
-                  featured ? "text-base sm:text-lg line-clamp-4" : "text-sm sm:text-base line-clamp-3"
+                  "text-white/90 font-body leading-snug",
+                  featured ? "text-sm line-clamp-3" : "text-xs sm:text-sm line-clamp-2"
                 )}>
                   {description}
                 </CardDescription>
               </div>
             </div>
             {totalTime && (
-              <div className="flex items-center gap-2 pt-2 border-t border-[#fcf45a]/20">
-                <Clock className={cn(
-                  "text-[#fcf45a] shrink-0",
-                  featured ? "h-5 w-5" : "h-4 w-4"
-                )} />
+              <div className="flex items-center gap-1.5 pt-1.5 border-t border-[#fcf45a]/20">
+                <Clock className="text-[#fcf45a] shrink-0 h-3.5 w-3.5" />
                 <span className={cn(
                   "text-[#fcf45a] font-body-semibold",
-                  featured ? "text-sm sm:text-base" : "text-xs"
+                  featured ? "text-xs sm:text-sm" : "text-xs"
                 )}>
                   {totalTime}
                 </span>
               </div>
             )}
             {featured && (
-              <div className="absolute top-3 right-3 bg-[#fcf45a] text-[#1d7b86] px-3 py-1 rounded-full text-xs font-body-bold shadow-lg transform rotate-3">
+              <div className="absolute top-2 left-2 bg-[#fcf45a] text-[#1d7b86] px-2 py-0.5 rounded-full text-[10px] font-body-bold shadow-md transform rotate-3">
                 Featured
               </div>
             )}
