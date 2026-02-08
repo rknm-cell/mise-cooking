@@ -55,13 +55,18 @@ export function LoginForm({
 
   const signInWithGoogle = async () => {
     try {
-      await authClient.signIn.social({
+      setIsLoading(true);
+      const result = await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/api/auth/callback",
+        callbackURL: "/dashboard",
       });
+
+      // Social sign-in redirects to OAuth provider, so we don't need to handle redirect here
+      // The callbackURL will be used after OAuth flow completes
     } catch (error) {
       console.error("Google signin error:", error);
       toast.error("Failed to sign in with Google");
+      setIsLoading(false);
     }
   };
 
@@ -74,25 +79,28 @@ export function LoginForm({
         password: values.password,
       });
 
-      // Check if we have user data (successful sign in)
-      if ('user' in result) {
-        const user = result.user as { id: string };
+      console.log("Sign in result:", result);
+
+      // Check if sign in was successful
+      if (result.data) {
         toast.success("Signed in successfully!");
 
-        // Check if user needs to complete onboarding
-        const onboardingCheck = await fetch(`/api/user/preferences?userId=${user.id}`);
-        if (onboardingCheck.status === 404) {
-          router.push("/onboarding");
-        } else {
-          router.push("/dashboard");
-        }
+        // Wait a moment for the cookie to be processed
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Use window.location for a hard redirect
+        // The middleware will validate the session on the server side
+        window.location.href = "/dashboard";
+      } else if (result.error) {
+        toast.error(result.error.message || "Invalid email or password");
+        setIsLoading(false);
       } else {
-        toast.error("Invalid email or password");
+        toast.error("Failed to sign in");
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Signin error:", error);
       toast.error("Failed to sign in");
-    } finally {
       setIsLoading(false);
     }
   }

@@ -28,19 +28,23 @@ export default function Dashboard() {
   const checkAuth = async () => {
     try {
       const currentSession = await authClient.getSession();
-      
-      // Check if we have a valid session with user data
-      if ('user' in currentSession) {
-        const user = currentSession.user as any; // Type assertion for better-auth compatibility
+
+      console.log("Dashboard session check:", currentSession);
+
+      // getSession returns { data: { user, session } | null } or error; user is on .data
+      const sessionData = currentSession && "data" in currentSession ? currentSession.data : null;
+      if (sessionData?.user) {
+        const user = sessionData.user;
         setSession({
           user: {
             id: user.id,
-            name: user.name,
+            name: user.name || user.email || "User",
             email: user.email,
-            image: user.image || undefined,
+            image: user.image ?? undefined,
           }
         });
       } else {
+        console.warn("No valid session found:", currentSession);
         setSession(null);
       }
     } catch (error) {

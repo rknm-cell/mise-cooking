@@ -59,14 +59,16 @@ export function SignupForm({
   const signUpWithGoogle = async () => {
     try {
       setIsLoading(true);
-      await authClient.signIn.social({
+      const result = await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: "/onboarding",
       });
+
+      // Social sign-in redirects to OAuth provider, so we don't need to handle redirect here
+      // The callbackURL will be used after OAuth flow completes
     } catch (error) {
       console.error("Google signup error:", error);
       toast.error("Failed to sign up with Google");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -74,24 +76,35 @@ export function SignupForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      
+
       const result = await authClient.signUp.email({
         email: values.email,
         password: values.password,
         name: values.name,
       });
 
-      // Check if we have user data (successful sign up)
-      if ('user' in result) {
+      console.log("Sign up result:", result);
+
+      // Check if sign up was successful
+      if (result.data) {
         toast.success("Account created successfully!");
-        router.push("/dashboard");
+
+        // Wait a moment for the cookie to be processed
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Use window.location for a hard redirect
+        // The middleware will validate the session on the server side
+        window.location.href = "/onboarding";
+      } else if (result.error) {
+        toast.error(result.error.message || "Failed to create account");
+        setIsLoading(false);
       } else {
         toast.error("Failed to create account");
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Signup error:", error);
       toast.error("Failed to create account");
-    } finally {
       setIsLoading(false);
     }
   }

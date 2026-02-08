@@ -48,6 +48,7 @@ describe("getAllRecipes", () => {
         "Fat: 5g",
         "Fiber: 6g",
       ],
+      imageUrl: null,
       createdAt: new Date(),
     },
   ];
@@ -88,6 +89,7 @@ describe("getRecipeById", () => {
         "Fat: 5g",
         "Fiber: 6g",
       ],
+      imageUrl: null,
       createdAt: new Date(),
     };
 

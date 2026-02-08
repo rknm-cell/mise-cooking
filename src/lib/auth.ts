@@ -2,13 +2,28 @@ import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "~/server/db";
+import * as schema from "~/server/db/schema";
 import { env } from "~/env";
 
 export const auth = betterAuth({
-  database: drizzleAdapter(db, { provider: "pg" }),
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    schema: {
+      user: schema.user,
+      session: schema.session,
+      account: schema.account,
+      verification: schema.verification,
+    },
+  }),
   secret: env.BETTER_AUTH_SECRET,
-  baseURL: env.BETTER_AUTH_URL,
+  // Auto-detect baseURL in development, use env var in production
+  baseURL: process.env.NODE_ENV === 'production' ? env.BETTER_AUTH_URL : undefined,
   basePath: "/auth",
+  // Enable debug logging in development
+  logger: {
+    level: process.env.NODE_ENV === 'development' ? 'debug' : 'error',
+    disabled: false,
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false, // No email verification for now
@@ -28,14 +43,15 @@ export const auth = betterAuth({
   },
   plugins: [nextCookies()],
   callbacks: {
-    onSignIn: async ({ user, account }) => {
+    onSignIn: async ({ user, account, session }) => {
       // Track sign-in for analytics
-      console.log(`User ${user.email} signed in via ${account?.providerId || 'email'}`);
+      console.log(`[Better Auth] User ${user.email} signed in via ${account?.providerId || 'email'}`);
+      console.log(`[Better Auth] Session created:`, session);
       return true;
     },
     onSignUp: async ({ user }) => {
       // Initialize user preferences and history
-      console.log(`New user registered: ${user.email}`);
+      console.log(`[Better Auth] New user registered: ${user.email}`);
       // New users will be redirected to onboarding in the login flow
       return true;
     },
