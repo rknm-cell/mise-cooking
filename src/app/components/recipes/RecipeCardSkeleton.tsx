@@ -13,7 +13,7 @@ export const RecipeCardSkeleton = ({ featured = false }: RecipeCardSkeletonProps
     )}>
       {/* Image placeholder */}
       <div className="relative h-48 bg-[#1d7b86]/40">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1d7b86]/80 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-[#1d7b86]/80 to-transparent" />
       </div>
 
       <CardHeader className={cn("space-y-3", featured && "p-6 sm:p-8")}>
@@ -42,12 +42,6 @@ export const RecipeCardSkeleton = ({ featured = false }: RecipeCardSkeletonProps
           )} />
         </div>
       </CardHeader>
-
-      {/* Dotted border - same as RecipeCard */}
-      <span className="recipe-card-dot-border-top" aria-hidden />
-      <span className="recipe-card-dot-border-right" aria-hidden />
-      <span className="recipe-card-dot-border-bottom" aria-hidden />
-      <span className="recipe-card-dot-border-left" aria-hidden />
     </Card>
   );
 };

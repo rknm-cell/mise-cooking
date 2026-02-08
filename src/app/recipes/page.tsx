@@ -39,7 +39,7 @@ export default function Page() {
   const isFeatured = (index: number) => index === 0 || (index > 0 && (index + 1) % 6 === 0);
 
   return (
-    <div className="relative mx-auto min-h-screen bg-gradient-to-b from-[#1d7b86] to-[#426b70] p-4 texture-grain pattern-organic">
+    <div className="relative mx-auto min-h-screen bg-linear-to-b from-[#1d7b86] to-[#426b70] p-4 texture-grain pattern-organic">
       <motion.div
         style={{ y: headerY, opacity: headerOpacity }}
         className="flex items-center justify-between mb-6 relative z-10"

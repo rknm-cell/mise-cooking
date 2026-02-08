@@ -20,7 +20,7 @@ export default async function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <main className="min-h-screen bg-linear-to-b from-background to-muted/20">
       <OnboardingFlow userId={session.user.id} />
     </main>
   );
