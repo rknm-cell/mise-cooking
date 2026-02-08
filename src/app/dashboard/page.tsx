@@ -7,6 +7,9 @@ import { Button } from "~/components/ui/button";
 import { User, LogOut, ChefHat, Bookmark, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
+import { api } from "~/trpc/react";
+import { RecipeCard } from "../components/recipes/RecipeCard";
+import { RecipeCardSkeleton } from "../components/recipes/RecipeCardSkeleton";
 
 interface UserSession {
   user: {
@@ -20,6 +23,12 @@ interface UserSession {
 export default function Dashboard() {
   const [session, setSession] = useState<UserSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch bookmarked recipes (full Recipe[] for display)
+  const { data: bookmarkedRecipes, isLoading: bookmarksLoading } = api.recipe.getBookmarkedRecipes.useQuery(
+    session?.user.id ?? "",
+    { enabled: !!session?.user.id }
+  );
 
   useEffect(() => {
     checkAuth();
@@ -177,38 +186,52 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        {/* Auth Test Section */}
+        {/* Bookmarked Recipes Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Authentication Test</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-semibold mb-2">Session Info</h4>
-                <pre className="text-xs bg-muted p-2 rounded overflow-auto">
-                  {JSON.stringify(session, null, 2)}
-                </pre>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-semibold mb-2">Test Actions</h4>
-                <div className="space-y-2">
-                  <Button 
-                    size="sm" 
-                    onClick={() => toast.success("Auth working!")}
-                  >
-                    Test Toast
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <Bookmark className="h-5 w-5 text-primary" />
+                My Bookmarks
+              </CardTitle>
+              {bookmarkedRecipes && bookmarkedRecipes.length > 0 && (
+                <Link href="/recipes">
+                  <Button variant="outline" size="sm">
+                    View All Recipes
                   </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => checkAuth()}
-                  >
-                    Refresh Session
-                  </Button>
-                </div>
-              </div>
+                </Link>
+              )}
             </div>
+          </CardHeader>
+          <CardContent>
+            {bookmarksLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {Array(4).fill(0).map((_, index) => (
+                  <div key={index} className="scale-90 origin-top">
+                    <RecipeCardSkeleton />
+                  </div>
+                ))}
+              </div>
+            ) : bookmarkedRecipes && bookmarkedRecipes.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {bookmarkedRecipes.slice(0, 8).map((recipe) => (
+                  <div key={recipe.id} className="scale-90 origin-top">
+                    <RecipeCard recipe={recipe} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Bookmark className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No bookmarks yet</h3>
+                <p className="text-muted-foreground mb-4">
+                  Start bookmarking your favorite recipes to see them here
+                </p>
+                <Link href="/recipes">
+                  <Button>Browse Recipes</Button>
+                </Link>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -10,6 +10,7 @@ import { motion } from "motion/react";
 import { api } from "~/trpc/react";
 import { Clock, Leaf, CircleDot, Flame } from "lucide-react";
 import { cn } from "~/lib/utils";
+import { BookmarkButton } from "./BookmarkButton";
 
 /* Floating ingredient doodles for decorative atmosphere */
 const FLOATING_DOODLES = [
@@ -76,10 +77,14 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
               <div className="absolute inset-0 bg-linear-gradient(to top, #1d7b86/80, transparent)" />
             </div>
           )}
-          <CardHeader className={cn("space-y-3", featured && "p-6 sm:p-8")}>
-            <div className="flex items-start gap-3">
+          <CardHeader className={cn("space-y-3 relative", featured && "p-6 sm:p-8")}>
+            {/* Bookmark Button */}
+            <div className="absolute top-3 right-3 z-10">
+              <BookmarkButton recipeId={id} size={featured ? 24 : 20} />
+            </div>
 
-              <div className="flex-1 min-w-0">
+            <div className="flex items-start gap-3">
+              <div className="flex-1 min-w-0 pr-8">
                 <CardTitle className={cn(
                   "text-[#fcf45a] font-body line-clamp-2 mb-2",
                   featured ? "text-2xl sm:text-3xl lg:text-4xl" : "text-xl sm:text-2xl"
