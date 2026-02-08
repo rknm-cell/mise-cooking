@@ -73,7 +73,7 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
                 alt={name}
                 className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1d7b86]/80 to-transparent" />
+              <div className="absolute inset-0 bg-linear-gradient(to top, #1d7b86/80, transparent)" />
             </div>
           )}
           <CardHeader className={cn("space-y-3", featured && "p-6 sm:p-8")}>
@@ -115,10 +115,7 @@ export const RecipeCard = ({ recipe, featured = false }: RecipeCardProps) => {
             )}
           </CardHeader>
           {/* Dotted border on top of image/content - same dot length on all sides */}
-          <span className="recipe-card-dot-border-top" aria-hidden />
-          <span className="recipe-card-dot-border-right" aria-hidden />
-          <span className="recipe-card-dot-border-bottom" aria-hidden />
-          <span className="recipe-card-dot-border-left" aria-hidden />
+          
         </Card>
       </motion.div>
     </Link>

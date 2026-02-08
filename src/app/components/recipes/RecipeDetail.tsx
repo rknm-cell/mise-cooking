@@ -194,7 +194,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
               alt={name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#428a93] via-[#428a93]/50 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#428a93] via-[#428a93]/50 to-transparent" />
             {/* Steam effect - wispy rising steam */}
             <span className="steam-effect" aria-hidden />
             <span className="steam-effect" aria-hidden />
