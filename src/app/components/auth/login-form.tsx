@@ -56,10 +56,13 @@ export function LoginForm({
   const signInWithGoogle = async () => {
     try {
       setIsLoading(true);
-      await authClient.signIn.social({
+      const result = await authClient.signIn.social({
         provider: "google",
         callbackURL: "/dashboard",
       });
+
+      // Social sign-in redirects to OAuth provider, so we don't need to handle redirect here
+      // The callbackURL will be used after OAuth flow completes
     } catch (error) {
       console.error("Google signin error:", error);
       toast.error("Failed to sign in with Google");
@@ -81,17 +84,23 @@ export function LoginForm({
       // Check if sign in was successful
       if (result.data) {
         toast.success("Signed in successfully!");
-        // Use window.location for a hard redirect to ensure proper session refresh
+
+        // Wait a moment for the cookie to be processed
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Use window.location for a hard redirect
+        // The middleware will validate the session on the server side
         window.location.href = "/dashboard";
       } else if (result.error) {
         toast.error(result.error.message || "Invalid email or password");
+        setIsLoading(false);
       } else {
         toast.error("Failed to sign in");
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Signin error:", error);
       toast.error("Failed to sign in");
-    } finally {
       setIsLoading(false);
     }
   }

@@ -16,7 +16,8 @@ export const auth = betterAuth({
     },
   }),
   secret: env.BETTER_AUTH_SECRET,
-  baseURL: env.BETTER_AUTH_URL,
+  // Auto-detect baseURL in development, use env var in production
+  baseURL: process.env.NODE_ENV === 'production' ? env.BETTER_AUTH_URL : undefined,
   basePath: "/auth",
   // Enable debug logging in development
   logger: {
@@ -42,14 +43,15 @@ export const auth = betterAuth({
   },
   plugins: [nextCookies()],
   callbacks: {
-    onSignIn: async ({ user, account }) => {
+    onSignIn: async ({ user, account, session }) => {
       // Track sign-in for analytics
-      console.log(`User ${user.email} signed in via ${account?.providerId || 'email'}`);
+      console.log(`[Better Auth] User ${user.email} signed in via ${account?.providerId || 'email'}`);
+      console.log(`[Better Auth] Session created:`, session);
       return true;
     },
     onSignUp: async ({ user }) => {
       // Initialize user preferences and history
-      console.log(`New user registered: ${user.email}`);
+      console.log(`[Better Auth] New user registered: ${user.email}`);
       // New users will be redirected to onboarding in the login flow
       return true;
     },
