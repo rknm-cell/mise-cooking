@@ -86,6 +86,18 @@ export async function getBookmarks(userId: string): Promise<schema.Bookmark[] | 
   }
 }
 
+export async function getBookmarkedRecipes(userId: string): Promise<schema.Recipe[]> {
+  try {
+    const bookmarks = await db.select({ recipeId: schema.bookmark.recipeId }).from(schema.bookmark).where(eq(schema.bookmark.userId, userId));
+    if (bookmarks.length === 0) return [];
+    const recipes = await db.select().from(schema.recipe).where(inArray(schema.recipe.id, bookmarks.map((b) => b.recipeId)));
+    return recipes as schema.Recipe[];
+  } catch (error) {
+    console.error(`Error fetching bookmarked recipes:`, error);
+    return [];
+  }
+}
+
 
 export async function saveBookmark(userId: string, recipeId: string): Promise<{ success: boolean; message?: string }> {
   try {

@@ -18,8 +18,9 @@ import {
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { motion, AnimatePresence } from "motion/react";
-import { Clock, Users, Utensils, ListChecks, Info, Printer, Share2 } from "lucide-react";
+import { Clock, Users, Utensils, ListChecks, Info, Printer, Share2, Bookmark } from "lucide-react";
 import { cn } from "~/lib/utils";
+import { BookmarkButton } from "./BookmarkButton";
 
 interface RecipeDetails {
   id: string;
@@ -184,9 +185,19 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
       </AnimatePresence>
       <motion.div layoutId={`recipe-card-${id}`} className="w-full">
       <Card className={cn(
-        "w-full bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean-lg glow-ocean overflow-hidden",
+        "w-full bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean-lg glow-ocean overflow-hidden relative",
         imageUrl && "pt-0"
       )}>
+        {/* Bookmark Button - Top Right */}
+        <div className="absolute top-4 right-4 z-20">
+          <BookmarkButton
+            recipeId={id}
+            size={28}
+            variant="large"
+            className="bg-[#428a93]/80 backdrop-blur-sm shadow-lg"
+          />
+        </div>
+
         {imageUrl && (
           <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden">
             <img
