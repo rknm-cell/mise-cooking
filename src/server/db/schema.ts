@@ -254,14 +254,39 @@ export const bookmarkRelations = relations(bookmark, ({ one }) => ({
   }),
 }));
 
-export const shoppingListRelations = relations(shoppingList, ({ many }) => ({
+export const shoppingListRelations = relations(shoppingList, ({ many, one }) => ({
   items: many(shoppingListItem),
+  user: one(user, {
+    fields: [shoppingList.userId],
+    references: [user.id],
+  }),
 }));
 
 export const shoppingListItemRelations = relations(shoppingListItem, ({ one }) => ({
   list: one(shoppingList, {
     fields: [shoppingListItem.listId],
     references: [shoppingList.id],
+  }),
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id],
+  }),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id],
+  }),
+}));
+
+export const userPreferencesRelations = relations(userPreferences, ({ one }) => ({
+  user: one(user, {
+    fields: [userPreferences.userId],
+    references: [user.id],
   }),
 }));
 
