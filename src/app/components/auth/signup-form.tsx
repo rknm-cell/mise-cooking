@@ -111,10 +111,10 @@ export function SignupForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="bg-[#428a93] border-[#fcf45a]">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Create your account</CardTitle>
-          <CardDescription>Join Mise to start cooking amazing recipes</CardDescription>
+          <CardTitle className="text-xl text-[#fcf45a]">Create your account</CardTitle>
+          <CardDescription className="text-white">Join Mise to start cooking amazing recipes</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -123,7 +123,7 @@ export function SignupForm({
                 <div className="flex flex-col gap-4">
                   <Button
                     variant="outline"
-                    className="w-full"
+                    className="w-full bg-white text-[#1d7b86] border-[#fcf45a] hover:bg-gray-100"
                     type="button"
                     onClick={signUpWithGoogle}
                     disabled={isLoading}
@@ -137,8 +137,8 @@ export function SignupForm({
                     Sign up with Google
                   </Button>
                 </div>
-                <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                  <span className="bg-card text-muted-foreground relative z-10 px-2">
+                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-[#fcf45a]/30">
+                  <span className="bg-[#428a93] text-white relative z-10 px-2">
                     Or continue with email
                   </span>
                 </div>
@@ -148,9 +148,9 @@ export function SignupForm({
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Full Name</FormLabel>
+                        <FormLabel className="text-white">Full Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="John Doe" {...field} />
+                          <Input placeholder="John Doe" className="bg-white text-black" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -161,9 +161,9 @@ export function SignupForm({
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel className="text-white">Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="name@email.com" {...field} />
+                          <Input placeholder="name@email.com" className="bg-white text-black" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -174,12 +174,13 @@ export function SignupForm({
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel className="text-white">Password</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="********"
                             {...field}
                             type="password"
+                            className="bg-white text-black"
                           />
                         </FormControl>
                         <FormMessage />
@@ -191,19 +192,20 @@ export function SignupForm({
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Confirm Password</FormLabel>
+                        <FormLabel className="text-white">Confirm Password</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="********"
                             {...field}
                             type="password"
+                            className="bg-white text-black"
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full bg-[#fcf45a]/70 text-black hover:bg-[#fcf45a] font-semibold" disabled={isLoading}>
                     {isLoading ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
@@ -211,9 +213,9 @@ export function SignupForm({
                     )}
                   </Button>
                 </div>
-                <div className="text-center text-sm">
+                <div className="text-center text-sm text-white">
                   Already have an account?{" "}
-                  <Link href="/login" className="underline underline-offset-4">
+                  <Link href="/login" className="text-[#fcf45a] underline underline-offset-4 hover:text-[#fcf45a]/80">
                     Sign in
                   </Link>
                 </div>
@@ -222,10 +224,10 @@ export function SignupForm({
           </Form>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+      <div className="text-white text-center text-xs text-balance">
         By creating an account, you agree to our{" "}
-        <Link href="#">Terms of Service</Link> and{" "}
-        <Link href="#">Privacy Policy</Link>.
+        <Link href="#" className="text-[#fcf45a] underline underline-offset-4 hover:text-[#fcf45a]/80">Terms of Service</Link> and{" "}
+        <Link href="#" className="text-[#fcf45a] underline underline-offset-4 hover:text-[#fcf45a]/80">Privacy Policy</Link>.
       </div>
     </div>
   );
