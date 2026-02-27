@@ -10,6 +10,7 @@ import Link from "next/link";
 import { api } from "~/trpc/react";
 import { RecipeCard } from "../components/recipes/RecipeCard";
 import { RecipeCardSkeleton } from "../components/recipes/RecipeCardSkeleton";
+import { BookmarkProvider } from "../components/recipes/BookmarkContext";
 
 interface UserSession {
   user: {
@@ -266,11 +267,13 @@ export default function Dashboard() {
               ))}
             </div>
           ) : bookmarkedRecipes && bookmarkedRecipes.length > 0 ? (
+            <BookmarkProvider ids={bookmarkedRecipes.map((r) => r.id)}>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {bookmarkedRecipes.slice(0, 8).map((recipe) => (
                 <RecipeCard key={recipe.id} recipe={recipe} />
               ))}
             </div>
+            </BookmarkProvider>
           ) : (
             <div className="bg-[#428a93] rounded-2xl border-2 border-[#fcf45a]/30 p-12 text-center shadow-ocean">
               <div className="max-w-md mx-auto">

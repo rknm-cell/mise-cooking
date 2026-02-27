@@ -7,6 +7,7 @@ import { api } from "~/trpc/react";
 import { authClient } from "~/lib/auth-client";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils";
+import { useBookmarkContext } from "./BookmarkContext";
 
 interface BookmarkButtonProps {
   recipeId: string;
@@ -19,17 +20,17 @@ export const BookmarkButton = ({
   recipeId,
   className,
   size = 20,
-  variant = "default"
+  variant = "default",
 }: BookmarkButtonProps) => {
   const [userId, setUserId] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Get user session
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const session = await authClient.getSession();
-        const sessionData = session && "data" in session ? session.data : null;
+        const sessionData =
+          session && "data" in session ? session.data : null;
         if (sessionData?.user) {
           setUserId(sessionData.user.id);
           setIsAuthenticated(true);
@@ -47,18 +48,24 @@ export const BookmarkButton = ({
   }, []);
 
   const utils = api.useUtils();
+  const { bookmarkIds, isLoaded: contextLoaded } = useBookmarkContext();
 
-  // Check if bookmarked
-  const { data: isBookmarked } = api.recipe.isBookmarked.useQuery(
+  // Only run the per-item query when there's no provider (e.g. detail page)
+  const { data: queriedIsBookmarked } = api.recipe.isBookmarked.useQuery(
     { userId: userId!, recipeId },
-    { enabled: !!userId }
+    { enabled: !!userId && !contextLoaded },
   );
 
-  // Bookmark mutations
+  const bookmarked = contextLoaded
+    ? bookmarkIds.has(recipeId)
+    : (queriedIsBookmarked ?? false);
+
   const saveBookmark = api.recipe.saveBookmark.useMutation({
     onSuccess: () => {
       utils.recipe.isBookmarked.invalidate({ userId: userId!, recipeId });
+      utils.recipe.getBookmarkIds.invalidate(userId!);
       utils.recipe.getBookmarks.invalidate(userId!);
+      utils.recipe.getBookmarkedRecipes.invalidate(userId!);
       toast.success("Recipe bookmarked!");
     },
     onError: (error) => {
@@ -70,7 +77,9 @@ export const BookmarkButton = ({
   const removeBookmark = api.recipe.removeBookmark.useMutation({
     onSuccess: () => {
       utils.recipe.isBookmarked.invalidate({ userId: userId!, recipeId });
+      utils.recipe.getBookmarkIds.invalidate(userId!);
       utils.recipe.getBookmarks.invalidate(userId!);
+      utils.recipe.getBookmarkedRecipes.invalidate(userId!);
       toast.success("Bookmark removed");
     },
     onError: (error) => {
@@ -90,7 +99,7 @@ export const BookmarkButton = ({
 
     if (!userId) return;
 
-    if (isBookmarked) {
+    if (bookmarked) {
       removeBookmark.mutate({ userId, recipeId });
     } else {
       saveBookmark.mutate({ userId, recipeId });
@@ -113,25 +122,25 @@ export const BookmarkButton = ({
         variant === "default" && "hover:bg-[#fcf45a]/10",
         variant === "large" && "hover:bg-[#fcf45a]/20",
         isPending && "opacity-50 cursor-not-allowed",
-        className
+        className,
       )}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+      aria-label={bookmarked ? "Remove bookmark" : "Add bookmark"}
     >
       <motion.div
         initial={false}
         animate={{
-          scale: isBookmarked ? [1, 1.2, 1] : 1,
+          scale: bookmarked ? [1, 1.2, 1] : 1,
         }}
         transition={{ duration: 0.3 }}
       >
         <Bookmark
           className={cn(
             "transition-all duration-200",
-            isBookmarked
+            bookmarked
               ? "fill-[#fcf45a] text-[#fcf45a]"
-              : "text-[#fcf45a] group-hover:text-[#fcf45a]/80"
+              : "text-[#fcf45a] group-hover:text-[#fcf45a]/80",
           )}
           size={size}
           strokeWidth={2}
