@@ -20,9 +20,11 @@ import {
   Pause,
   Play,
   X,
+  MessageCircle,
 } from "lucide-react";
 import { cn } from "~/lib/utils";
 import type { Recipe } from "~/server/db/schema";
+import { CookingSessionChat } from "./CookingSessionChat";
 
 interface CookingSessionProps {
   recipe: Recipe;
@@ -52,6 +54,7 @@ export function CookingSession({
     new Set()
   );
   const [showIngredients, setShowIngredients] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const totalSteps = recipe.instructions.length;
   const progress = ((currentStep + 1) / totalSteps) * 100;
@@ -326,6 +329,27 @@ export function CookingSession({
           )}
         </Button>
       </div>
+
+      {/* Floating Chat Button */}
+      <motion.button
+        type="button"
+        onClick={() => setIsChatOpen(true)}
+        className="fixed bottom-6 right-6 w-16 h-16 rounded-full bg-[#fcf45a] text-[#1d7b86] shadow-2xl hover:shadow-yellow hover:scale-110 transition-all flex items-center justify-center z-30 group"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        aria-label="Open cooking assistant"
+      >
+        <MessageCircle className="h-7 w-7 group-hover:rotate-12 transition-transform" />
+        <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse" />
+      </motion.button>
+
+      {/* Chat Panel with Session Context */}
+      <CookingSessionChat
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        recipe={recipe}
+        currentStep={currentStep}
+      />
     </div>
   );
 }
