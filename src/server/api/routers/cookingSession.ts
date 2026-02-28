@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+// DEBUGGING: Using publicProcedure instead of protectedProcedure
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import {
   createCookingSession,
   getCookingSession,
@@ -15,7 +16,7 @@ import {
 
 export const cookingSessionRouter = createTRPCRouter({
   // Create a new cooking session
-  create: protectedProcedure
+  create: publicProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -28,13 +29,13 @@ export const cookingSessionRouter = createTRPCRouter({
     }),
 
   // Get a specific cooking session by ID
-  getById: protectedProcedure.input(z.string()).query(async (opts) => {
+  getById: publicProcedure.input(z.string()).query(async (opts) => {
     const sessionId = opts.input;
     return getCookingSession(sessionId);
   }),
 
   // Get active session for a user/recipe
-  getActive: protectedProcedure
+  getActive: publicProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -47,7 +48,7 @@ export const cookingSessionRouter = createTRPCRouter({
     }),
 
   // Get all sessions for a user
-  getUserSessions: protectedProcedure
+  getUserSessions: publicProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -60,7 +61,7 @@ export const cookingSessionRouter = createTRPCRouter({
     }),
 
   // Update cooking session (step, status, notes)
-  update: protectedProcedure
+  update: publicProcedure
     .input(
       z.object({
         sessionId: z.string(),
@@ -76,31 +77,31 @@ export const cookingSessionRouter = createTRPCRouter({
     }),
 
   // Complete a cooking session
-  complete: protectedProcedure.input(z.string()).mutation(async (opts) => {
+  complete: publicProcedure.input(z.string()).mutation(async (opts) => {
     const sessionId = opts.input;
     return completeCookingSession(sessionId);
   }),
 
   // Pause a cooking session
-  pause: protectedProcedure.input(z.string()).mutation(async (opts) => {
+  pause: publicProcedure.input(z.string()).mutation(async (opts) => {
     const sessionId = opts.input;
     return pauseCookingSession(sessionId);
   }),
 
   // Resume a cooking session
-  resume: protectedProcedure.input(z.string()).mutation(async (opts) => {
+  resume: publicProcedure.input(z.string()).mutation(async (opts) => {
     const sessionId = opts.input;
     return resumeCookingSession(sessionId);
   }),
 
   // Abandon a cooking session
-  abandon: protectedProcedure.input(z.string()).mutation(async (opts) => {
+  abandon: publicProcedure.input(z.string()).mutation(async (opts) => {
     const sessionId = opts.input;
     return abandonCookingSession(sessionId);
   }),
 
   // Delete a cooking session
-  delete: protectedProcedure.input(z.string()).mutation(async (opts) => {
+  delete: publicProcedure.input(z.string()).mutation(async (opts) => {
     const sessionId = opts.input;
     return deleteCookingSession(sessionId);
   }),

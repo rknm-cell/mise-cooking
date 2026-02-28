@@ -1,4 +1,11 @@
+import { Suspense } from "react"
 import { LoginForm } from "~/app/components/auth/login-form"
+
+function LoginFormFallback() {
+  return (
+    <div className="flex min-h-[320px] w-full max-w-sm animate-pulse flex-col gap-6 rounded-lg bg-[#428a93]/50 p-6" />
+  )
+}
 
 export default function LoginPage() {
   return (
@@ -12,7 +19,9 @@ export default function LoginPage() {
             (meez)
           </span>
         </a>
-        <LoginForm />
+        <Suspense fallback={<LoginFormFallback />}>
+          <LoginForm />
+        </Suspense>
       </div>
     </div>
   )
