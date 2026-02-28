@@ -4,6 +4,7 @@ import { type Metadata } from "next";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { TRPCReactProvider } from "~/trpc/react";
 import NavBar from "./components/NavBar";
+import { AuthProvider } from "./components/auth/AuthContext";
 
 export const metadata: Metadata = {
   title: "Mise",
@@ -19,8 +20,12 @@ export default function RootLayout({
       <GoogleTagManager gtmId="GTM-XYZ" />
 
       <body>
-        <NavBar />
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <AuthProvider>
+            <NavBar />
+            {children}
+          </AuthProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );

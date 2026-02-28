@@ -84,13 +84,13 @@ export function CookingSessionContainer({
         recipeId: recipe.id,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     existingSessionId,
     existingSession,
     isLoadingSession,
     userId,
     recipe.id,
-    createSessionMutation,
     isInitialized,
   ]);
 

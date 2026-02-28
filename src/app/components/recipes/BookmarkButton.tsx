@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Bookmark } from "lucide-react";
 import { api } from "~/trpc/react";
-import { authClient } from "~/lib/auth-client";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils";
 import { useBookmarkContext } from "./BookmarkContext";
+import { useAuth } from "../auth/AuthContext";
 
 interface BookmarkButtonProps {
   recipeId: string;
@@ -22,30 +21,7 @@ export const BookmarkButton = ({
   size = 20,
   variant = "default",
 }: BookmarkButtonProps) => {
-  const [userId, setUserId] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const session = await authClient.getSession();
-        const sessionData =
-          session && "data" in session ? session.data : null;
-        if (sessionData?.user) {
-          setUserId(sessionData.user.id);
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-          setUserId(null);
-        }
-      } catch (error) {
-        console.error("Auth check error:", error);
-        setIsAuthenticated(false);
-        setUserId(null);
-      }
-    };
-    checkAuth();
-  }, []);
+  const { userId, isAuthenticated } = useAuth();
 
   const utils = api.useUtils();
   const { bookmarkIds, isLoaded: contextLoaded } = useBookmarkContext();

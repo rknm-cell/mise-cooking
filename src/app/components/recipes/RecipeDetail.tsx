@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { api } from "~/trpc/react";
+import { useAuth } from "../auth/AuthContext";
 import {
   Card,
   CardContent,
@@ -18,7 +21,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { motion, AnimatePresence } from "motion/react";
-import { Clock, Users, Utensils, ListChecks, Info, Printer, Share2, Bookmark } from "lucide-react";
+import { Clock, Users, Utensils, ListChecks, Info, Printer, Share2, Bookmark, ChefHat } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { BookmarkButton } from "./BookmarkButton";
 
@@ -40,6 +43,8 @@ interface RecipeDetails {
 }
 
 const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
+  const router = useRouter();
+  const { userId, isAuthenticated, isLoading: authLoading } = useAuth();
   const {
     id,
     name,
@@ -61,6 +66,19 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
 
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const [copied, setCopied] = useState(false);
+  const [isStartingSession, setIsStartingSession] = useState(false);
+
+  const createSessionMutation = api.cookingSession.create.useMutation({
+    onSuccess: (data) => {
+      if (data.session) {
+        router.push(`/cook/${data.session.id}`);
+      }
+      setIsStartingSession(false);
+    },
+    onError: () => {
+      setIsStartingSession(false);
+    },
+  });
 
   const toggleIngredient = (index: number) => {
     setCheckedIngredients((prev) => {
@@ -80,6 +98,25 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     await navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleStartCooking = () => {
+    // AUTHENTICATION DISABLED FOR DEBUGGING
+    // Don't redirect if auth is still loading - wait for it to finish
+    // if (authLoading) {
+    //   return;
+    // }
+
+    // if (!isAuthenticated || !userId) {
+    //   router.push("/login?redirect=/recipes/" + id);
+    //   return;
+    // }
+
+    setIsStartingSession(true);
+    createSessionMutation.mutate({
+      userId: userId || "debug-user", // Use debug user if not authenticated
+      recipeId: id,
+    });
   };
 
   const springBouncy = { type: "spring" as const, stiffness: 280, damping: 40 };
@@ -257,8 +294,18 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
             </div>
           )}
 
-          {/* Print & Share actions */}
+          {/* Action buttons */}
           <div className="flex flex-wrap gap-2 mt-4">
+            <Button
+              type="button"
+              onClick={handleStartCooking}
+              disabled={isStartingSession}
+              size="sm"
+              className="bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 font-body-semibold shadow-yellow disabled:opacity-50"
+            >
+              <ChefHat className="mr-2 h-4 w-4" />
+              {isStartingSession ? "Starting..." : "Start Cooking"}
+            </Button>
             <Button
               type="button"
               onClick={handlePrint}

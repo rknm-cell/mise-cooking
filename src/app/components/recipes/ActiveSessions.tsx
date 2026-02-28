@@ -171,7 +171,7 @@ export function ActiveSessions({ userId }: ActiveSessionsProps) {
                       size="sm"
                       className="flex-1 bg-[#fcf45a] text-[#1d7b86] hover:bg-[#fcf45a]/90 font-body-semibold"
                     >
-                      <Link href={`/recipes/${recipe.id}/cook?session=${session.id}`}>
+                      <Link href={`/cook/${session.id}`}>
                         <Play className="h-4 w-4 mr-1" />
                         {isPaused ? "Resume" : "Continue"} Cooking
                       </Link>

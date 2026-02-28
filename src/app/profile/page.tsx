@@ -1,28 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { authClient } from "~/lib/auth-client";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { 
-  User, 
-  Clock, 
-  Bookmark, 
-  ShoppingCart, 
+import {
+  User,
+  Clock,
+  Bookmark,
+  ShoppingCart,
   ChefHat,
   LogOut,
   Settings
 } from "lucide-react";
 import { toast } from "sonner";
-
-interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  image?: string;
-  createdAt: string;
-}
+import { useAuth } from "../components/auth/AuthContext";
+import { authClient } from "~/lib/auth-client";
 
 interface CookingHistory {
   recipeId: string;
@@ -38,37 +31,25 @@ interface ViewedRecipe {
 }
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [cookingHistory, setCookingHistory] = useState<CookingHistory[]>([]);
   const [viewedRecipes, setViewedRecipes] = useState<ViewedRecipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadUserData();
-  }, []);
+    if (user) {
+      loadUserData();
+    }
+  }, [user]);
 
   const loadUserData = async () => {
     try {
       setIsLoading(true);
-      const session = await authClient.getSession();
-      
-      // Check if we have a valid session with user data
-      if ('user' in session) {
-        const user = session.user as any; // Type assertion for better-auth compatibility
-        setUser({
-          id: user.id,
-          name: user.name || "User",
-          email: user.email || "",
-          image: user.image,
-          createdAt: user.createdAt || new Date().toISOString(),
-        });
-
-        // Load cooking history and viewed recipes
-        await Promise.all([
-          loadCookingHistory(),
-          loadViewedRecipes(),
-        ]);
-      }
+      // Load cooking history and viewed recipes
+      await Promise.all([
+        loadCookingHistory(),
+        loadViewedRecipes(),
+      ]);
     } catch (error) {
       console.error("Error loading user data:", error);
       toast.error("Failed to load profile data");
@@ -112,7 +93,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -120,7 +101,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!user) {
+  if (!isAuthenticated || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <p>Please sign in to view your profile.</p>
@@ -141,9 +122,11 @@ export default function ProfilePage() {
               <div className="flex-1">
                 <CardTitle className="text-2xl">{user.name}</CardTitle>
                 <p className="text-muted-foreground">{user.email}</p>
-                <p className="text-sm text-muted-foreground">
-                  Member since {new Date(user.createdAt).toLocaleDateString()}
-                </p>
+                {user.createdAt && (
+                  <p className="text-sm text-muted-foreground">
+                    Member since {new Date(user.createdAt).toLocaleDateString()}
+                  </p>
+                )}
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm">

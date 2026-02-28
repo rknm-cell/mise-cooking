@@ -9,24 +9,17 @@ import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import Masonry from "react-masonry-css";
 import { Grid, LayoutGrid } from "lucide-react";
-import { authClient } from "~/lib/auth-client";
+import { useAuth } from "../components/auth/AuthContext";
 
 const springBouncy = { type: "spring" as const, stiffness: 280, damping: 40 };
 
 export default function Page() {
+  const { userId } = useAuth();
   const { data: recipes, isLoading } = api.recipe.getAllRecipes.useQuery();
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [layoutMode, setLayoutMode] = useState<"hero" | "masonry">("hero");
-  const [userId, setUserId] = useState<string | null>(null);
-
-  useEffect(() => {
-    authClient.getSession().then((s) => {
-      const data = s && "data" in s ? s.data : null;
-      setUserId(data?.user?.id ?? null);
-    });
-  }, []);
 
   const { data: bookmarkIds } = api.recipe.getBookmarkIds.useQuery(userId!, {
     enabled: !!userId,

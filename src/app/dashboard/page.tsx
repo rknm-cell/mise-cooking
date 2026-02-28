@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { authClient } from "~/lib/auth-client";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -11,64 +10,20 @@ import { api } from "~/trpc/react";
 import { RecipeCard } from "../components/recipes/RecipeCard";
 import { RecipeCardSkeleton } from "../components/recipes/RecipeCardSkeleton";
 import { BookmarkProvider } from "../components/recipes/BookmarkContext";
-
-interface UserSession {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image?: string;
-  };
-}
+import { useAuth } from "../components/auth/AuthContext";
 
 export default function Dashboard() {
-  const [session, setSession] = useState<UserSession | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, userId, isAuthenticated, isLoading } = useAuth();
 
   // Fetch bookmarked recipes (full Recipe[] for display)
   const { data: bookmarkedRecipes, isLoading: bookmarksLoading } = api.recipe.getBookmarkedRecipes.useQuery(
-    session?.user.id ?? "",
-    { enabled: !!session?.user.id }
+    userId ?? "",
+    { enabled: !!userId }
   );
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const currentSession = await authClient.getSession();
-
-      console.log("Dashboard session check:", currentSession);
-
-      // getSession returns { data: { user, session } | null } or error; user is on .data
-      const sessionData = currentSession && "data" in currentSession ? currentSession.data : null;
-      if (sessionData?.user) {
-        const user = sessionData.user;
-        setSession({
-          user: {
-            id: user.id,
-            name: user.name || user.email || "User",
-            email: user.email,
-            image: user.image ?? undefined,
-          }
-        });
-      } else {
-        console.warn("No valid session found:", currentSession);
-        setSession(null);
-      }
-    } catch (error) {
-      console.error("Auth check error:", error);
-      setSession(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSignOut = async () => {
     try {
       await authClient.signOut();
-      setSession(null);
       toast.success("Signed out successfully");
       window.location.href = "/";
     } catch (error) {
@@ -77,7 +32,7 @@ export default function Dashboard() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || !isAuthenticated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#1d7b86] to-[#426b70]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#fcf45a]"></div>
@@ -85,7 +40,7 @@ export default function Dashboard() {
     );
   }
 
-  if (!session) {
+  if (!userId) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#1d7b86] to-[#426b70] p-4">
         <Card className="w-full max-w-md bg-[#428a93] border-2 border-[#fcf45a]">
@@ -129,9 +84,9 @@ export default function Dashboard() {
               </div>
               <div>
                 <h1 className="text-4xl font-bold tracking-tight mb-1 text-white">
-                  Welcome back, {session.user.name}!
+                  Welcome back, {user?.name}!
                 </h1>
-                <p className="text-white/80 text-lg">{session.user.email}</p>
+                <p className="text-white/80 text-lg">{user?.email}</p>
               </div>
             </div>
             <Button

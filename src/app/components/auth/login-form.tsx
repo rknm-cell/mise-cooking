@@ -27,7 +27,7 @@ import { signIn } from "~/server/users";
 
 import { z } from "zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { authClient } from "~/lib/auth-client";
@@ -45,6 +45,9 @@ export function LoginForm({
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams?.get("redirect") || "/dashboard";
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,7 +61,7 @@ export function LoginForm({
       setIsLoading(true);
       const result = await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: redirectUrl,
       });
 
       // Social sign-in redirects to OAuth provider, so we don't need to handle redirect here
@@ -90,7 +93,7 @@ export function LoginForm({
 
         // Use window.location for a hard redirect
         // The middleware will validate the session on the server side
-        window.location.href = "/dashboard";
+        window.location.href = redirectUrl;
       } else if (result.error) {
         toast.error(result.error.message || "Invalid email or password");
         setIsLoading(false);
