@@ -287,6 +287,19 @@ export async function getUserById(userId: string): Promise<typeof schema.user.$i
   }
 }
 
+export async function getBookmarkIds(userId: string): Promise<string[]> {
+  try {
+    const rows = await db
+      .select({ recipeId: schema.bookmark.recipeId })
+      .from(schema.bookmark)
+      .where(eq(schema.bookmark.userId, userId));
+    return rows.map((r) => r.recipeId);
+  } catch (error) {
+    console.error("Error fetching bookmark IDs:", error);
+    return [];
+  }
+}
+
 export async function isBookmarked(userId: string, recipeId: string): Promise<boolean> {
   try {
     const bookmark = await db.query.bookmark.findFirst({

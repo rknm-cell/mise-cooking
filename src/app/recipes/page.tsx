@@ -3,21 +3,27 @@ import { api } from "~/trpc/react";
 import { RecipeCard } from "../components/recipes/RecipeCard";
 import { RecipeCardSkeleton } from "../components/recipes/RecipeCardSkeleton";
 import { EmptyState } from "../components/recipes/EmptyState";
+import { BookmarkProvider } from "../components/recipes/BookmarkContext";
 import SearchBar from "../components/SearchBar";
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import Masonry from "react-masonry-css";
 import { Grid, LayoutGrid } from "lucide-react";
+import { useAuth } from "../components/auth/AuthContext";
 
 const springBouncy = { type: "spring" as const, stiffness: 280, damping: 40 };
 
 export default function Page() {
+  const { userId } = useAuth();
   const { data: recipes, isLoading } = api.recipe.getAllRecipes.useQuery();
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [layoutMode, setLayoutMode] = useState<"hero" | "masonry">("hero");
-  const utils = api.useUtils();
+
+  const { data: bookmarkIds } = api.recipe.getBookmarkIds.useQuery(userId!, {
+    enabled: !!userId,
+  });
 
   // Debounce search input for better performance
   useEffect(() => {
@@ -42,19 +48,11 @@ export default function Page() {
   const headerY = useTransform(scrollY, [0, 400], [0, -100]);
   const headerOpacity = useTransform(scrollY, [0, 250], [1, 0.7]);
 
-  // Prefetch all recipe data when the page loads
-  useEffect(() => {
-    if (recipes) {
-      recipes.forEach((recipe) => {
-        utils.recipe.getRecipe.prefetch(recipe.id);
-      });
-    }
-  }, [recipes, utils.recipe.getRecipe]);
-
   // Determine which cards should be featured (1st and every 6th card)
   const isFeatured = (index: number) => index === 0 || (index > 0 && (index + 1) % 6 === 0);
 
   return (
+    <BookmarkProvider ids={bookmarkIds}>
     <div className="relative mx-auto min-h-screen bg-linear-to-b from-[#1d7b86] to-[#426b70] p-4 texture-grain pattern-organic">
       <motion.div
         style={{ y: headerY, opacity: headerOpacity }}
@@ -195,5 +193,6 @@ export default function Page() {
         )
       )}
     </div>
+    </BookmarkProvider>
   );
 }
