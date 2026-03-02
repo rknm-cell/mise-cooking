@@ -21,7 +21,8 @@ interface CookingHistory {
   recipeId: string;
   recipeName: string;
   cookedAt: string;
-  rating?: number;
+  status: string;
+  sessionId: string;
 }
 
 interface ViewedRecipe {
@@ -60,7 +61,9 @@ export default function ProfilePage() {
 
   const loadCookingHistory = async () => {
     try {
-      const response = await fetch("/api/user/cooking-history");
+      if (!user?.id) return;
+
+      const response = await fetch(`/api/user/cooking-history?userId=${user.id}`);
       if (response.ok) {
         const data = await response.json();
         setCookingHistory(data.history || []);
@@ -149,8 +152,10 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <ChefHat className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-2xl font-bold">{cookingHistory.length}</p>
-                  <p className="text-sm text-muted-foreground">Recipes Cooked</p>
+                  <p className="text-2xl font-bold">
+                    {cookingHistory.filter(h => h.status === "completed").length}
+                  </p>
+                  <p className="text-sm text-muted-foreground">Recipes Completed</p>
                 </div>
               </div>
             </CardContent>
@@ -195,29 +200,54 @@ export default function ProfilePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ChefHat className="h-5 w-5" />
-              Recent Cooking History
+              Recent Cooking Sessions
             </CardTitle>
           </CardHeader>
           <CardContent>
             {cookingHistory.length === 0 ? (
               <p className="text-muted-foreground text-center py-8">
-                No cooking history yet. Start cooking to see your history here!
+                No cooking sessions yet. Start cooking to see your history here!
               </p>
             ) : (
               <div className="space-y-3">
-                {cookingHistory.slice(0, 5).map((item) => (
-                  <div key={item.recipeId} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
+                {cookingHistory.slice(0, 10).map((item) => (
+                  <div key={item.sessionId} className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent transition-colors">
+                    <div className="flex-1">
                       <p className="font-medium">{item.recipeName}</p>
                       <p className="text-sm text-muted-foreground">
-                        Cooked on {new Date(item.cookedAt).toLocaleDateString()}
+                        {new Date(item.cookedAt).toLocaleDateString()} at {new Date(item.cookedAt).toLocaleTimeString()}
                       </p>
                     </div>
-                    {item.rating && (
-                      <Badge variant="secondary">
-                        {item.rating}/5 ⭐
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={
+                          item.status === "completed" ? "default" :
+                          item.status === "active" ? "secondary" :
+                          item.status === "paused" ? "outline" :
+                          "destructive"
+                        }
+                      >
+                        {item.status}
                       </Badge>
-                    )}
+                      {(item.status === "active" || item.status === "paused") && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.location.href = `/cook/${item.sessionId}`}
+                        >
+                          Resume
+                        </Button>
+                      )}
+                      {item.status === "completed" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.location.href = `/recipes/${item.recipeId}`}
+                        >
+                          View Recipe
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
