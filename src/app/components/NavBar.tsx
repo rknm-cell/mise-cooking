@@ -21,9 +21,9 @@ export default function NavBar() {
           <div className="shrink-0">
             <Link
               href="/"
-              className="flex items-center space-x-2 text-xl font-display-bold text-gray-900 transition-colors hover:text-blue-600"
+              className="flex items-center space-x-2 transition-all hover:scale-105 duration-200"
             >
-              <span className="nanum-pen-script-regular text-6xl text-[#fcf45a]">
+              <span className="nanum-pen-script-regular text-7xl text-[#fcf45a] rotate-hand-4 inline-block text-shadow-yellow">
                 Mise
               </span>
             </Link>
@@ -32,11 +32,13 @@ export default function NavBar() {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8 text-2xl text-[#fcf45a]">
-              {navLinks.map(({ name, href }) => (
+              {navLinks.map(({ name, href }, index) => (
                 <Link
                   key={href}
                   href={href}
-                  className="rounded-md px-3 py-2 text-4xl nanum-pen-script-regular transition-colors duration-200 hover:text-[#fcf45a]/80"
+                  className={`rounded-md px-3 py-2 text-4xl nanum-pen-script-regular transition-all duration-200 hover:text-[#fcf45a]/80 hover:scale-110 inline-block ${
+                    index % 2 === 0 ? 'rotate-hand-1' : 'rotate-hand-2'
+                  }`}
                 >
                   {name}
                 </Link>
@@ -79,7 +81,9 @@ export default function NavBar() {
                 >
                   <Link
                     href={href}
-                    className="block text-3xl nanum-pen-script-regular text-[#fcf45a] hover:text-[#fcf45a]/80 transition-colors py-2 border-b border-[#fcf45a]/10 last:border-0"
+                    className={`block text-4xl nanum-pen-script-regular text-[#fcf45a] hover:text-[#fcf45a]/80 transition-all py-2 border-b border-[#fcf45a]/10 last:border-0 ${
+                      index % 2 === 0 ? 'rotate-hand-1' : 'rotate-hand-3'
+                    } inline-block`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {name}

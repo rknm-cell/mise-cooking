@@ -250,7 +250,7 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
             <span className="steam-effect" aria-hidden />
             <span className="steam-effect" aria-hidden />
             <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-              <CardTitle className="text-[#fcf45a] text-3xl sm:text-4xl font-body-bold mb-2">
+              <CardTitle className="text-[#fcf45a] text-display-medium font-display rotate-hand-2 text-shadow-dramatic">
                 {name}
               </CardTitle>
             </div>
@@ -258,11 +258,11 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
         )}
         <CardHeader className="pb-4">
           {!imageUrl && (
-            <CardTitle className="text-[#fcf45a] text-3xl sm:text-4xl font-body-bold mb-2">
+            <CardTitle className="text-[#fcf45a] text-display-medium font-display rotate-hand-2 text-shadow-dramatic mb-3">
               {name}
             </CardTitle>
           )}
-          <CardDescription className="text-white/90 text-base sm:text-lg font-body">
+          <CardDescription className="text-white/90 text-lg sm:text-xl font-body-light leading-relaxed">
             {description}
           </CardDescription>
 
@@ -333,21 +333,21 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           {/* Recipe Info */}
           <div className="grid grid-cols-2 gap-4 pb-4 border-b border-[#fcf45a]/20">
             <div className="flex items-center gap-3">
-              <Clock className="h-5 w-5 text-[#fcf45a]" />
+              <Clock className="h-6 w-6 text-[#fcf45a]" />
               <div>
-                <p className="text-xs text-white/70 uppercase tracking-wide font-body-medium">
+                <p className="text-xs text-white/60 uppercase tracking-widest font-body-medium">
                   Total Time
                 </p>
-                <p className="text-white font-body-semibold">{totalTime}</p>
+                <p className="text-white font-body-bold text-lg">{totalTime}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Users className="h-5 w-5 text-[#fcf45a]" />
+              <Users className="h-6 w-6 text-[#fcf45a]" />
               <div>
-                <p className="text-xs text-white/70 uppercase tracking-wide font-body-medium">
+                <p className="text-xs text-white/60 uppercase tracking-widest font-body-medium">
                   Servings
                 </p>
-                <p className="text-white font-body-semibold">{servings}</p>
+                <p className="text-white font-body-bold text-lg">{servings}</p>
               </div>
             </div>
           </div>
@@ -355,8 +355,8 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
           {/* Nutrition Info */}
           {nutrition && nutrition.length > 0 && (
             <div className="pb-4 border-b border-[#fcf45a]/20">
-              <h3 className="text-[#fcf45a] font-body-bold text-lg mb-3 flex items-center gap-2">
-                <Info className="h-5 w-5" />
+              <h3 className="text-[#fcf45a] font-body-bold text-xl mb-4 flex items-center gap-2">
+                <Info className="h-6 w-6" />
                 Nutrition
               </h3>
               {handleNutrition(nutrition)}
@@ -380,13 +380,13 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
                   value="ingredients"
                   className="border-[#fcf45a]/20 px-0"
                 >
-                  <AccordionTrigger className="text-[#fcf45a] font-body-bold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
+                  <AccordionTrigger className="text-[#fcf45a] font-body-bold text-2xl hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
                     <motion.div
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-3"
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Utensils className="h-5 w-5" />
+                      <Utensils className="h-6 w-6" />
                       Ingredients
                     </motion.div>
                   </AccordionTrigger>
@@ -414,13 +414,13 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
                   value="instructions"
                   className="border-[#fcf45a]/20 px-0"
                 >
-                  <AccordionTrigger className="text-[#fcf45a] font-body-bold text-lg hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
+                  <AccordionTrigger className="text-[#fcf45a] font-body-bold text-2xl hover:no-underline py-4 [&>svg]:text-[#fcf45a] transition-all duration-200">
                     <motion.div
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-3"
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <ListChecks className="h-5 w-5" />
+                      <ListChecks className="h-6 w-6" />
                       Instructions
                     </motion.div>
                   </AccordionTrigger>
@@ -445,11 +445,11 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
             initial={{ opacity: 0, rotate: -3 }}
             animate={{ opacity: 1, rotate: 1 }}
             transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 20 }}
-            className="relative mt-6 p-4 bg-[#fcf45a] text-[#1d7b86] rounded-lg shadow-lg transform rotate-1 font-body"
+            className="relative mt-6 p-5 bg-[#fcf45a] text-[#1d7b86] rounded-lg shadow-lg transform rotate-1 font-body"
           >
             <div className="absolute -top-2 left-4 w-12 h-5 bg-mise-yellow-600 opacity-50 blur-sm rounded" aria-hidden />
-            <p className="font-display text-lg text-[#1d7b86] mb-1">Chef&apos;s Tip</p>
-            <p className="text-sm font-body-medium">{chefTip}</p>
+            <p className="font-display text-2xl text-[#1d7b86] mb-2 rotate-hand-5">Chef&apos;s Tip</p>
+            <p className="text-base font-body-medium leading-relaxed">{chefTip}</p>
           </motion.div>
         </CardContent>
 

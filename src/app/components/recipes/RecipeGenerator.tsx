@@ -211,10 +211,10 @@ export default function RecipeGenerator() {
 
         <Card className="relative bg-[#428a93] border-[#fcf45a] border-2 texture-paper shadow-ocean-lg overflow-visible">
           <CardHeader className="pb-3">
-            <CardTitle className="text-2xl font-display text-[#fcf45a] text-center">
+            <CardTitle className="text-5xl font-display text-[#fcf45a] text-center rotate-hand-2 text-shadow-yellow">
               What's cooking?
             </CardTitle>
-            <p className="text-white/70 text-center text-sm font-body mt-1">
+            <p className="text-white/80 text-center text-base sm:text-lg font-body-light mt-3 leading-relaxed">
               {conversationHistory.length > 0
                 ? "Refine your recipe or ask follow-up questions"
                 : "Tell me what you'd like to cook, and I'll create a recipe for you"
@@ -421,6 +421,7 @@ export default function RecipeGenerator() {
               transition={{ delay: 0.1 }}
               className="mb-4 px-4"
             >
+
               <div className="flex items-start gap-3">
                 <div className="shrink-0 w-8 h-8 rounded-full bg-[#fcf45a] flex items-center justify-center shadow-yellow">
                   <ChefHat className="h-4 w-4 text-[#1d7b86]" />
@@ -451,6 +452,7 @@ export default function RecipeGenerator() {
                   <ChefHat className="h-4 w-4" />
                   Start Cooking
                 </motion.button>
+
 
                 {/* Save Recipe */}
                 {saveStatus === 'none' && (

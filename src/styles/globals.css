@@ -299,6 +299,134 @@
 }
 
 @layer utilities {
+  /* ========== Enhanced Typography System ========== */
+
+  /* Display Size Extremes */
+  .text-display-hero {
+    font-size: clamp(4rem, 12vw, 10rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+
+  .text-display-mega {
+    font-size: clamp(3rem, 10vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+
+  .text-display-large {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    line-height: 1;
+  }
+
+  .text-display-medium {
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    line-height: 1.1;
+  }
+
+  /* Random Rotation Utilities */
+  .rotate-hand-1 {
+    transform: rotate(-1.5deg);
+  }
+
+  .rotate-hand-2 {
+    transform: rotate(2deg);
+  }
+
+  .rotate-hand-3 {
+    transform: rotate(-2.5deg);
+  }
+
+  .rotate-hand-4 {
+    transform: rotate(1.8deg);
+  }
+
+  .rotate-hand-5 {
+    transform: rotate(-0.8deg);
+  }
+
+  /* Text Shadows for Depth */
+  .text-shadow-soft {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-ocean {
+    text-shadow:
+      3px 3px 0 rgba(29, 123, 134, 0.3),
+      6px 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .text-shadow-yellow {
+    text-shadow:
+      2px 2px 0 rgba(252, 244, 90, 0.5),
+      4px 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .text-shadow-dramatic {
+    text-shadow:
+      4px 4px 0 rgba(29, 123, 134, 0.4),
+      8px 8px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Weight Variations for DM Sans */
+  .font-ultra-light {
+    font-weight: 200;
+  }
+
+  .font-book {
+    font-weight: 400;
+  }
+
+  .font-heavy {
+    font-weight: 800;
+  }
+
+  .font-black {
+    font-weight: 900;
+  }
+
+  /* Layered Text Effect */
+  .text-layered {
+    position: relative;
+  }
+
+  .text-layered::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    z-index: -1;
+    opacity: 0.3;
+  }
+
+  /* Outlined Text */
+  .text-outline-yellow {
+    -webkit-text-stroke: 2px #fcf45a;
+    -webkit-text-fill-color: transparent;
+    paint-order: stroke fill;
+  }
+
+  .text-outline-ocean {
+    -webkit-text-stroke: 2px #1d7b86;
+    -webkit-text-fill-color: transparent;
+    paint-order: stroke fill;
+  }
+
+  /* Gradient Text */
+  .text-gradient-yellow-white {
+    background: linear-gradient(135deg, #fcf45a 0%, #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-ocean {
+    background: linear-gradient(135deg, #1d7b86 0%, #66d2db 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   /* Noise/Grain Texture Overlay */
   .texture-grain {
     position: relative;
