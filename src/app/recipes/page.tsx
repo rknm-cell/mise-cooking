@@ -39,12 +39,12 @@ export default function Page() {
   const isFeatured = (index: number) => index === 0 || (index > 0 && (index + 1) % 6 === 0);
 
   return (
-    <div className="relative mx-auto min-h-screen bg-linear-to-b from-[#1d7b86] to-[#426b70] p-4 texture-grain pattern-organic">
+    <div className="relative mx-auto min-h-screen bg-linear-to-b from-[#1d7b86] to-[#426b70] p-4 sm:p-6 lg:p-8 texture-grain pattern-organic">
       <motion.div
         style={{ y: headerY, opacity: headerOpacity }}
-        className="flex items-center justify-between mb-6 relative z-10"
+        className="flex items-center justify-between mb-8 relative z-10"
       >
-        <h1 className="text-center text-4xl font-display text-[#fcf45a] flex-1">
+        <h1 className="font-display text-display-large text-[#fcf45a] rotate-hand-3 text-shadow-dramatic">
           Recipes
         </h1>
         <div className="flex gap-2">
@@ -56,6 +56,7 @@ export default function Page() {
                 : "bg-[#428a93] text-[#fcf45a] hover:bg-[#1d7b86]"
             }`}
             title="Hero Grid Layout"
+            aria-label="Hero Grid Layout"
           >
             <LayoutGrid className="h-5 w-5" />
           </button>
@@ -67,6 +68,7 @@ export default function Page() {
                 : "bg-[#428a93] text-[#fcf45a] hover:bg-[#1d7b86]"
             }`}
             title="Masonry Layout"
+            aria-label="Masonry Layout"
           >
             <Grid className="h-5 w-5" />
           </button>

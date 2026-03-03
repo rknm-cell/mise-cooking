@@ -160,10 +160,10 @@ export default function RecipeGenerator() {
 
         <Card className="relative bg-[#428a93] border-[#fcf45a] border-2 texture-paper shadow-ocean-lg overflow-visible">
           <CardHeader className="pb-3">
-            <CardTitle className="text-2xl font-display text-[#fcf45a] text-center">
+            <CardTitle className="text-5xl font-display text-[#fcf45a] text-center rotate-hand-2 text-shadow-yellow">
               What's cooking?
             </CardTitle>
-            <p className="text-white/70 text-center text-sm font-body mt-1">
+            <p className="text-white/80 text-center text-base sm:text-lg font-body-light mt-3 leading-relaxed">
               {conversationHistory.length > 0
                 ? "Refine your recipe or ask follow-up questions"
                 : "Tell me what you'd like to cook, and I'll create a recipe for you"
@@ -301,7 +301,7 @@ export default function RecipeGenerator() {
             >
               <Card className="mb-4 bg-[#428a93] border-[#fcf45a] texture-paper shadow-ocean">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-[#fcf45a] text-lg font-body-bold">Recipe Actions</CardTitle>
+                  <CardTitle className="text-[#fcf45a] text-2xl font-body-bold">Recipe Actions</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {/* Start Session Button */}
