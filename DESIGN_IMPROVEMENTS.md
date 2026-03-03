@@ -145,7 +145,7 @@ import Masonry from 'react-masonry-css';
       fill
       className="object-cover transition-transform duration-300 hover:scale-110"
     />
-    <div className="absolute inset-0 bg-gradient-to-t from-[#1d7b86]/80 to-transparent" />
+    <div className="absolute inset-0 bg-linear-to-t from-[#1d7b86]/80 to-transparent" />
   </div>
   {/* Rest of card content */}
 </Card>
@@ -442,8 +442,8 @@ const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 #### C. Recipe Note/Post-it Style Elements
 ```tsx
 // Create sticky note component for tips
-<div className="relative mt-6 p-4 bg-[#fcf45a] text-[#1d7b86] rounded shadow-lg transform rotate-1">
-  <div className="absolute -top-2 left-4 w-12 h-6 bg-[#e3db51] opacity-50 blur-sm" /> {/* "tape" effect */}
+<div className="relative mt-6 p-4 bg-[#fcf45a] text-mise-green-500 rounded shadow-lg transform rotate-1">
+  <div className="absolute -top-2 left-4 w-12 h-6 bg-mise-yellow-600 opacity-50 blur-sm" /> {/* "tape" effect */}
   <p className="font-display text-lg">Chef's Tip: {recipe.tip}</p>
 </div>
 ```

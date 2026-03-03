@@ -27,7 +27,7 @@ import { signIn } from "~/server/users";
 
 import { z } from "zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { authClient } from "~/lib/auth-client";
@@ -45,6 +45,9 @@ export function LoginForm({
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams?.get("redirect") || "/dashboard";
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,7 +61,7 @@ export function LoginForm({
       setIsLoading(true);
       const result = await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: redirectUrl,
       });
 
       // Social sign-in redirects to OAuth provider, so we don't need to handle redirect here
@@ -90,7 +93,7 @@ export function LoginForm({
 
         // Use window.location for a hard redirect
         // The middleware will validate the session on the server side
-        window.location.href = "/dashboard";
+        window.location.href = redirectUrl;
       } else if (result.error) {
         toast.error(result.error.message || "Invalid email or password");
         setIsLoading(false);
@@ -107,10 +110,10 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
+      <Card className="bg-[#428a93] border-[#fcf45a]">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>Login with your Google account</CardDescription>
+          <CardTitle className="text-xl text-[#fcf45a]">Welcome back</CardTitle>
+          <CardDescription className="text-white">Login with your Google account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -119,7 +122,7 @@ export function LoginForm({
                 <div className="flex flex-col gap-4">
                   <Button
                     variant="outline"
-                    className="w-full"
+                    className="w-full bg-white text-[#1d7b86] border-[#fcf45a] hover:bg-gray-100"
                     type="button"
                     onClick={signInWithGoogle}
                     disabled={isLoading}
@@ -133,8 +136,8 @@ export function LoginForm({
                     Login with Google
                   </Button>
                 </div>
-                <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                  <span className="bg-card text-muted-foreground relative z-10 px-2">
+                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-[#fcf45a]/30">
+                  <span className="bg-[#428a93] text-white relative z-10 px-2">
                     Or continue with
                   </span>
                 </div>
@@ -145,9 +148,9 @@ export function LoginForm({
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel className="text-white">Email</FormLabel>
                           <FormControl>
-                            <Input placeholder="name@email.com" {...field} />
+                            <Input placeholder="name@email.com" className="bg-white text-black" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -161,12 +164,13 @@ export function LoginForm({
                         name="password"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel className="text-white">Password</FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="********"
                                 {...field}
                                 type="password"
+                                className="bg-white text-black"
                               />
                             </FormControl>
                             <FormMessage />
@@ -175,13 +179,13 @@ export function LoginForm({
                       />
                       <Link
                         href="/forgot-password"
-                        className="ml-auto text-sm underline-offset-4 hover:underline"
+                        className="ml-auto text-sm text-[#fcf45a] underline-offset-4 hover:underline"
                       >
                         Forgot your password?
                       </Link>
                     </div>
                   </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full bg-[#fcf45a]/70 text-black hover:bg-[#fcf45a] font-semibold" disabled={isLoading}>
                     {isLoading ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
@@ -189,9 +193,9 @@ export function LoginForm({
                     )}
                   </Button>
                 </div>
-                <div className="text-center text-sm">
+                <div className="text-center text-sm text-white">
                   Don&apos;t have an account?{" "}
-                  <Link href="/signup" className="underline underline-offset-4">
+                  <Link href="/signup" className="text-[#fcf45a] underline underline-offset-4 hover:text-[#fcf45a]/80">
                     Sign up
                   </Link>
                 </div>
@@ -200,10 +204,10 @@ export function LoginForm({
           </Form>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+      <div className="text-white text-center text-xs text-balance">
         By clicking continue, you agree to our{" "}
-        <Link href="#">Terms of Service</Link> and{" "}
-        <Link href="#">Privacy Policy</Link>.
+        <Link href="#" className="text-[#fcf45a] underline underline-offset-4 hover:text-[#fcf45a]/80">Terms of Service</Link> and{" "}
+        <Link href="#" className="text-[#fcf45a] underline underline-offset-4 hover:text-[#fcf45a]/80">Privacy Policy</Link>.
       </div>
     </div>
   );

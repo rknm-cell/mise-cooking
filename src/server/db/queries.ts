@@ -86,6 +86,18 @@ export async function getBookmarks(userId: string): Promise<schema.Bookmark[] | 
   }
 }
 
+export async function getBookmarkedRecipes(userId: string): Promise<schema.Recipe[]> {
+  try {
+    const bookmarks = await db.select({ recipeId: schema.bookmark.recipeId }).from(schema.bookmark).where(eq(schema.bookmark.userId, userId));
+    if (bookmarks.length === 0) return [];
+    const recipes = await db.select().from(schema.recipe).where(inArray(schema.recipe.id, bookmarks.map((b) => b.recipeId)));
+    return recipes as schema.Recipe[];
+  } catch (error) {
+    console.error(`Error fetching bookmarked recipes:`, error);
+    return [];
+  }
+}
+
 
 export async function saveBookmark(userId: string, recipeId: string): Promise<{ success: boolean; message?: string }> {
   try {
@@ -275,6 +287,19 @@ export async function getUserById(userId: string): Promise<typeof schema.user.$i
   }
 }
 
+export async function getBookmarkIds(userId: string): Promise<string[]> {
+  try {
+    const rows = await db
+      .select({ recipeId: schema.bookmark.recipeId })
+      .from(schema.bookmark)
+      .where(eq(schema.bookmark.userId, userId));
+    return rows.map((r) => r.recipeId);
+  } catch (error) {
+    console.error("Error fetching bookmark IDs:", error);
+    return [];
+  }
+}
+
 export async function isBookmarked(userId: string, recipeId: string): Promise<boolean> {
   try {
     const bookmark = await db.query.bookmark.findFirst({
@@ -412,5 +437,211 @@ export async function checkOnboardingStatus(userId: string): Promise<boolean> {
   } catch (error) {
     console.error(`Error checking onboarding status:`, error);
     return false;
+  }
+}
+
+// ============================================================================
+// COOKING SESSION QUERIES
+// ============================================================================
+
+export async function createCookingSession(
+  userId: string,
+  recipeId: string
+): Promise<{ success: boolean; session?: schema.CookingSession; message?: string }> {
+  try {
+    const newSession = await db.insert(schema.cookingSession).values({
+      userId,
+      recipeId,
+      currentStep: 0,
+      status: "active",
+    }).returning();
+    return { success: true, session: newSession[0] };
+  } catch (error) {
+    console.error(`Error creating cooking session:`, error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function getCookingSession(sessionId: string): Promise<schema.CookingSession | null> {
+  try {
+    const session = await db.query.cookingSession.findFirst({
+      where: eq(schema.cookingSession.id, sessionId),
+      with: {
+        recipe: true,
+        user: true,
+      },
+    });
+    return session ?? null;
+  } catch (error) {
+    console.error(`Error fetching cooking session ${sessionId}:`, error);
+    return null;
+  }
+}
+
+export async function getActiveCookingSession(
+  userId: string,
+  recipeId: string
+): Promise<schema.CookingSession | null> {
+  try {
+    const session = await db.query.cookingSession.findFirst({
+      where: and(
+        eq(schema.cookingSession.userId, userId),
+        eq(schema.cookingSession.recipeId, recipeId),
+        eq(schema.cookingSession.status, "active")
+      ),
+      with: {
+        recipe: true,
+      },
+    });
+    return session ?? null;
+  } catch (error) {
+    console.error(`Error fetching active cooking session:`, error);
+    return null;
+  }
+}
+
+export async function getUserCookingSessions(
+  userId: string,
+  status?: string
+): Promise<schema.CookingSession[]> {
+  try {
+    const sessions = await db.query.cookingSession.findMany({
+      where: status
+        ? and(
+            eq(schema.cookingSession.userId, userId),
+            eq(schema.cookingSession.status, status)
+          )
+        : eq(schema.cookingSession.userId, userId),
+      with: {
+        recipe: true,
+      },
+      orderBy: (sessions, { desc }) => [desc(sessions.lastActiveAt)],
+    });
+    return sessions || [];
+  } catch (error) {
+    console.error(`Error fetching user cooking sessions:`, error);
+    return [];
+  }
+}
+
+export async function updateCookingSession(
+  sessionId: string,
+  updates: {
+    currentStep?: number;
+    status?: string;
+    notes?: string;
+    lastActiveAt?: Date;
+  }
+): Promise<{ success: boolean; session?: schema.CookingSession; message?: string }> {
+  try {
+    const updatedSession = await db
+      .update(schema.cookingSession)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+        lastActiveAt: updates.lastActiveAt || new Date(),
+      })
+      .where(eq(schema.cookingSession.id, sessionId))
+      .returning();
+
+    return { success: true, session: updatedSession[0] };
+  } catch (error) {
+    console.error(`Error updating cooking session:`, error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function completeCookingSession(
+  sessionId: string
+): Promise<{ success: boolean; session?: schema.CookingSession; message?: string }> {
+  try {
+    const now = new Date();
+    const completedSession = await db
+      .update(schema.cookingSession)
+      .set({
+        status: "completed",
+        completedAt: now,
+        lastActiveAt: now,
+        updatedAt: now,
+      })
+      .where(eq(schema.cookingSession.id, sessionId))
+      .returning();
+
+    return { success: true, session: completedSession[0] };
+  } catch (error) {
+    console.error(`Error completing cooking session:`, error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function pauseCookingSession(
+  sessionId: string
+): Promise<{ success: boolean; message?: string }> {
+  try {
+    await db
+      .update(schema.cookingSession)
+      .set({
+        status: "paused",
+        lastActiveAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.cookingSession.id, sessionId));
+
+    return { success: true };
+  } catch (error) {
+    console.error(`Error pausing cooking session:`, error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function resumeCookingSession(
+  sessionId: string
+): Promise<{ success: boolean; message?: string }> {
+  try {
+    await db
+      .update(schema.cookingSession)
+      .set({
+        status: "active",
+        lastActiveAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.cookingSession.id, sessionId));
+
+    return { success: true };
+  } catch (error) {
+    console.error(`Error resuming cooking session:`, error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function abandonCookingSession(
+  sessionId: string
+): Promise<{ success: boolean; message?: string }> {
+  try {
+    await db
+      .update(schema.cookingSession)
+      .set({
+        status: "abandoned",
+        lastActiveAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.cookingSession.id, sessionId));
+
+    return { success: true };
+  } catch (error) {
+    console.error(`Error abandoning cooking session:`, error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export async function deleteCookingSession(
+  sessionId: string
+): Promise<{ success: boolean; message?: string }> {
+  try {
+    await db.delete(schema.cookingSession).where(eq(schema.cookingSession.id, sessionId));
+    return { success: true };
+  } catch (error) {
+    console.error(`Error deleting cooking session:`, error);
+    return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

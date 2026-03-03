@@ -4,7 +4,9 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "~/server/
 import { 
   getAllRecipes, 
   getRecipeById, 
-  getBookmarks, 
+  getBookmarks,
+  getBookmarkIds,
+  getBookmarkedRecipes,
   saveBookmark, 
   removeBookmark, 
   isBookmarked
@@ -29,6 +31,16 @@ export const recipeRouter = createTRPCRouter({
     const { input: userId } = opts;
     const bookmarks = await getBookmarks(userId);
     return bookmarks;
+  }),
+
+  getBookmarkedRecipes: protectedProcedure.input(z.string()).query(async (opts) => {
+    const { input: userId } = opts;
+    return getBookmarkedRecipes(userId);
+  }),
+
+  getBookmarkIds: protectedProcedure.input(z.string()).query(async (opts) => {
+    const { input: userId } = opts;
+    return getBookmarkIds(userId);
   }),
 
   saveBookmark: protectedProcedure

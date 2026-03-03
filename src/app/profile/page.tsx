@@ -1,34 +1,28 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { authClient } from "~/lib/auth-client";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { 
-  User, 
-  Clock, 
-  Bookmark, 
-  ShoppingCart, 
+import {
+  User,
+  Clock,
+  Bookmark,
+  ShoppingCart,
   ChefHat,
   LogOut,
   Settings
 } from "lucide-react";
 import { toast } from "sonner";
-
-interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  image?: string;
-  createdAt: string;
-}
+import { useAuth } from "../components/auth/AuthContext";
+import { authClient } from "~/lib/auth-client";
 
 interface CookingHistory {
   recipeId: string;
   recipeName: string;
   cookedAt: string;
-  rating?: number;
+  status: string;
+  sessionId: string;
 }
 
 interface ViewedRecipe {
@@ -38,37 +32,25 @@ interface ViewedRecipe {
 }
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [cookingHistory, setCookingHistory] = useState<CookingHistory[]>([]);
   const [viewedRecipes, setViewedRecipes] = useState<ViewedRecipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadUserData();
-  }, []);
+    if (user) {
+      loadUserData();
+    }
+  }, [user]);
 
   const loadUserData = async () => {
     try {
       setIsLoading(true);
-      const session = await authClient.getSession();
-      
-      // Check if we have a valid session with user data
-      if ('user' in session) {
-        const user = session.user as any; // Type assertion for better-auth compatibility
-        setUser({
-          id: user.id,
-          name: user.name || "User",
-          email: user.email || "",
-          image: user.image,
-          createdAt: user.createdAt || new Date().toISOString(),
-        });
-
-        // Load cooking history and viewed recipes
-        await Promise.all([
-          loadCookingHistory(),
-          loadViewedRecipes(),
-        ]);
-      }
+      // Load cooking history and viewed recipes
+      await Promise.all([
+        loadCookingHistory(),
+        loadViewedRecipes(),
+      ]);
     } catch (error) {
       console.error("Error loading user data:", error);
       toast.error("Failed to load profile data");
@@ -79,7 +61,9 @@ export default function ProfilePage() {
 
   const loadCookingHistory = async () => {
     try {
-      const response = await fetch("/api/user/cooking-history");
+      if (!user?.id) return;
+
+      const response = await fetch(`/api/user/cooking-history?userId=${user.id}`);
       if (response.ok) {
         const data = await response.json();
         setCookingHistory(data.history || []);
@@ -112,7 +96,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -120,7 +104,7 @@ export default function ProfilePage() {
     );
   }
 
-  if (!user) {
+  if (!isAuthenticated || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <p>Please sign in to view your profile.</p>
@@ -141,9 +125,11 @@ export default function ProfilePage() {
               <div className="flex-1">
                 <CardTitle className="text-2xl">{user.name}</CardTitle>
                 <p className="text-muted-foreground">{user.email}</p>
-                <p className="text-sm text-muted-foreground">
-                  Member since {new Date(user.createdAt).toLocaleDateString()}
-                </p>
+                {user.createdAt && (
+                  <p className="text-sm text-muted-foreground">
+                    Member since {new Date(user.createdAt).toLocaleDateString()}
+                  </p>
+                )}
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm">
@@ -166,8 +152,10 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <ChefHat className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-2xl font-bold">{cookingHistory.length}</p>
-                  <p className="text-sm text-muted-foreground">Recipes Cooked</p>
+                  <p className="text-2xl font-bold">
+                    {cookingHistory.filter(h => h.status === "completed").length}
+                  </p>
+                  <p className="text-sm text-muted-foreground">Recipes Completed</p>
                 </div>
               </div>
             </CardContent>
@@ -212,29 +200,54 @@ export default function ProfilePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <ChefHat className="h-5 w-5" />
-              Recent Cooking History
+              Recent Cooking Sessions
             </CardTitle>
           </CardHeader>
           <CardContent>
             {cookingHistory.length === 0 ? (
               <p className="text-muted-foreground text-center py-8">
-                No cooking history yet. Start cooking to see your history here!
+                No cooking sessions yet. Start cooking to see your history here!
               </p>
             ) : (
               <div className="space-y-3">
-                {cookingHistory.slice(0, 5).map((item) => (
-                  <div key={item.recipeId} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
+                {cookingHistory.slice(0, 10).map((item) => (
+                  <div key={item.sessionId} className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent transition-colors">
+                    <div className="flex-1">
                       <p className="font-medium">{item.recipeName}</p>
                       <p className="text-sm text-muted-foreground">
-                        Cooked on {new Date(item.cookedAt).toLocaleDateString()}
+                        {new Date(item.cookedAt).toLocaleDateString()} at {new Date(item.cookedAt).toLocaleTimeString()}
                       </p>
                     </div>
-                    {item.rating && (
-                      <Badge variant="secondary">
-                        {item.rating}/5 ⭐
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={
+                          item.status === "completed" ? "default" :
+                          item.status === "active" ? "secondary" :
+                          item.status === "paused" ? "outline" :
+                          "destructive"
+                        }
+                      >
+                        {item.status}
                       </Badge>
-                    )}
+                      {(item.status === "active" || item.status === "paused") && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.location.href = `/cook/${item.sessionId}`}
+                        >
+                          Resume
+                        </Button>
+                      )}
+                      {item.status === "completed" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => window.location.href = `/recipes/${item.recipeId}`}
+                        >
+                          View Recipe
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

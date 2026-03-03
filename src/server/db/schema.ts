@@ -104,6 +104,10 @@ export const session = pgTable("session", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  // Session revocation fields for security
+  revoked: boolean("revoked").default(false).notNull(),
+  revokedAt: timestamp("revoked_at"),
+  revokedReason: text("revoked_reason"),
 });
 
 export const account = pgTable("account", {
@@ -174,6 +178,39 @@ export type ShoppingList = InferSelectModel<typeof shoppingList>;
 export type ShoppingListItem = InferSelectModel<typeof shoppingListItem>;
 
 // ============================================================================
+// COOKING SESSION TABLES
+// ============================================================================
+
+export const cookingSession = pgTable("cooking_sessions", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  recipeId: text("recipe_id")
+    .notNull()
+    .references(() => recipe.id, { onDelete: "cascade" }),
+  currentStep: integer("current_step").default(0).notNull(),
+  status: text("status").default("active").notNull(),
+  // Status options: "active", "paused", "completed", "abandoned"
+  notes: text("notes"),
+  startedAt: timestamp("started_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  lastActiveAt: timestamp("last_active_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export type CookingSession = InferSelectModel<typeof cookingSession>;
+
+// ============================================================================
 // USER PREFERENCES TABLES
 // ============================================================================
 
@@ -233,6 +270,7 @@ export const userRelations = relations(user, ({ many, one }) => ({
   shoppingLists: many(shoppingList),
   sessions: many(session),
   accounts: many(account),
+  cookingSessions: many(cookingSession),
   preferences: one(userPreferences, {
     fields: [user.id],
     references: [userPreferences.userId],
@@ -241,6 +279,7 @@ export const userRelations = relations(user, ({ many, one }) => ({
 
 export const recipeRelations = relations(recipe, ({ many }) => ({
   bookmarks: many(bookmark),
+  cookingSessions: many(cookingSession),
 }));
 
 export const bookmarkRelations = relations(bookmark, ({ one }) => ({
@@ -254,14 +293,50 @@ export const bookmarkRelations = relations(bookmark, ({ one }) => ({
   }),
 }));
 
-export const shoppingListRelations = relations(shoppingList, ({ many }) => ({
+export const shoppingListRelations = relations(shoppingList, ({ many, one }) => ({
   items: many(shoppingListItem),
+  user: one(user, {
+    fields: [shoppingList.userId],
+    references: [user.id],
+  }),
 }));
 
 export const shoppingListItemRelations = relations(shoppingListItem, ({ one }) => ({
   list: one(shoppingList, {
     fields: [shoppingListItem.listId],
     references: [shoppingList.id],
+  }),
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id],
+  }),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id],
+  }),
+}));
+
+export const userPreferencesRelations = relations(userPreferences, ({ one }) => ({
+  user: one(user, {
+    fields: [userPreferences.userId],
+    references: [user.id],
+  }),
+}));
+
+export const cookingSessionRelations = relations(cookingSession, ({ one }) => ({
+  user: one(user, {
+    fields: [cookingSession.userId],
+    references: [user.id],
+  }),
+  recipe: one(recipe, {
+    fields: [cookingSession.recipeId],
+    references: [recipe.id],
   }),
 }));
 
@@ -278,5 +353,6 @@ export const schema = {
   bookmark,
   shoppingList,
   shoppingListItem,
+  cookingSession,
   userPreferences,
 };

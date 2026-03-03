@@ -42,6 +42,7 @@ export const RecipeCardSkeleton = ({ featured = false }: RecipeCardSkeletonProps
           )} />
         </div>
       </CardHeader>
+
     </Card>
   );
 };

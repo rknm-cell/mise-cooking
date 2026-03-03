@@ -6,7 +6,10 @@ import "./src/env.js";
 import { withSentryConfig } from "@sentry/nextjs";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  // ESLint flat config contains non-serializable parser; run `bun run lint` separately.
+  eslint: { ignoreDuringBuilds: true },
+};
 
 const sentryConfig = withSentryConfig(config, {
   // For all available options, see:
