@@ -1,0 +1,11 @@
+#!/bin/bash
+echo "🔍 Quick Security Verification"
+echo ""
+echo "Checking RLS status..."
+psql "$DATABASE_URL" -c "SELECT relname, relrowsecurity as rls_enabled FROM pg_class WHERE relname = 'session';"
+echo ""
+echo "Checking sessions_public view..."
+psql "$DATABASE_URL" -c "\d sessions_public" 2>&1 | grep -E "(token|View)" || echo "View exists, checking columns..."
+psql "$DATABASE_URL" -c "SELECT column_name FROM information_schema.columns WHERE table_name = 'sessions_public' ORDER BY ordinal_position;"
+echo ""
+echo "✅ If you don't see 'token' in the columns above, you're good!"

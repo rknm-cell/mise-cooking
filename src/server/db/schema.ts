@@ -104,6 +104,10 @@ export const session = pgTable("session", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  // Session revocation fields for security
+  revoked: boolean("revoked").default(false).notNull(),
+  revokedAt: timestamp("revoked_at"),
+  revokedReason: text("revoked_reason"),
 });
 
 export const account = pgTable("account", {
