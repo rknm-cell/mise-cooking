@@ -43,6 +43,7 @@ export async function getBookmarkedRecipes(userId: string): Promise<schema.Recip
         instructions: schema.recipe.instructions,
         storage: schema.recipe.storage,
         nutrition: schema.recipe.nutrition,
+        chefsTip: schema.recipe.chefsTip,
         imageUrl: schema.recipe.imageUrl,
         createdAt: schema.recipe.createdAt,
       })
@@ -225,6 +226,7 @@ export async function getBookmarkedRecipesPaginated(
           instructions: schema.recipe.instructions,
           storage: schema.recipe.storage,
           nutrition: schema.recipe.nutrition,
+          chefsTip: schema.recipe.chefsTip,
           imageUrl: schema.recipe.imageUrl,
           createdAt: schema.recipe.createdAt,
         })

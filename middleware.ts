@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const protectedRoutes = ["/dashboard", "/profile"];
-  const protectedApiRoutes = ["/api/generate", "/api/cooking-chat"];
+  const protectedApiRoutes = ["/api/cooking-chat"]; // Removed /api/generate to allow unauthenticated recipe generation
 
   const isProtectedPage = protectedRoutes.some((route) => path.startsWith(route));
   const isProtectedApi = protectedApiRoutes.some((route) => path.startsWith(route));
@@ -45,7 +45,6 @@ export const config = {
     "/dashboard/:path*",
     "/profile",
     "/profile/:path*",
-    "/api/generate",
-    "/api/cooking-chat",
+    "/api/cooking-chat", // Removed /api/generate from matcher
   ],
 };

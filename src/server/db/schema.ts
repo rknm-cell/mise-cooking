@@ -26,6 +26,7 @@ export const recipe = pgTable("recipe", {
   instructions: varchar("instructions").array().notNull(),
   storage: varchar("storage").notNull(),
   nutrition: varchar("nutrition").array().notNull(),
+  chefsTip: varchar("chefs_tip"),
   imageUrl: varchar("image_url"),
   createdAt: timestamp("createdAt").notNull(),
 });
@@ -42,6 +43,7 @@ export const recipeObject = z.object({
   instructions: z.array(z.string()),
   storage: z.string(),
   nutrition: z.array(z.string()),
+  chefsTip: z.string().optional(),
   imageUrl: z.string().optional(),
 });
 
@@ -104,7 +106,6 @@ export const session = pgTable("session", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  // Session revocation fields for security
   revoked: boolean("revoked").default(false).notNull(),
   revokedAt: timestamp("revoked_at"),
   revokedReason: text("revoked_reason"),
@@ -268,9 +269,9 @@ export type UserPreferences = InferSelectModel<typeof userPreferences>;
 export const userRelations = relations(user, ({ many, one }) => ({
   bookmarks: many(bookmark),
   shoppingLists: many(shoppingList),
+  cookingSessions: many(cookingSession),
   sessions: many(session),
   accounts: many(account),
-  cookingSessions: many(cookingSession),
   preferences: one(userPreferences, {
     fields: [user.id],
     references: [userPreferences.userId],
