@@ -263,39 +263,6 @@ export const userPreferences = pgTable("user_preferences", {
 export type UserPreferences = InferSelectModel<typeof userPreferences>;
 
 // ============================================================================
-// COOKING SESSION TABLES
-// ============================================================================
-
-export const cookingSession = pgTable("cooking_sessions", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  recipeId: text("recipe_id")
-    .notNull()
-    .references(() => recipe.id, { onDelete: "cascade" }),
-  currentStep: integer("current_step").default(0).notNull(),
-  status: text("status").default("active").notNull(),
-  // Options: "active", "paused", "completed", "abandoned"
-  notes: text("notes"),
-  startedAt: timestamp("started_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  completedAt: timestamp("completed_at", { withTimezone: true }),
-  lastActiveAt: timestamp("last_active_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
-
-export type CookingSession = InferSelectModel<typeof cookingSession>;
-
-// ============================================================================
 // RELATIONS
 // ============================================================================
 
@@ -305,7 +272,6 @@ export const userRelations = relations(user, ({ many, one }) => ({
   cookingSessions: many(cookingSession),
   sessions: many(session),
   accounts: many(account),
-  cookingSessions: many(cookingSession),
   preferences: one(userPreferences, {
     fields: [user.id],
     references: [userPreferences.userId],
@@ -314,7 +280,6 @@ export const userRelations = relations(user, ({ many, one }) => ({
 
 export const recipeRelations = relations(recipe, ({ many }) => ({
   bookmarks: many(bookmark),
-  cookingSessions: many(cookingSession),
   cookingSessions: many(cookingSession),
 }));
 
@@ -391,5 +356,4 @@ export const schema = {
   shoppingListItem,
   cookingSession,
   userPreferences,
-  cookingSession,
 };
