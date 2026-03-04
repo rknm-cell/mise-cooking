@@ -39,7 +39,7 @@ interface RecipeDetails {
   difficulty?: string;
   cuisine?: string;
   dietaryTags?: string[];
-  tip?: string;
+  chefsTip?: string | null;
 }
 
 const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
@@ -59,10 +59,10 @@ const RecipeDetail = ({ recipe }: { recipe: RecipeDetails }) => {
     difficulty,
     cuisine,
     dietaryTags,
-    tip,
+    chefsTip,
   } = recipe;
 
-  const chefTip = tip ?? "Let ingredients come to room temperature when the recipe allows—it improves texture and flavor.";
+  const chefTip = chefsTip ?? "Let ingredients come to room temperature when the recipe allows—it improves texture and flavor.";
 
   const [checkedIngredients, setCheckedIngredients] = useState<Set<number>>(new Set());
   const [copied, setCopied] = useState(false);

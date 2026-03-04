@@ -59,6 +59,7 @@ Recipe structure requirements:
    - Plating guidelines
 7. Storage - Professional storage methods with temperature guidelines
 8. Nutrition - Detailed nutritional information
+9. Chef's Tip - A single, valuable professional insight specific to this recipe. This should be an insider technique, flavor pairing secret, or pro tip that elevates the dish (e.g., "For extra depth, toast the spices in a dry pan until fragrant before grinding" or "The key to perfect risotto is adding warm stock - cold liquid stops the cooking process").
 
 Keep responses clear, precise, and easy to follow. Include helpful cooking tips and explain any technical terms. If asked about a specific cuisine or dietary requirement, adapt the recipe accordingly.
 
@@ -78,6 +79,7 @@ If the user is modifying a previous recipe, note what changes were made in the d
         instructions: z.array(z.string()),
         storage: z.string(),
         nutrition: z.array(z.string()),
+        chefsTip: z.string(),
         conversationContext: z.string().optional(), // Track why changes were made
         isModification: z.boolean().optional() // Flag if this is a modification
       }),
@@ -96,7 +98,7 @@ If the user is modifying a previous recipe, note what changes were made in the d
         .join('; ')}`;
     }
 
-    const {id, name, description, totalTime, servings, ingredients, instructions, storage, nutrition } = recipe;
+    const {id, name, description, totalTime, servings, ingredients, instructions, storage, nutrition, chefsTip } = recipe;
 
     // Automatically assign an appropriate image based on recipe name
     const imageUrl = getRecipeImage(name);
@@ -112,6 +114,7 @@ If the user is modifying a previous recipe, note what changes were made in the d
       instructions: instructions,
       storage: storage,
       nutrition: nutrition,
+      chefsTip: chefsTip,
       imageUrl: imageUrl,
     });
     

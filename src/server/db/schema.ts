@@ -26,6 +26,7 @@ export const recipe = pgTable("recipe", {
   instructions: varchar("instructions").array().notNull(),
   storage: varchar("storage").notNull(),
   nutrition: varchar("nutrition").array().notNull(),
+  chefsTip: varchar("chefs_tip"),
   imageUrl: varchar("image_url"),
   createdAt: timestamp("createdAt").notNull(),
 });
@@ -42,6 +43,7 @@ export const recipeObject = z.object({
   instructions: z.array(z.string()),
   storage: z.string(),
   nutrition: z.array(z.string()),
+  chefsTip: z.string().optional(),
   imageUrl: z.string().optional(),
 });
 
@@ -104,7 +106,6 @@ export const session = pgTable("session", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  // Session revocation fields for security
   revoked: boolean("revoked").default(false).notNull(),
   revokedAt: timestamp("revoked_at"),
   revokedReason: text("revoked_reason"),
@@ -262,12 +263,46 @@ export const userPreferences = pgTable("user_preferences", {
 export type UserPreferences = InferSelectModel<typeof userPreferences>;
 
 // ============================================================================
+// COOKING SESSION TABLES
+// ============================================================================
+
+export const cookingSession = pgTable("cooking_sessions", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  recipeId: text("recipe_id")
+    .notNull()
+    .references(() => recipe.id, { onDelete: "cascade" }),
+  currentStep: integer("current_step").default(0).notNull(),
+  status: text("status").default("active").notNull(),
+  // Options: "active", "paused", "completed", "abandoned"
+  notes: text("notes"),
+  startedAt: timestamp("started_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  lastActiveAt: timestamp("last_active_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export type CookingSession = InferSelectModel<typeof cookingSession>;
+
+// ============================================================================
 // RELATIONS
 // ============================================================================
 
 export const userRelations = relations(user, ({ many, one }) => ({
   bookmarks: many(bookmark),
   shoppingLists: many(shoppingList),
+  cookingSessions: many(cookingSession),
   sessions: many(session),
   accounts: many(account),
   cookingSessions: many(cookingSession),
@@ -279,6 +314,7 @@ export const userRelations = relations(user, ({ many, one }) => ({
 
 export const recipeRelations = relations(recipe, ({ many }) => ({
   bookmarks: many(bookmark),
+  cookingSessions: many(cookingSession),
   cookingSessions: many(cookingSession),
 }));
 
@@ -355,4 +391,5 @@ export const schema = {
   shoppingListItem,
   cookingSession,
   userPreferences,
+  cookingSession,
 };

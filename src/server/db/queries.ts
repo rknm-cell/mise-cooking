@@ -15,6 +15,7 @@ export async function saveRecipe({
   instructions,
   storage,
   nutrition,
+  chefsTip,
   imageUrl,
 }: {
   id: string;
@@ -26,6 +27,7 @@ export async function saveRecipe({
   instructions: string[];
   storage: string;
   nutrition: string[];
+  chefsTip?: string;
   imageUrl?: string;
 }) {
   try {
@@ -39,6 +41,7 @@ export async function saveRecipe({
       instructions,
       storage,
       nutrition,
+      chefsTip,
       imageUrl,
       createdAt: new Date(),
     });
