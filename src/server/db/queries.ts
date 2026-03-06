@@ -305,14 +305,16 @@ export async function getBookmarkIds(userId: string): Promise<string[]> {
 
 export async function isBookmarked(userId: string, recipeId: string): Promise<boolean> {
   try {
-    const bookmark = await db.query.bookmark.findFirst({
-      where: (bookmark) => 
+    const bookmarks = await db
+      .select()
+      .from(schema.bookmark)
+      .where(
         and(
-          eq(bookmark.userId, userId),
-          eq(bookmark.recipeId, recipeId)
+          eq(schema.bookmark.userId, userId),
+          eq(schema.bookmark.recipeId, recipeId)
         )
-    });
-    return !!bookmark;
+      );
+    return bookmarks.length > 0;
   } catch (error) {
     console.error(`Error checking bookmark status: `, error);
     return false;
