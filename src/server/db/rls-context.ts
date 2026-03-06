@@ -7,6 +7,12 @@ import { db } from "~/server/db";
  * Sets the user context for Row Level Security (RLS) policies.
  * This must be called at the start of each authenticated request.
  *
+ * NOTE: With transaction-mode pooling, SET LOCAL only persists within
+ * a transaction. For now, this is a no-op. RLS policies are in place
+ * but we rely on application-level filtering in queries.
+ *
+ * TODO: Implement proper transaction wrapping or use service_role key
+ *
  * @param userId - The authenticated user's ID
  * @returns Promise that resolves when context is set
  *
@@ -19,7 +25,11 @@ import { db } from "~/server/db";
  * ```
  */
 export async function setRLSContext(userId: string): Promise<void> {
-  await db.execute(sql`SET LOCAL app.user_id = ${userId}`);
+  // With transaction-mode pooling, SET LOCAL doesn't persist across queries
+  // Each query runs in its own transaction, so the setting is lost
+  // For now, we rely on application-level filtering
+  // TODO: Wrap queries in explicit transactions or use alternative RLS approach
+  return Promise.resolve();
 }
 
 /**

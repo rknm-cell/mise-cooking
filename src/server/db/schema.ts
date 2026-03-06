@@ -89,7 +89,7 @@ export const bookmark = pgTable(
   (t) => [primaryKey({ columns: [t.userId, t.recipeId] })],
 );
 
-export type Bookmark = z.infer<typeof bookmark>;
+export type Bookmark = InferSelectModel<typeof bookmark>;
 
 // ============================================================================
 // AUTHENTICATION TABLES
@@ -356,4 +356,13 @@ export const schema = {
   shoppingListItem,
   cookingSession,
   userPreferences,
+  userRelations,
+  recipeRelations,
+  bookmarkRelations,
+  shoppingListRelations,
+  shoppingListItemRelations,
+  sessionRelations,
+  accountRelations,
+  userPreferencesRelations,
+  cookingSessionRelations,
 };
